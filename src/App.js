@@ -18,8 +18,11 @@ function App() {
           {/* <main className='content'> */}
             {/* <Topbar /> */}
             <Routes>
+              <Route exact path="/" element={<Workbook/>}/>
+            </Routes>
+            <Routes>
+              
               <Route path="/dashboard" element={<Sidebar/>}/>
-              <Route path="/workbook" element={<Workbook/>}/>
               {/* <Route path="" element={<Topbar />} /> */}
             </Routes>
           {/* </main> */}
