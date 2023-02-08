@@ -3,18 +3,25 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Box } from "@mui/material";
 import { ColorModeContext, tokens } from "../theme";
 import { useState, useContext } from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Chart } from "react-chartjs-2";
+// import {  ArcElement, Tooltip, Legend } from 'chart.js';
+// import {Chart as ChartJS} from 'chart.js/auto';
+// import { Chart } from "react-chartjs-2";
+import { Chart as ChartJS, registerables } from 'chart.js';
+import { Chart } from 'react-chartjs-2'
+
+  
 import { mockDataTeam } from "../data/mockData";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
 
-function IndividualChart ({props}) {
+ChartJS.register(...registerables);
+// ChartJS.register(ArcElement, Tooltip, Legend);
+
+function IndividualChart ({type}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
 
-    console.log({props});
+    console.log({type});
 
     const [chartTitle, setChartTitle] = useState('something something title');
     // const [chartType, setChartType] = useState('pie');
@@ -44,7 +51,7 @@ function IndividualChart ({props}) {
     return(
         <Box width="100%" padding="30px" backgroundColor={colors.chartbg} borderRadius="20px" >
             <Chart
-                type={props.type}
+                type={type}
                 data={chartData}
                 options={{
                     plugins: {

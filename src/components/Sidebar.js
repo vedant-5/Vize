@@ -211,7 +211,7 @@ export default function Sidebar() {
           <Database selected={selected} />
         ) : (
           // (selected <= dashboardlist.length && selected > 0) ? (
-            <Dashboard chartType={chartType} />
+            <Dashboard />
           // ) : (
           //   <IndividualChart chartType={chartType} />
           // )

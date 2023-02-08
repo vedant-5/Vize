@@ -3,7 +3,10 @@ import { styled } from '@mui/material/styles';
 import React from "react";
 import IndividualChart from "./IndividualChart";
 
-function Dashboard ({chartType}) {
+function Dashboard () {
+    
+    const chartType=['pie', 'bar', 'line', 'scatter'];
+
     
     const Item = styled(Paper)(({ theme }) => ({
         // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
