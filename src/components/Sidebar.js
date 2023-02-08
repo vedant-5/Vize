@@ -4,27 +4,16 @@ import {useContext, useState} from "react";
 import {ColorModeContext, tokens} from "../theme";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Topbar from './Topbar';
-import { Menu, MenuItem, MenuList, Paper } from '@mui/material';
+import { MenuItem, MenuList, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
-
+import Database from '../pages/Database';
+import Dashboard from '../pages/Dashboard';
+import Chart from '../pages/Chart';
 
 const Item = ({title, index, to, selected, setSelected}) => {
   const theme = useTheme();
@@ -38,18 +27,23 @@ const Item = ({title, index, to, selected, setSelected}) => {
             sx={{
               backgroundColor: `${index === selected ? 'rgba(0,0,0,0.1) !important' : 'transparent !important'}`,
               borderRadius: '10px',
+              color: colors.text,
               // padding: `${index === selected ? '0px' : '6px 16px'}`,
               // margin: `${index === selected ? '12px 16px' : '0px'}`,
             }}
             selected={index === selected} 
             onClick={() => {setSelected(index);}}>
-            <ListItemText sx={{}} >{title}</ListItemText>
+            <Typography variant='body2'>{title}</Typography>
           </MenuItem>
         // </Link>
     //   </MenuList>
     // </Paper>
   )
 }
+
+const databaselist = ['one'];
+const dashboardlist = ['Inbox', 'Starred', 'Send email', 'Drafts'];
+const chartlist = ['Inbox', 'Hello', 'Send email'];
 
 const drawerWidth = 200;
 
@@ -103,8 +97,7 @@ export default function Sidebar() {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [open, setOpen] = useState(true);
-  const [selected, setSelected] = useState(0);
-
+  const [selected, setSelected] = useState(1);
 
   // const handleDrawerOpen = () => {
   //   setOpen(true);
@@ -116,12 +109,9 @@ export default function Sidebar() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {/* <CssBaseline /> */}
       <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
-        {/* <Toolbar> */}
-            <Topbar open={open} setOpen={setOpen} />
-            <Divider />
-        {/* </Toolbar> */}
+        <Topbar open={open} setOpen={setOpen} />
+          <Divider />
       </AppBar>
       <Drawer
         sx={{
@@ -149,20 +139,20 @@ export default function Sidebar() {
             backgroundColor: `${colors.sidebarlight}`,
             borderRadius: '0px',
             boxShadow: 'none',
-            padding: '0px 16px'
+            padding: '30px 16px 0px 16px'
           }} >
-          <Typography 
+          <Typography variant='button'
             sx={{
               textTransform: 'uppercase',
               color: `${colors.greytext}`,
               fontWeight: '600',
-              padding: '30px 16px 0px 16px'
+              padding: '16px'
             }}>
             Database
           </Typography>
           <MenuList>
-            {['one', 'two'].map((text, index) => (
-              <Item title={text} index={index} to="/" selected={selected} setSelected={setSelected} />
+            {databaselist.map((text, index) => (
+              <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -171,20 +161,20 @@ export default function Sidebar() {
             backgroundColor: `${colors.sidebarlight}`,
             borderRadius: '0px',
             boxShadow: 'none',
-            padding: '0px 16px'
+            padding: '20px 16px 0px 16px'
           }} >
-          <Typography 
+          <Typography variant='button'
             sx={{
               textTransform: 'uppercase',
               color: `${colors.greytext}`,
               fontWeight: '600',
-              padding: '20px 16px 0px 16px'
+              padding: '16px'
             }}>
             Dashboards
           </Typography>
           <MenuList>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <Item title={text} index={index} to="/" selected={selected} setSelected={setSelected} />
+            {dashboardlist.map((text, index) => (
+              <Item title={text} index={databaselist.length + index} to={`/dashboard/${text}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -193,20 +183,20 @@ export default function Sidebar() {
             backgroundColor: `${colors.sidebarlight}`,
             borderRadius: '0px',
             boxShadow: 'none',
-            padding: '0px 16px'
+            padding: '20px 16px 0px 16px'
           }} >
-          <Typography 
+          <Typography variant='button'
             sx={{
               textTransform: 'uppercase',
               color: `${colors.greytext}`,
               fontWeight: '600',
-              padding: '20px 16px 0px 16px'
+              padding: '16px'
             }}>
             Charts
           </Typography>
           <MenuList>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <Item title={text} index={index} to="/" selected={selected} setSelected={setSelected} />
+            {chartlist.map((text, index) => (
+              <Item title={text} index={databaselist.length + chartlist.length + 1 + index} to={`/chart/${text}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -214,64 +204,17 @@ export default function Sidebar() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-          enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-          imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-          Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-          nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-          leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-          feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-          consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.
-        </Typography>
+        {selected === 0 ? (
+          <Database selected={selected} />
+        ) : (
+          (selected <= dashboardlist.length && selected > 0) ? (
+            <Dashboard />
+          ) : (
+            <Chart />
+          )
+        )}
+        
       </Main>
     </Box>
   );
 }
-
-// import React from 'react';
-// import { useState } from 'react';
-// import {Sidebar, Menu, MenuItem} from "react-pro-sidebar";
-// // import 'react-pro-sidebar/dist/css/styles.css';
-// import {Box, IconButton, Typography, useTheme} from "@mui/material";
-// import { Link } from 'react-router-dom';
-// import { tokens } from '../theme';
-
-// function Sidebars () {
-//   const theme = useTheme();
-//   const colors = tokens(theme.palette.mode);
-//   const [open, setOpen] = useState(true);
-//   const [selected, setSelected] = useState('Dashboard');
-
-//   return (
-//     <Box sx={{
-//       "& .pro-sidebar-inner": {
-//         background: `${colors.sidebarlight} !important`,
-//       },
-//       "& .pro-icon-wrapper": {
-//         backgroundColor: "transparent !important",
-//       },
-//       "& .pro-inner-item": {
-//         padding: "5px 35px 5px 20px !important",
-//       },
-//       "& .pro-inner-item:hover": {
-//         color: "#868dfb !important",
-//       },
-//       "& .pro-menu-item.active": {
-//         color: "#6870fa !important",
-//       }
-//     }} >
-//       <Sidebar collapsed={open}>
-//         <Menu iconShape="square">
-//           <MenuItem onClick={() => setOpen(!open)}>Pie charts</MenuItem>
-//         </Menu>
-//       </Sidebar>
-//     </Box>
-//   )
-// }
-
-// export default Sidebars;
