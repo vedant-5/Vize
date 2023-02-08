@@ -7,7 +7,7 @@ import { Routes, Route, Router } from "react-router-dom";
 import Workbook from "./pages/Workbook";
 import Database from "./pages/Database";
 import Dashboard from "./pages/Dashboard";
-import Chart from "./pages/Chart";
+import IndividualChart from "./pages/IndividualChart";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -23,8 +23,8 @@ function App() {
               <Route exact path="/dashboard" element={<Sidebar/>}/>
               <Route path="/dashboard/:text" element={<Dashboard/>}/>
               <Route path="/database/:text" element={<Database/>}/>
-              <Route path="/chart/:text" element={<Chart/>}/>
-              <Route path="/workbook" element={<Workbook/>}/>
+              <Route path="/chart/:text" element={<IndividualChart/>}/>
+              <Route path="/" element={<Workbook/>}/>
             </Routes>
           {/* </main> */}
         </div>

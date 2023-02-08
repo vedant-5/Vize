@@ -13,7 +13,7 @@ import { MenuItem, MenuList, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Database from '../pages/Database';
 import Dashboard from '../pages/Dashboard';
-import Chart from '../pages/Chart';
+import IndividualChart from '../pages/IndividualChart';
 
 const Item = ({title, index, to, selected, setSelected}) => {
   const theme = useTheme();
@@ -106,6 +106,9 @@ export default function Sidebar() {
   // const handleDrawerClose = () => {
   //   setOpen(false);
   // };
+
+  const chartType=['pie', 'bar', 'line', 'scatter'];
+
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -207,11 +210,11 @@ export default function Sidebar() {
         {selected === 0 ? (
           <Database selected={selected} />
         ) : (
-          (selected <= dashboardlist.length && selected > 0) ? (
-            <Dashboard />
-          ) : (
-            <Chart />
-          )
+          // (selected <= dashboardlist.length && selected > 0) ? (
+            <Dashboard chartType={chartType} />
+          // ) : (
+          //   <IndividualChart chartType={chartType} />
+          // )
         )}
         
       </Main>
