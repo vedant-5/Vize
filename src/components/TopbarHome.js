@@ -55,7 +55,7 @@ function TopbarHome() {
         <>
             <Box width="100vw">
             <Box display="flex" justifyContent="space-between" alignContent={"center"} pt={"25px"} pb={"25px"} height="64px" >
-                <Box display="flex" justifyContent="space-between" ml={"90px"} alignItems="center">
+                <Box display="flex" justifyContent="space-between" ml={"60px"} alignItems="center">
                     <p style={{fontWeight:"bold", fontFamily:"Inter"}}>Hello, Palka Dhirawani</p>
                 </Box>
                 <Box display="flex" mr={"36px"}>

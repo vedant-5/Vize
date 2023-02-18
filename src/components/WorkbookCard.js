@@ -10,8 +10,8 @@ import { Grid } from '@mui/material';
 
 const WorkCard =  styled.div`
     position : relative;
-    width: 315px;
-    height: 280px;
+    width: 280px;
+    height: 238px;
     background: rgba(229, 236, 246, 0.5);
     border-radius: 16px;
     display : flex;
@@ -19,8 +19,8 @@ const WorkCard =  styled.div`
 
 const GraphImage = styled.img`
     position: absolute;
-    width: 315px;
-    height: 203px;
+    width: 280px;
+    height: 170px;
     left: 0px;
     top: 0px;
     border-radius: 16px 16px 0 0;
@@ -35,8 +35,8 @@ const Title = styled.p`
     position: absolute;
     width: 158px;
     height: 20px;
-    left: 18px;
-    top: 200px;
+    left: 20px;
+    top: 165px;
     color: #1C1C1C;
     font-family: 'Inter';
     font-style: normal;
@@ -49,12 +49,12 @@ const Created = styled.p`
     position: absolute;
     width: 130px;
     height: 20px;
-    left: 18px;
-    top: 233px;
+    left: 20px;
+    top: 196px;
     font-family: 'Inter';
     font-style: italic;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 22px;
     /* identical to box height, or 143% */
     display: flex;
@@ -68,7 +68,7 @@ const ActionIcons = styled.div`
     width: 46px;
     height: 18px;
     right: 16px;
-    top: 222px;
+    top: 184px;
 `
 
 const EditImage = styled.img`

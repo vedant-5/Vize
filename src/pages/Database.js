@@ -54,14 +54,13 @@ function Database() {
   ];
 
   return (
-    <Box m="0px 20px">
+    <Box>
       {/* <Header
         title="CONTACTS"
         subtitle="List of Contacts for Future Reference"
       /> */}
       <Box
         height="75vh"
-				width="79vw"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",

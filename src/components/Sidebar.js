@@ -22,7 +22,7 @@ const Item = ({title, index, to, selected, setSelected}) => {
   return (
     // <Paper open="true">
     //   <MenuList>
-        // <Link to={to}>
+        <Link to={to}>
           <MenuItem 
             sx={{
               backgroundColor: `${index === selected ? 'rgba(0,0,0,0.1) !important' : 'transparent !important'}`,
@@ -35,7 +35,7 @@ const Item = ({title, index, to, selected, setSelected}) => {
             onClick={() => {setSelected(index);}}>
             <Typography variant='body2'>{title}</Typography>
           </MenuItem>
-        // </Link>
+        </Link>
     //   </MenuList>
     // </Paper>
   )
@@ -47,24 +47,24 @@ const chartlist = ['Inbox', 'Hello', 'Send email'];
 
 const drawerWidth = 200;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    }),
-  }),
-);
+// const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+//   ({ theme, open }) => ({
+//     flexGrow: 1,
+//     padding: theme.spacing(3),
+//     transition: theme.transitions.create('margin', {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.leavingScreen,
+//     }),
+//     marginLeft: `-${drawerWidth}px`,
+//     ...(open && {
+//       transition: theme.transitions.create('margin', {
+//         easing: theme.transitions.easing.easeOut,
+//         duration: theme.transitions.duration.enteringScreen,
+//       }),
+//       marginLeft: 0,
+//     }),
+//   }),
+// );
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -92,11 +92,11 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function Sidebar() {
+export default function Sidebar({open, setOpen}) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState(1);
 
   // const handleDrawerOpen = () => {
@@ -107,7 +107,7 @@ export default function Sidebar() {
   //   setOpen(false);
   // };
 
-  const chartType=['pie', 'bar', 'line', 'scatter'];
+  // const chartType=['pie', 'bar', 'line', 'scatter'];
 
 
   return (
@@ -205,19 +205,19 @@ export default function Sidebar() {
         </Paper>
         {/* <Divider /> */}
       </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-        {selected === 0 ? (
+      {/* <Main open={open}> */}
+        {/* <DrawerHeader /> */}
+        {/* {selected === 0 ? (
           <Database selected={selected} />
         ) : (
-          // (selected <= dashboardlist.length && selected > 0) ? (
+          (selected <= dashboardlist.length && selected > 0) ? (
             <Dashboard />
-          // ) : (
-          //   <IndividualChart chartType={chartType} />
-          // )
-        )}
+          ) : (
+            <IndividualChart />
+          )
+        )} */}
         
-      </Main>
+      {/* </Main> */}
     </Box>
   );
 }
