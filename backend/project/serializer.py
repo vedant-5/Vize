@@ -5,6 +5,9 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from .models import *
+
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -42,3 +45,35 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class WorkspaceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Workspace
+        fields =  "__all__"
+
+class DashboardSerializer(serializers.ModelSerializer):
+    # workspace_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Dashboard
+        fields = "__all__"
+
+    # def get_workspace_name(self, obj):
+    #     print(obj)
+    #     return obj.workspace
+    
+class ChartSerializer(serializers.ModelSerializer):
+    # dashboard_name = serializers.SerializerMethodField()
+    # workspace_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Chart
+        fields = "__all__"
+
+    # def get_dashboard_name(self, obj):
+    #     return obj.dashboard
+    
+    # def get_workspace_name(self, obj):
+    #     return obj.workspace
+
+    

@@ -1,8 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 from multiselectfield import MultiSelectField
 
 import uuid
+from datetime import datetime
 
 # Create your models here.
 class NewUser(models.Model):
@@ -24,38 +26,45 @@ class NewUser(models.Model):
         return self.email
 
 class Database(models.Model):
-    name = models.TextField(max_length=100, null=False, blank=False)
+    file = models.FileField(upload_to="files")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
     # Workspace_id  =  Workspace
 
+    def __str__(self):
+        return f"File id: {self.id} name: {self.file}"
+
 class Workspace(models.Model):
-    workspace_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_by = models.ForeignKey(NewUser, on_delete=models.CASCADE, blank=False, null=False)
-    name =  models.TextField(max_length=100,null=False, blank=False)
+    workspace = models.AutoField(primary_key=True, editable = False, unique=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    name =  models.CharField(max_length=10000,null=False, blank=False)
     database =  models.ForeignKey(Database, on_delete=models.CASCADE, blank=True, null=True)
     dashboards =  models.CharField(max_length=10000,null=True, blank=True)
     charts =  models.CharField(max_length=10000, null=True, blank=True)
     preview_image = models.ImageField(blank=False, null=False)
     created_on = models.DateField(null=False, blank=False)
-    last_edit = models.DateTimeField(null=False, blank=True)
+    last_edit = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
 
 
 class Dashboard(models.Model):
-    dashboard_id = models.UUIDField(primary_key = True,
-         default = uuid.uuid4,
-         editable = False)
+    # dashboard = models.UUIDField(primary_key = True,
+    #      default = uuid.uuid3,
+    #      editable = False, unique=True)
+    dashboard = models.AutoField(primary_key=True, editable = False, unique=True)
     name =  models.CharField(max_length=100, null=False, blank=False)
-    charts =  models.TextField(max_length=5000,null=False, blank= False)
+    charts =  models.CharField(max_length=5000,null= True, blank= True)
     image = models.ImageField(blank=True, null=True)
-    text = models.TextField(max_length=10000, null=True, blank=True)
-    created_on =  models.DateTimeField()
-    created_by = models.ForeignKey(NewUser, on_delete=models.CASCADE, blank=False, null=False)
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, blank=False, null=False)
+    text = models.CharField(max_length=10000, null=True, blank=True)
+    created_on =  models.DateField(auto_now_add=True, blank=False, null=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    workspace_name = models.ForeignKey(Workspace, on_delete=models.CASCADE, blank=False, null=False)
+
 
     def __str__(self):
-        return self.dashboard_id
+        return self.name
 
 
 class Chart(models.Model):
@@ -88,16 +97,17 @@ class Chart(models.Model):
         ('color', 'color palette')
     )
 
-    chart_id = models.UUIDField(primary_key = True,
-         default = uuid.uuid4,
-         editable = False)
-    name =  models.CharField(max_length=100, null=False, blank=False)
-    title = models.CharField(max_length=20, null=True, blank=True)
-    axis = models.CharField(max_length=1000, null=True, blank=True)
+    chart_id = models.AutoField(primary_key=True, editable = False, unique=True)
+    title = models.CharField(max_length=1000, null=True, blank=True)
+    x_axis = models.CharField(max_length=1000, null=False, blank=False, default=None)
+    y_axis = models.CharField(max_length=1000, null=False, blank=False, default=None)
     chart_type = models.CharField(max_length=100, choices=chart_options,default=None, null=False, blank=False)
-    # options = MultiSelectField(choices=edit_options, default=None)
+    options = models.CharField(max_length=1000, default=None)
     summary = models.CharField(max_length=1000, null=True, blank=True)
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=False, blank=False)
+    workspace_name = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=False, blank=False)
+    dashboard_name = models.ForeignKey(Dashboard, on_delete=models.CASCADE, null=False, blank=False)
+
 
     def __str__(self):
-        return self.chart_id
+        return self.title
+        
