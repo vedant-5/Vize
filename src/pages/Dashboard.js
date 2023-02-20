@@ -10,10 +10,11 @@ function Dashboard ({match}) {
     const [dashboard, setDashboard] =  useState([])
 
     const { id } = useParams();
+    console.log(id)
 
     useEffect(() => {
         fetchDashboards();
-      }, []);
+      }, [id]);
 
     const fetchDashboards = async () => {
         const response = await fetch(
