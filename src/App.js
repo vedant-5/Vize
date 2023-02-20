@@ -44,7 +44,7 @@ function App() {
           <Main className='content' open={open}>
             <Routes>
               <Route exact path="/voice" element={<VoiceAssistant/>}/>
-              <Route path="/dashboard/:text" element={<Dashboard/>}/>
+              <Route path="/dashboard/:id" element={<Dashboard/>}/>
               <Route path="/database/:text" element={<Database/>}/>
               <Route path="/chart/:text" element={<IndividualChart/>}/>
               <Route path="/" element={<Workbook/>}/>

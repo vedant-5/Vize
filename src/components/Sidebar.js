@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import {useContext, useState} from "react";
+import {useContext, useState, useEffect} from "react";
 import {ColorModeContext, tokens} from "../theme";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -98,6 +98,9 @@ export default function Sidebar({open, setOpen}) {
   const colorMode = useContext(ColorModeContext);
   // const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState(1);
+  const [dashboards, setDashboards] = useState([])
+  const [database, setDatabase] = useState([])
+  const [charts, setCharts] =  useState([])
 
   // const handleDrawerOpen = () => {
   //   setOpen(true);
@@ -108,6 +111,40 @@ export default function Sidebar({open, setOpen}) {
   // };
 
   // const chartType=['pie', 'bar', 'line', 'scatter'];
+
+  useEffect(() => {
+    fetchDashboards();
+    // fetchDatabase();
+    fetchChart();
+  }, []);
+
+
+const fetchDashboards = async () => {
+    const response = await fetch(
+      `http://127.0.0.1:8000/dashboard/`
+    );
+    const data = await response.json();
+    setDashboards(data.response);
+    // console.log(data.response)
+  };
+
+  // const fetchDatabase = async () => {
+  //   const response = await fetch(
+  //     `http://127.0.0.1:8000/database/`
+  //   );
+  //   const data = await response.json();
+  //   setDatabase(data.response);
+  //   // console.log(data.response)
+  // };
+
+  const fetchChart = async () => {
+    const response = await fetch(
+      `http://127.0.0.1:8000/chart/`
+    );
+    const data = await response.json();
+    setCharts(data.response);
+    console.log(data.response)
+  };
 
 
   return (
@@ -176,8 +213,8 @@ export default function Sidebar({open, setOpen}) {
             Dashboards
           </Typography>
           <MenuList>
-            {dashboardlist.map((text, index) => (
-              <Item title={text} index={databaselist.length + index} to={`/dashboard/${text}`} selected={selected} setSelected={setSelected} />
+            {dashboards.map((arr, index) => (
+              <Item title={arr.name} index={databaselist.length + index} to={`/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -198,8 +235,8 @@ export default function Sidebar({open, setOpen}) {
             Charts
           </Typography>
           <MenuList>
-            {chartlist.map((text, index) => (
-              <Item title={text} index={databaselist.length + chartlist.length + 1 + index} to={`/chart/${text}`} selected={selected} setSelected={setSelected} />
+            {charts.map((chart, index) => (
+              <Item title={chart.title} index={chart.chart_id} to={`/chart/${chart.title}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
