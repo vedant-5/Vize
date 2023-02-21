@@ -104,6 +104,13 @@ def FileUpload(request):
 #         count = Workspace.objects.all().delete()
 #         return JsonResponse({'message': '{} Workspaces were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
+@api_view(('GET','POST', 'DELETE', 'PUT'))
+def DatabaseViewSet(request):
+    if request.method == 'GET':
+        database = Database.objects.all()
+        serializer_class = DatabaseSerializer(database, many=True)
+        return Response({'response': serializer_class.data}, status=status.HTTP_200_OK)
+    
 
 class WorkspaceViewSet(APIView):
     workspace = Workspace
@@ -173,6 +180,12 @@ def DashboardViewSet(request):
 
 @api_view(['GET','POST'])
 def DashboardUpdateViewSet(request, id):
+    if request.method == 'GET':
+        item = Dashboard.objects.filter(dashboard = id)
+        # item = Dashboard.objects.get(pk = id)
+        serializer_class = DashboardSerializer(item, many= True)
+        return Response({'response': serializer_class.data}, status=status.HTTP_200_OK)
+
     if request.method == "POST":
         item = Dashboard.objects.get(pk=id)
         data = DashboardSerializer(instance=item, data=request.data)
@@ -214,3 +227,20 @@ def ChartViewSet(request):
         return JsonResponse({'message': '{} Charts were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['GET','POST'])
+def ChartUpdateViewSet(request, id):
+    if request.method == 'GET':
+        item = Chart.objects.filter(chart_id = id)
+        # item = Dashboard.objects.get(pk = id)
+        serializer_class = ChartSerializer(item, many= True)
+        return Response({'response': serializer_class.data}, status=status.HTTP_200_OK)
+
+    if request.method == "POST":
+        item = Chart.objects.get(pk=id)
+        data = ChartSerializer(instance=item, data=request.data)
+
+        if data.is_valid():
+            data.save()
+            return Response(data.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)

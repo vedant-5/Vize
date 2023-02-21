@@ -19,11 +19,13 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('test/', views.testEndPoint, name='test'),
     path('upload-database/', views.FileUpload, name="upload_db"),
+    path('database/', views.DatabaseViewSet, name="database"),
     path('workspace/', views.WorkspaceViewSet.as_view(), name="workspace"),
     path('workspace/<int:id>/', views.WorkspacePostViewSet.as_view(), name="workspacePost"),
     path('dashboard/', views.DashboardViewSet, name="dashboard"),
     path('dashboard/<int:id>/', views.DashboardUpdateViewSet, name="dashboardPost"),
     path('chart/', views.ChartViewSet, name="chart"),
+    path('chart/<int:id>/', views.ChartUpdateViewSet, name="chartSingle"),
     path('authenticate', views.getRoutes),
 
 ]

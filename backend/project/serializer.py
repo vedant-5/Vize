@@ -7,7 +7,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import *
 
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -44,6 +43,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
+class DatabaseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Database
+        fields =  "__all__"
 
 class WorkspaceSerializer(serializers.ModelSerializer):
 

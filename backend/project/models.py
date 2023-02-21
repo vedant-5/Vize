@@ -28,11 +28,12 @@ class NewUser(models.Model):
 class Database(models.Model):
     file = models.FileField(upload_to="files")
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=1000,default=file)
 
     # Workspace_id  =  Workspace
 
     def __str__(self):
-        return f"File id: {self.id} name: {self.file}"
+        return f"File id: {self.id} name: {self.name}"
 
 class Workspace(models.Model):
     workspace = models.AutoField(primary_key=True, editable = False, unique=True)
