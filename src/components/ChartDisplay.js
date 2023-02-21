@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 // ChartJS.register(...registerables);
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function IndividualChart ({chart_id}) {
+function ChartDisplay ({chart_id}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
@@ -47,23 +47,20 @@ function IndividualChart ({chart_id}) {
     });
 
     
-    console.log(chart_id)
-    const id = useParams().text;
+    // console.log(chart_id)
 
     useEffect(() => {
         fetchChart();
-      }, [id]);
+      }, []);
 
     const fetchChart = async () => {
         const response = await fetch( 
-          `http://127.0.0.1:8000/chart/${id}`
+          `http://127.0.0.1:8000/chart/${chart_id}`
         );
         const data = await response.json();
         setChart(data.response[0]);
         const type = data.response[0].chart_type.split(" ")[0]
-        console.log(type)
         setChartType(type)
-        console.log(data.response[0].title)
       };
       
     return(
@@ -86,4 +83,4 @@ function IndividualChart ({chart_id}) {
     )
 }
 
-export default IndividualChart;
+export default ChartDisplay;

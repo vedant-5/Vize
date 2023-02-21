@@ -99,7 +99,7 @@ export default function Sidebar({open, setOpen}) {
   // const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState(1);
   const [dashboards, setDashboards] = useState([])
-  const [database, setDatabase] = useState([])
+  const [database, setDatabase] = useState('')
   const [charts, setCharts] =  useState([])
 
   // const handleDrawerOpen = () => {
@@ -114,8 +114,8 @@ export default function Sidebar({open, setOpen}) {
 
   useEffect(() => {
     fetchDashboards();
-    // fetchDatabase();
     fetchChart();
+    fetchDatabase();
   }, []);
 
 
@@ -128,14 +128,14 @@ const fetchDashboards = async () => {
     // console.log(data.response)
   };
 
-  // const fetchDatabase = async () => {
-  //   const response = await fetch(
-  //     `http://127.0.0.1:8000/database/`
-  //   );
-  //   const data = await response.json();
-  //   setDatabase(data.response);
-  //   // console.log(data.response)
-  // };
+  const fetchDatabase = async () => {
+    const response = await fetch(
+      `http://127.0.0.1:8000/database/`
+    );
+    const data = await response.json();
+    setDatabase(data.response[0]);
+    console.log(data.response[0].name)
+  };
 
   const fetchChart = async () => {
     const response = await fetch(
@@ -143,7 +143,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setCharts(data.response);
-    console.log(data.response)
+    // console.log(data.response)
   };
 
 
@@ -191,9 +191,10 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            {databaselist.map((text, index) => (
+            <Item title={database.name} to={`/database/${database.name}`} selected={selected} setSelected={setSelected} />
+            {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
-            ))}
+            ))} */}
           </MenuList>
         </Paper>
         <Paper 
@@ -236,7 +237,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {charts.map((chart, index) => (
-              <Item title={chart.title} index={chart.chart_id} to={`/chart/${chart.title}`} selected={selected} setSelected={setSelected} />
+              <Item title={chart.title} index={chart.chart_id} to={`/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
