@@ -12,6 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import IndividualChart from "./pages/IndividualChart";
 import VoiceAssistant from "./pages/VoiceAssistant";
 import { AuthProvider } from "./context/AuthContext";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -45,7 +47,7 @@ function App() {
             {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} />)}
             <Main className='content' open={open}>
               <Routes>
-                <PrivateRoute component={ProtectedPage} path="/protected" exact />
+                {/* <PrivateRoute component={ProtectedPage} path="/protected" exact /> */}
                 <Route component={Login} path="/login" />
                 <Route component={Register} path="/register" />
                 <Route path="/" element={<Workbook/>}/>

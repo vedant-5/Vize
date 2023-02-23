@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 
-const LoginPage = () => {
+const Login = () => {
   const { loginUser } = useContext(AuthContext);
   const handleSubmit = e => {
     e.preventDefault();
@@ -25,4 +25,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
