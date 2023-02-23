@@ -11,6 +11,7 @@ import Database from "./pages/Database";
 import Dashboard from "./pages/Dashboard";
 import IndividualChart from "./pages/IndividualChart";
 import VoiceAssistant from "./pages/VoiceAssistant";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -39,18 +40,23 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
-          {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} />)}
-          <Main className='content' open={open}>
-            <Routes>
-              <Route exact path="/voice" element={<VoiceAssistant/>}/>
-              <Route path="/dashboard/:id" element={<Dashboard/>}/>
-              <Route path="/database/:text" element={<Database/>}/>
-              <Route path="/chart/:text" element={<IndividualChart/>}/>
-              <Route path="/" element={<Workbook/>}/>
-            </Routes>
-          </Main>
-        </div>
+        <AuthProvider>
+          <div className="app">
+            {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} />)}
+            <Main className='content' open={open}>
+              <Routes>
+                <PrivateRoute component={ProtectedPage} path="/protected" exact />
+                <Route component={Login} path="/login" />
+                <Route component={Register} path="/register" />
+                <Route path="/" element={<Workbook/>}/>
+                <Route exact path="/voice" element={<VoiceAssistant/>}/>
+                <Route path="/dashboard/:id" element={<Dashboard/>}/>
+                <Route path="/database/:text" element={<Database/>}/>
+                <Route path="/chart/:text" element={<IndividualChart/>}/>
+              </Routes>
+            </Main>
+          </div>
+        </AuthProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
