@@ -6,25 +6,6 @@ from multiselectfield import MultiSelectField
 import uuid
 from datetime import datetime
 
-# Create your models here.
-class NewUser(models.Model):
-    username = None
-    user_id = models.UUIDField(primary_key = True,
-         default = uuid.uuid4,
-         editable = False)
-    email = models.EmailField(max_length=255, unique=True)
-    phone_number = models.CharField(max_length=13, null=True, blank=True)
-    company_name = models.CharField(max_length=255, null=True, blank=True)
-
-    USERNAME_FIELD = 'email'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    # objects = CustomUserManager()
-
-    def __str__(self):
-        return self.email
-
 class Database(models.Model):
     file = models.FileField(upload_to="files")
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -63,10 +44,8 @@ class Dashboard(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     workspace_name = models.ForeignKey(Workspace, on_delete=models.CASCADE, blank=False, null=False)
 
-
     def __str__(self):
         return self.name
-
 
 class Chart(models.Model):
     Area =  'area chart'

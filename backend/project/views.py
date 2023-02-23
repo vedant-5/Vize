@@ -137,9 +137,6 @@ class WorkspacePostViewSet(APIView):
         workspace_serializer = WorkspaceSerializer(data = workspace_data)
         print(workspace_data, request,id)
 
-
-
-
 # class DashboardViewSet(viewsets.ModelViewSet):
 #     queryset = Dashboard.objects.all()
 #     serializer_class =  DashboardSerializer
@@ -244,3 +241,4 @@ def ChartUpdateViewSet(request, id):
             return Response(data.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+    
