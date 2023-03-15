@@ -9,6 +9,12 @@ function VoiceAssistant () {
   const [chartType, setChartType] = useState('');
   const [cols, setCols] = useState([]);
 
+  // useEffect(() => {
+  //   sendChart();
+  // }, []);
+
+
+
   const commands = [
     {
       command: 'create * chart',
@@ -28,6 +34,7 @@ function VoiceAssistant () {
         setCols([col1, col2]);
         if(chartType !== '') {
           setValue(`Creating ${chartType} chart with columns ${col1} and ${col2}`);
+          sendChart(chartType,col1, col2)
         }
         else {
           setValue('Please specify which chart you want to create');
@@ -89,6 +96,35 @@ function VoiceAssistant () {
     else {
       SpeechRecognition.abortListening();
     }
+  }
+
+  const sendChart = async ({chartType,col1, col2}) => {
+    const data = {
+        "title": "Chart 3",
+        "x_axis": `${col1}`,
+        "y_axis": `${col2}`,
+        "chart_type": "bar",
+        "options": "Legend, title, color",
+        "summary": null,
+        "workspace_name": 3,
+        "dashboard_name": 6,
+    }
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+  };
+  fetch('http://127.0.0.1:8000/chart/', requestOptions)
+      .then(function (response) {
+        // ...
+        console.log(response);
+        return response.json();
+      }).then(function (body) {
+        // ...
+        console.log(body);
+      }).catch(err => {
+          console.log(err)
+      })
   }
 
   return (

@@ -1,5 +1,6 @@
 import React from "react";
 import {useContext, useState} from "react";
+import { useLocation } from "react-router-dom";
 import {Box, IconButton, useTheme, Breadcrumbs, Link} from "@mui/material";
 import {ColorModeContext, tokens} from "../theme";
 // import {InputBase} from "@mui/material";
@@ -10,10 +11,21 @@ import MicIcon from '@mui/icons-material/Mic';
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
 function Topbar({open, setOpen}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    const location = useLocation()
+    const path_split = location.pathname.split("/")
+    const first = capitalizeFirstLetter(path_split[1])
+    const second = path_split[2].split("%20").join(" ")
+
+
     // const [fullScreen, setFullScreen] = useState(false);
 
     return(
@@ -35,7 +47,7 @@ function Topbar({open, setOpen}) {
                         color="inherit"
                         href="/material-ui/getting-started/installation/"
                     >
-                        Core
+                        {first}
                     </Link>
                     <Link
                         underline="hover"
@@ -43,7 +55,7 @@ function Topbar({open, setOpen}) {
                         href="/material-ui/react-breadcrumbs/"
                         aria-current="page"
                         >
-                        Breadcrumbs
+                        {second}
                     </Link>
                 </Breadcrumbs>
             </Box>
