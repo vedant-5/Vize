@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
 from .models import *
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -43,6 +44,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
+class FileModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileModel
+        fields = ('id', 'file', 'name', 'size')
+        read_only_fields = ('id', 'size')
+
+
 class DatabaseSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -56,6 +64,8 @@ class WorkspaceSerializer(serializers.ModelSerializer):
         fields =  "__all__"
 
 class DashboardSerializer(serializers.ModelSerializer):
+    
+    workspace_name = WorkspaceSerializer(read_only=True)
     # workspace_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -67,8 +77,8 @@ class DashboardSerializer(serializers.ModelSerializer):
     #     return obj.workspace
     
 class ChartSerializer(serializers.ModelSerializer):
-    # dashboard_name = serializers.SerializerMethodField()
-    # workspace_name = serializers.SerializerMethodField()
+    # dashboard_name = DashboardSerializer(many = True, read_only=True)
+    # workspace_name = WorkspaceSerializer(read_only=True)
 
     class Meta:
         model = Chart

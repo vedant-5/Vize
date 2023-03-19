@@ -2,9 +2,39 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from multiselectfield import MultiSelectField
-
+import os
 import uuid
 from datetime import datetime
+
+def upload_to(instance, filename):
+    ext = os.path.splitext(filename)[1]
+    name = instance.name if instance.name else os.path.splitext(filename)[0]
+    filename = '{}{}'.format(name, ext)
+    return 'user_files/{}'.format(filename)
+
+class FileModel(models.Model):
+    #id=models.AutoField(primary_key=True)
+    file = models.FileField(upload_to=upload_to)
+    name = models.CharField(max_length=255, blank=True)
+    size = models.PositiveIntegerField(null=True, blank=True)
+    content = models.TextField(blank=True)
+    # url = models.URLField(max_length=255, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.name = os.path.splitext(os.path.basename(self.file.name))[0]
+        self.size = self.file.size
+        self.content = self.file.read().decode('utf-8')
+        super().save(*args, **kwargs)
+        # if not self.id:
+        #     super().save(*args, **kwargs)
+        #     self.url = 'http://127.0.0.1:8000/view-file/{}/'.format(self.id)
+        # else:
+        #     self.url = 'http://127.0.0.1:8000/view-file/{}/'.format(self.id)
+        # super(NewFile, self).save(*args, **kwargs)
+
+    def __str__(self):
+        file_name = str(self.id)+"_"+str(self.name)
+        return file_name
 
 class Database(models.Model):
     file = models.FileField(upload_to="files")
@@ -48,16 +78,16 @@ class Dashboard(models.Model):
         return self.name
 
 class Chart(models.Model):
-    Area =  'area chart'
-    Bar =  'bar chart'
-    Bubble =  'bubble chart'
-    Donut  = 'doughnut chart'
-    Pie = 'pie chart'
-    Line = 'line chart'
-    Mixed = 'mixed chart'
-    Polar = 'polar area chart'
-    Radar = 'radar chart'
-    Scatter = 'scatter chart'
+    Area =  'area'
+    Bar =  'bar'
+    Bubble =  'bubble'
+    Donut  = 'doughnut'
+    Pie = 'pie'
+    Line = 'line'
+    Mixed = 'mixed'
+    Polar = 'polar area'
+    Radar = 'radar'
+    Scatter = 'scatter'
     chart_options = [
         (Area, "Area Chart"),
         (Bar,  'Bar chart'),

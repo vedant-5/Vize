@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from django.http import JsonResponse, HttpResponse
+from django.http import Http404, FileResponse, JsonResponse, HttpResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from project.serializer import MyTokenObtainPairSerializer, RegisterSerializer
@@ -14,8 +14,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
 import pandas as pd
-
-
+from rest_framework.parsers import MultiPartParser, FormParser
+import csv
+import json
+from django.shortcuts import get_object_or_404
+import os
+from django.conf import settings
 
 from .models import *
 from .serializer import *
@@ -73,6 +77,54 @@ def FileUpload(request):
         return Response({'response': obj}, status=status.HTTP_201_CREATED)
     return Response({}, status=status.HTTP_201_CREATED)
 
+class FileUploadView(generics.CreateAPIView):
+    queryset = FileModel.objects.all()
+    serializer_class = FileModelSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+class FileDownloadView(generics.RetrieveAPIView):
+    queryset = FileModel.objects.all()
+    serializer_class = FileModelSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        file_path = os.path.join(settings.MEDIA_ROOT, instance.file.name)
+        if os.path.exists(file_path):
+            response = FileResponse(open(file_path, 'rb'))
+            response['Content-Disposition'] = 'inline'
+            return response
+        raise HttpResponse.Http404("File does not exist")
+
+@api_view(('GET',))
+def view_all_files(request):
+    if request.method == "GET":
+        databases = FileModel.objects.all()
+        serializer_class = FileModelSerializer(databases, many=True)
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+
+
+
+def view_file(request, pk):
+    my_model = get_object_or_404(FileModel, pk=pk)
+    file_path = my_model.file.path
+    with open(file_path, 'r') as f:
+        if file_path.endswith('.csv'):
+            file_data = list(csv.reader(f))
+            headers = ['id'] + file_data[0]
+            rows = []
+            for i, row in enumerate(file_data[1:], start=1):
+                rows.append({'id': i, **dict(zip(headers[1:], row))})
+            response = HttpResponse(content_type='application/json')
+            response['Content-Disposition'] = f'inline; filename={my_model.name}'
+            json.dump(rows, response, indent=4)
+            return response
+        elif file_path.endswith('.json'):
+            file_data = json.load(f)
+            for i, row in enumerate(file_data, start=1):
+                row['id'] = i
+            response = HttpResponse(json.dumps(file_data, indent=4), content_type='application/json')
+            response['Content-Disposition'] = f'inline; filename={my_model.name}'
+            return  response
 
 # class WorkspaceViewSet(viewsets.ModelViewSet):
 #     queryset = Workspace.objects.all()
@@ -84,25 +136,25 @@ def FileUpload(request):
 #         return Workspace.objects.filter(workspace=self.workspace)
 
 
-# @api_view(('GET','POST', 'DELETE', 'PUT'))
-# def WorkspaceViewSet(request):
-#     if request.method == 'GET':
-#         workspace = Workspace.objects.all()
-#         serializer_class = WorkspaceSerializer(workspace, many=True)
-#         return Response(serializer_class.data, status=status.HTTP_200_OK)
+@api_view(('GET','POST', 'DELETE', 'PUT'))
+def WorkspaceViewSet(request):
+    if request.method == 'GET':
+        workspace = Workspace.objects.all()
+        serializer_class = WorkspaceSerializer(workspace, many=True)
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
 
     
-#     elif request.method == 'POST':
-#         workspace_data = JSONParser().parse(request)
-#         workspace_serializer = WorkspaceSerializer(data = workspace_data)
-#         if workspace_serializer.is_valid():
-#             workspace_serializer.save()
-#             return JsonResponse(workspace_serializer.data, status=status.HTTP_201_CREATED) 
-#         return JsonResponse(workspace_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'POST':
+        workspace_data = JSONParser().parse(request)
+        workspace_serializer = WorkspaceSerializer(data = workspace_data)
+        if workspace_serializer.is_valid():
+            workspace_serializer.save()
+            return JsonResponse(workspace_serializer.data, status=status.HTTP_201_CREATED) 
+        return JsonResponse(workspace_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-#     elif request.method == 'DELETE':
-#         count = Workspace.objects.all().delete()
-#         return JsonResponse({'message': '{} Workspaces were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        count = Workspace.objects.all().delete()
+        return JsonResponse({'message': '{} Workspaces were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(('GET','POST', 'DELETE', 'PUT'))
 def DatabaseViewSet(request):
@@ -112,21 +164,24 @@ def DatabaseViewSet(request):
         return Response({'response': serializer_class.data}, status=status.HTTP_200_OK)
     
 
-class WorkspaceViewSet(APIView):
-    workspace = Workspace
-    serializer_class = WorkspaceSerializer(workspace, many=True)
+# class WorkspaceViewSet(APIView):
+#     workspace = Workspace
+#     serializer_class = WorkspaceSerializer(workspace, many=True)
 
-    def get_queryset(self):
-        user = self.request.user
-        return Response(Workspace.objects.filter(created_by=user), status=status.HTTP_200_OK)
+#     def get(self):
+#         workspace = Workspace.objects.all()
+#         serializer_class = WorkspaceSerializer(workspace, many= True)
+#         # user = self.request.user
+#         return Response({'response': serializer_class.data}, status=status.HTTP_200_OK)
+#         # return Response(Workspace.objects.filter(created_by=user), status=status.HTTP_200_OK)
 
-    def post(self, request):
-        workspace_data = JSONParser().parse(request)
-        workspace_serializer = WorkspaceSerializer(data = workspace_data)
-        if workspace_serializer.is_valid():
-            workspace_serializer.save()
-            return JsonResponse(workspace_serializer.data, status=status.HTTP_201_CREATED) 
-        return JsonResponse(workspace_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         workspace_data = JSONParser().parse(request)
+#         workspace_serializer = WorkspaceSerializer(data = workspace_data)
+#         if workspace_serializer.is_valid():
+#             workspace_serializer.save()
+#             return JsonResponse(workspace_serializer.data, status=status.HTTP_201_CREATED) 
+#         return JsonResponse(workspace_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class WorkspacePostViewSet(APIView):
@@ -214,8 +269,13 @@ def ChartViewSet(request):
     elif request.method == 'POST':
         chart_data = JSONParser().parse(request)
         chart_serializer = ChartSerializer(data = chart_data)
+        # dashboard_data =  Dashboard.objects.filter(dashboard =  chart_serializer.dashboard_name)
+        # dashboard_serializer =  DashboardSerializer(data = dashboard_data)
+        
         if chart_serializer.is_valid():
+            print(chart_serializer)
             chart_serializer.save()
+            print(chart_data)
             return JsonResponse(chart_serializer.data, status=status.HTTP_201_CREATED) 
         return JsonResponse(chart_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -237,6 +297,7 @@ def ChartUpdateViewSet(request, id):
         data = ChartSerializer(instance=item, data=request.data)
 
         if data.is_valid():
+            print(data)
             data.save()
             return Response(data.data)
         else:
