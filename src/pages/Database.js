@@ -1,16 +1,65 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import { mockDataContacts } from "../data/mockData";
 // import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Database() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const location = useLocation();
+  const currentID = location.pathname.split("/")[2];
 
-  const columns = [
+  const [chartData, setChartData] =  useState([])
+  const [columnNames, setColumnNames] = useState([]);
+
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  const getChart = async () => {
+    const response = await fetch( 
+      `http://127.0.0.1:8000/view-file/${currentID}`
+    );
+    const data = await response.json();
+    setChartData(data)
+    const key_names = [];
+    data.forEach((dictionary) => {
+      // Loop over each key in the dictionary
+      Object.keys(dictionary).forEach((key) => {
+        // Add the key to the array if it's not already present
+        if (!key_names.includes(key)) {
+          key_names.push(key);
+        }
+      });
+    })
+    setColumnNames(key_names);
+    return data
+  };
+
+  useEffect(() => {
+    getChart()
+  }, []);
+
+
+  useEffect(()=>{
+    console.log(columnNames)
+  },[columnNames])
+
+
+  const columns = columnNames.map((item) => {
+    return { field: item, headerName: capitalizeFirstLetter(item),  flex: 1 };
+  });
+
+  console.log(columns)
+
+
+  const columns2 = [
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "registrarId", headerName: "Registrar ID" },
     {
@@ -55,10 +104,9 @@ function Database() {
 
   return (
     <Box>
-      {/* <Header
-        title="CONTACTS"
-        subtitle="List of Contacts for Future Reference"
-      /> */}
+      {chartData.length !== 0 ?
+      
+      
       <Box
         height="75vh"
         sx={{
@@ -91,11 +139,12 @@ function Database() {
         }}
       >
         <DataGrid
-          rows={mockDataContacts}
+          rows={chartData}
           columns={columns}
-          components={{ Toolbar: GridToolbar }}
-        />
+          components={{ Toolbar: GridToolbar }} 
+        /> 
       </Box>
+      : <CircularProgress color="inherit" /> }
     </Box>
   );
 };

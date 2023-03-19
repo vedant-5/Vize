@@ -130,11 +130,11 @@ const fetchDashboards = async () => {
 
   const fetchDatabase = async () => {
     const response = await fetch(
-      `http://127.0.0.1:8000/database/`
+      `http://127.0.0.1:8000/view-file`
     );
     const data = await response.json();
-    setDatabase(data.response[0]);
-    console.log(data.response[0].name)
+    setDatabase(data[0]);
+    //console.log(data)
   };
 
   const fetchChart = async () => {
@@ -191,7 +191,7 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            <Item title={database.name} to={`/database/${database.name}`} selected={selected} setSelected={setSelected} />
+            <Item title={database.name} to={`/database/${database.id}`} selected={selected} setSelected={setSelected} />
             {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))} */}

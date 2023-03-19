@@ -37,16 +37,7 @@ function Topbar({open, setOpen}) {
     const [xLabel, setXLabel] = useState('');
     const [yLabel, setYLabel] = useState('');
     const [chartID, setChartID] =  useState('')
-    const [editChart, setEditChart] = useState({
-      "title": "",
-      "x_axis": ``,
-      "y_axis": ``,
-      "chart_type": "",
-      "options": "Legend, title, color",
-      "summary": null,
-      "workspace_name": 3,
-      "dashboard_name": 6,
-  })
+    const [editChart, setEditChart] = useState({})
     const [chartList, setChartList] = useState([])
 
     const handleMicrophone = () => {
@@ -106,12 +97,13 @@ function Topbar({open, setOpen}) {
     
       const editChartPost = async () => {
         const data = editChart
+        console.log(editChart)
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
       };
-      fetch(`http://127.0.0.1:8000/chart/${chartID}`, requestOptions)
+      fetch(`http://127.0.0.1:8000/chart/${chartID}/`, requestOptions)
           .then(function (response) {
             // ...
             console.log(response);
@@ -162,15 +154,17 @@ function Topbar({open, setOpen}) {
           callback: (chart_name) => {
             setChartName(chart_name)
             const chart_list =  chartList
-            const chart_id = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name).chart_id
-            console.log(chart_id)
+            const chart_id = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].chart_id
             setChartID(chart_id)
+            setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            setIsChartOpen(true)
+            setValue(`Chart ${chart_name} selected`)
           }
         },
         {
           command: 'Add title *',
           callback: (title) => {
-            setEditChart(...cols,{"title":title})
+            setEditChart({...editChart,"title":title})
             setTitle(title);
             if(isChartOpen) {
               setValue(`Title ${title} added`);
@@ -183,6 +177,7 @@ function Topbar({open, setOpen}) {
         {
           command: 'Change title to *',
           callback: (title) => {
+            setEditChart({...editChart,"title":title})
             setTitle(title);
             if(isChartOpen) {
               setValue(`Title changed to ${title}`);
@@ -195,6 +190,7 @@ function Topbar({open, setOpen}) {
         {
           command: 'Change x label to *',
           callback: (xLabel) => {
+            setEditChart({...editChart,"x_axis":xLabel})
             setXLabel(xLabel);
             if(isChartOpen) {
               setValue(`X label changed to ${xLabel}`);
@@ -207,6 +203,7 @@ function Topbar({open, setOpen}) {
         {
           command: 'Change y label to *',
           callback: (yLabel) => {
+            setEditChart({...editChart,"y_axis":yLabel})
             setYLabel(yLabel);
             if(isChartOpen) {
               setValue(`Y label changed to ${yLabel}`);
