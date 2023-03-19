@@ -8,6 +8,10 @@ function VoiceAssistant () {
   const [microphone, setMicrophone] = useState(false);
   const [chartType, setChartType] = useState('');
   const [cols, setCols] = useState([]);
+  const [title, setTitle] = useState('');
+  const [isChartOpen, setIsChartOpen] = useState(false);
+  const [xLabel, setXLabel] = useState('');
+  const [yLabel, setYLabel] = useState('');
 
   const commands = [
     {
@@ -28,9 +32,86 @@ function VoiceAssistant () {
         setCols([col1, col2]);
         if(chartType !== '') {
           setValue(`Creating ${chartType} chart with columns ${col1} and ${col2}`);
+          setIsChartOpen(true);
+          // call api to create chart (get chart id)
+          // redirect to individual chart screen (using chart id)
+          // maybe give alert about edit options
         }
         else {
           setValue('Please specify which chart you want to create');
+        }
+      }
+    },
+    {
+      command: 'Add title *',
+      callback: (title) => {
+        setTitle(title);
+        if(isChartOpen) {
+          setValue(`Title ${title} added`);
+        }
+        else {
+          setValue('Please select your desired chart first');
+        }
+      }
+    },
+    {
+      command: 'Change title to *',
+      callback: (title) => {
+        setTitle(title);
+        if(isChartOpen) {
+          setValue(`Title changed to ${title}`);
+        }
+        else {
+          setValue('Please select your desired chart first');
+        }
+      }
+    },
+    {
+      command: 'Change x label to *',
+      callback: (xLabel) => {
+        setXLabel(xLabel);
+        if(isChartOpen) {
+          setValue(`X label changed to ${xLabel}`);
+        }
+        else {
+          setValue('Please select your desired chart first');
+        }
+      }
+    },
+    {
+      command: 'Change y label to *',
+      callback: (yLabel) => {
+        setYLabel(yLabel);
+        if(isChartOpen) {
+          setValue(`Y label changed to ${yLabel}`);
+        }
+        else {
+          setValue('Please select your desired chart first');
+        }
+      }
+    },
+    {
+      command: 'Add legend',
+      callback: () => {
+        if(isChartOpen) {
+          setValue(`Legend added`);
+          // call api to add legend
+        }
+        else {
+          setValue('Please select your desired chart first');
+        }
+      }
+    },
+    {
+      command: 'Delete the chart',
+      callback: () => {
+        if(isChartOpen) {
+          setValue(`Chart is deleted`);
+          // call api to delete chart
+          // redirect to dashboard page
+        }
+        else {
+          setValue('Please select your desired chart first');
         }
       }
     },
@@ -42,20 +123,6 @@ function VoiceAssistant () {
     //   command: ['Hello', 'Hi'],
     //   callback: ({ command }) => setValue(`Hi there! You said: "${command}"`),
     //   matchInterim: true
-    // },
-    // {
-    //   command: 'Beijing',
-    //   callback: (command, spokenPhrase, similarityRatio) => setValue(`${command} and ${spokenPhrase} are ${similarityRatio * 100}% similar`),
-    //   // If the spokenPhrase is "Benji", the message would be "Beijing and Benji are 40% similar"
-    //   isFuzzyMatch: true,
-    //   fuzzyMatchingThreshold: 0.2
-    // },
-    // {
-    //   command: ['eat', 'sleep', 'leave'],
-    //   callback: (command) => setValue(`Best matching command: ${command}`),
-    //   isFuzzyMatch: true,
-    //   fuzzyMatchingThreshold: 0.2,
-    //   bestMatchOnly: true
     // },
     {
       command: 'clear',
