@@ -47,14 +47,14 @@ const Title = styled.p`
 
 const Created = styled.p`
     position: absolute;
-    width: 130px;
+    width: 160px;
     height: 20px;
     left: 20px;
     top: 196px;
     font-family: 'Inter';
     font-style: italic;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 22px;
     /* identical to box height, or 143% */
     display: flex;

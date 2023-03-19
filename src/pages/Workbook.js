@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { ColorModeContext, tokens } from "../theme";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -19,6 +19,8 @@ const workbooks = [{id:1, name: "Workbook 1", created: "08/24"},
                     {id:3, name: "Workbook 3", created: "10/24"}]
 
 const Workbook = () => {
+
+    const [workspaces, setWorkspaces] = useState([])
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
@@ -47,23 +49,38 @@ const Workbook = () => {
         setValue(newValue);
     };
 
+    
+    useEffect(() => {
+        fetchWorkspace();
+      }, []);
+
+    const fetchWorkspace = async () => {
+        const response = await fetch(
+          `http://127.0.0.1:8000/workspace`
+        );
+        const data = await response.json();
+        setWorkspaces(data);
+        console.log(data)
+      };
+    
+
     return (
 
         <>  
-            <Box sx={{display:"flex"}}>
+            <Box >
                 <AppBar position="fixed" sx={{boxShadow: "none"}}>
                     <Top/>
                     <Divider />
                 </AppBar>
             
-                <Box>
+                <Box sx={{display:"flex"}}>
                     <Grid container spacing={1}>
-                        <Grid item md={10} lg={10}>
+                        <Grid item xs={10}>
                             <Box sx={{marginLeft:"30px"}}>
                                 <p style={{fontFamily:"Inter", color:`${colors.greytext}`, marginBottom:"24px"}}>Your Workbooks</p>
                             
                                 <Box sx={{display: "flex"}}>
-                                    
+    
                                     <Grid
                                     container
                                     rowSpacing={4} 
@@ -72,11 +89,11 @@ const Workbook = () => {
                                     justifyContent="left"
                                     alignItems="flex-start"
                                     >
-                                        {workbooks.map((book)=>(
+                                        {workspaces.map((book)=>(
                                             <Grid item>
-                                                <WorkbookCard cardTitle = {book.name} createdOn = {book.created}/>
+                                                <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/>
                                             </Grid >
-                                            
+                
                                         ))}
                                             <Grid item>
                                                 <NewWorkbookCard/>
@@ -86,9 +103,8 @@ const Workbook = () => {
                             </Box>
                             
                         </Grid>
-                        <Divider orientation="vertical" flexItem sx={{mt:"-30px", mb: "-36px"}}/>
-                        <Grid item md={2} lg={2}>
-                            
+                        <Divider orientation="vertical" flexItem sx={{height: "100vh", mt:"-36px", mb:"-36px"}}/> 
+                        <Grid item xs={2} >
                             
                         </Grid>
                     </Grid>
