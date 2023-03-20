@@ -13,7 +13,8 @@ function Database() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const location = useLocation();
-  const currentID = location.pathname.split("/")[2];
+  console.log(location.pathname.split("/"))
+  const currentID = location.pathname.split("/")[4];
 
   const [chartData, setChartData] =  useState([])
   const [columnNames, setColumnNames] = useState([]);

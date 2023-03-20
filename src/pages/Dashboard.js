@@ -11,16 +11,17 @@ function Dashboard () {
     const [dashboard, setDashboard] =  useState([])
     const [chartlist, setChartlist] = useState([])
 
-    const { id } = useParams();
+    const { did } = useParams();
+    console.log(did)
 
 
     useEffect(() => {
         fetchDashboards();
-      }, [id]);
+      }, [did]);
 
     const fetchDashboards = async () => {
         const response = await fetch(
-          `http://127.0.0.1:8000/dashboard/${id}`
+          `http://127.0.0.1:8000/dashboard/${did}`
         );
         const data = await response.json();
         setDashboard(data.response[0]);

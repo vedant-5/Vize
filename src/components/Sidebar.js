@@ -92,7 +92,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function Sidebar({open, setOpen}) {
+export default function Sidebar({open, setOpen, clickedWorkspace}) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -134,7 +134,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDatabase(data[0]);
-    //console.log(data)
+    console.log(data)
   };
 
   const fetchChart = async () => {
@@ -192,7 +192,7 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            <Item title={database.name} to={`workspace/:wid/database/${database.name}`} selected={selected} setSelected={setSelected} />
+            <Item title={database.name} to={`workspace/${clickedWorkspace}/database/${database.id}`} selected={selected} setSelected={setSelected} />
             {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))} */}
@@ -216,7 +216,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {dashboards.map((arr, index) => (
-              <Item title={arr.name} index={databaselist.length + index} to={`workspace/:wid/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
+              <Item title={arr.name} index={databaselist.length + index} to={`workspace/${clickedWorkspace}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -238,7 +238,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {charts.map((chart, index) => (
-              <Item title={chart.title} index={chart.chart_id} to={`workspace/:wid/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
+              <Item title={chart.title} index={chart.chart_id} to={`workspace/${clickedWorkspace}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>

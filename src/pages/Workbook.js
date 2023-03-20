@@ -89,11 +89,12 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                                     alignItems="flex-start"
                                     >
                                         {workspaces.map((book)=>(
-                                            <Link to={`/workspace/${book.workspace}/dashboard/${book.dashboards[0]}`}>
+                                            
                                                 <Grid item id={book.workspace} onClick={(e)=>{setClickedWorkspace(e.currentTarget.id)}}>
-                                                    <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/>
+                                                    <Link to={`/workspace/${book.workspace}/dashboard/${book.dashboards[0]}`}>
+                                                    <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/></Link>
                                                 </Grid>
-                                            </Link>
+                                          
                                         ))}
                                             <Grid item>
                                                 <NewWorkbookCard/>

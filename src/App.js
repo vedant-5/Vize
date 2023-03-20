@@ -47,7 +47,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
             <div className="app">
-              {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} />)}
+              {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace}/>)}
               <Main className='content' open={open}>
               {/* <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
                 <Topbar open={open} setOpen={setOpen} />
