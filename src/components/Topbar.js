@@ -39,6 +39,11 @@ function Topbar({open, setOpen}) {
     const [chartID, setChartID] =  useState('')
     const [editChart, setEditChart] = useState({})
     const [chartList, setChartList] = useState([])
+    const [dashboardName, setDashboardName] =  useState('')
+    const [workspaceID, setWorkspaceID] = useState('')
+    const [dashboardID, setDashboardID] = useState('')
+    const [workspaceData, setWorkspaceData] = useState({})
+    const [dashboardData, setDashboardData] =  useState({})
 
     const handleMicrophone = () => {
         setMicrophone(!microphone);
@@ -85,6 +90,74 @@ function Topbar({open, setOpen}) {
             // ...
             console.log(response);
             setChartID(response.chart_id)
+            
+            return response.json();
+          }).then(function (body) {
+            // ...
+            console.log(body);
+          }).catch(err => {
+              console.log(err)
+          })
+      }
+
+      const getDashboardList = async () => {
+        const response = await fetch( 
+          `http://127.0.0.1:8000/dashboard`
+        );
+        const data = await response.json();
+        console.log(dashboardName)
+        const id = data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName)[0].dashboard
+        setDashboardID(id)
+        console.log(data.response,id)
+        getDashboard(id)
+        return data.response
+      }
+
+      const getDashboard = async (id) => {
+        console.log(id)
+        const response = await fetch( 
+          `http://127.0.0.1:8000/dashboard/${id}/`
+        );
+        const data = await response.json()
+        setDashboardData(data.response[0])
+        const workspace_id = data.response[0].workspace_name.workspace
+        setWorkspaceData =  data.response[0].workspace_name
+        setWorkspaceID(workspace_id)
+        console.log(workspace_id, data.response)
+        return data.response
+      }
+
+      const updateDashboard =  async (data) => {
+        data = dashboardData
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      };
+      fetch(`http://127.0.0.1:8000/dashboard/${dashboardID}/`, requestOptions)
+          .then(function (response) {
+            // ...
+            console.log(response);
+            return response.json();
+          }).then(function (body) {
+            // ...
+            console.log(body);
+          }).catch(err => {
+              console.log(err)
+          })
+      }
+
+      const updateWorkspace =  async (data) => {
+        data = workspaceData
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      };
+      fetch(`http://127.0.0.1:8000/workspace/${workspaceID}/`, requestOptions)
+          .then(function (response) {
+            // ...
+            console.log(response);
             return response.json();
           }).then(function (body) {
             // ...
@@ -123,8 +196,18 @@ function Topbar({open, setOpen}) {
           command: 'create * chart',
           callback: (chart) => {
             setChartType(chart); 
-            setValue(`Select variables for the ${chart} chart`);
+            setValue(`Select which dashboard you want to add the chart to`)
+            // setValue(`Select variables for the ${chart} chart`);
             console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'select dashboard *',
+          callback: (dashboard) => {
+            setDashboardName(dashboard); 
+            //setValue(`Specify which dashboard you want to add the chart to`)
+            setValue(`Select variables for the ${chartType} chart`);
+            //console.log(chartType, value);
           } //create handle function and call it here to make charts
         },
         // {
@@ -263,9 +346,15 @@ function Topbar({open, setOpen}) {
         useEffect(() => {
           speak({text: value})
         }, [value])
+
+        useEffect(()=>{
+          getDashboardList()
+        },[dashboardName])
         
         useEffect(() => {
           createChart()
+          //updateDashboard()
+          //updateWorkspace()
         }, [cols])
       
       

@@ -80,7 +80,6 @@ const Workbook = () => {
                                 <p style={{fontFamily:"Inter", color:`${colors.greytext}`, marginBottom:"24px"}}>Your Workbooks</p>
                             
                                 <Box sx={{display: "flex"}}>
-    
                                     <Grid
                                     container
                                     rowSpacing={4} 

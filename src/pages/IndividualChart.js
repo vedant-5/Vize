@@ -61,7 +61,7 @@ function IndividualChart ({chart_id}) {
         const data = await response.json();
         setChart(data.response[0]);
         const type = data.response[0].chart_type.split(" ")[0]
-        console.log(type)
+        console.log(data.response[0])
         setChartType(type)
         console.log(data.response[0].title)
       };
