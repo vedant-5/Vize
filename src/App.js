@@ -21,6 +21,7 @@ import Topbar from "./components/Topbar";
 function App() {
   const [theme, colorMode] = useMode();
   const [open, setOpen] = useState(true);
+  const [clickedWorkspace, setClickedWorkspace] = useState();
 
   const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -55,11 +56,11 @@ function App() {
                 <Routes>
                   {/* <Route component={Login} path="/login" />
                   <Route component={Register} path="/register" /> */}
-                  <Route path="/" element={<Workbook/>}/>
+                  <Route path="/" element={<Workbook clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace} />}/>
                   <Route exact path="/voice" element={<VoiceAssistant/>}/>
-                  <Route path="/dashboard/:id" element={<Dashboard/>}/>
-                  <Route path="/database/:text" element={<Database/>}/>
-                  <Route path="/chart/:text" element={<IndividualChart/>}/>
+                  <Route path="workspace/:wid/dashboard/:did" element={<Dashboard/>}/>
+                  <Route path="workspace/:wid/database/:text" element={<Database/>}/>
+                  <Route path="workspace/:wid/chart/:text" element={<IndividualChart/>}/>
                 </Routes>
               </Main>
             </div>

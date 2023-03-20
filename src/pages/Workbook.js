@@ -5,7 +5,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { AppBar, Divider, Grid } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
-
+import { Link } from 'react-router-dom';
 import TopbarHome from '../components/TopbarHome';
 import Topbar from '../components/Topbar';
 import WorkbookCard from '../components/WorkbookCard';
@@ -14,11 +14,11 @@ import NewWorkbookCard from '../components/NewWorkbookCard';
 
 const Top = TopbarHome
 
-const workbooks = [{id:1, name: "Workbook 1", created: "08/24"}, 
-                    {id:2, name: "Workbook 2", created: "09/24"}, 
-                    {id:3, name: "Workbook 3", created: "10/24"}]
+// const workbooks = [{id:1, name: "Workbook 1", created: "08/24"}, 
+//                     {id:2, name: "Workbook 2", created: "09/24"}, 
+//                     {id:3, name: "Workbook 3", created: "10/24"}]
 
-const Workbook = () => {
+const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
 
     const [workspaces, setWorkspaces] = useState([])
     const theme = useTheme();
@@ -59,14 +59,14 @@ const Workbook = () => {
           `http://127.0.0.1:8000/workspace`
         );
         const data = await response.json();
+        // const w_id = data
         setWorkspaces(data);
         console.log(data)
       };
     
 
     return (
-
-        <>  
+        <>
             <Box >
                 <AppBar position="fixed" sx={{boxShadow: "none"}}>
                     <Top/>
@@ -82,17 +82,18 @@ const Workbook = () => {
                                 <Box sx={{display: "flex"}}>
                                     <Grid
                                     container
-                                    rowSpacing={4} 
+                                    rowSpacing={4}
                                     columnSpacing={4}
                                     direction="row"
                                     justifyContent="left"
                                     alignItems="flex-start"
                                     >
                                         {workspaces.map((book)=>(
-                                            <Grid item>
-                                                <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/>
-                                            </Grid >
-                
+                                            <Link to={`/workspace/${book.workspace}/dashboard/${book.dashboards[0]}`}>
+                                                <Grid item id={book.workspace} onClick={(e)=>{setClickedWorkspace(e.currentTarget.id)}}>
+                                                    <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/>
+                                                </Grid>
+                                            </Link>
                                         ))}
                                             <Grid item>
                                                 <NewWorkbookCard/>

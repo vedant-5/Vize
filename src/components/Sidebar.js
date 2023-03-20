@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Topbar from './Topbar';
-import { MenuItem, MenuList, Paper } from '@mui/material';
+import { Button, MenuItem, MenuList, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Database from '../pages/Database';
 import Dashboard from '../pages/Dashboard';
@@ -174,6 +174,7 @@ const fetchDashboards = async () => {
           {/* </IconButton> */}
           <Typography>Home</Typography>
         </DrawerHeader>
+        <Button>+ New Dashboard</Button>
         <Paper 
           sx={{
             backgroundColor: `${colors.sidebarlight}`,
@@ -191,7 +192,7 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            <Item title={database.name} to={`/database/${database.id}`} selected={selected} setSelected={setSelected} />
+            <Item title={database.name} to={`workspace/:wid/database/${database.name}`} selected={selected} setSelected={setSelected} />
             {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))} */}
@@ -215,7 +216,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {dashboards.map((arr, index) => (
-              <Item title={arr.name} index={databaselist.length + index} to={`/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
+              <Item title={arr.name} index={databaselist.length + index} to={`workspace/:wid/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -237,7 +238,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {charts.map((chart, index) => (
-              <Item title={chart.title} index={chart.chart_id} to={`/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
+              <Item title={chart.title} index={chart.chart_id} to={`workspace/:wid/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
