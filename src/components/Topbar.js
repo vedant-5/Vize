@@ -21,7 +21,7 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-function Topbar({open, setOpen}) {
+function Topbar({open, setOpen, clickedWorkspace}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
@@ -70,6 +70,8 @@ function Topbar({open, setOpen}) {
       };
     
       const createChart = async () => {
+        if(clickedWorkspace) {
+          console.log(clickedWorkspace, dashboardID)
         const data = {
           "title": cols[0] + " vs " + cols[1],
           "x_axis": cols[0],
@@ -77,9 +79,9 @@ function Topbar({open, setOpen}) {
           "chart_type": chartType,
           "options": "Legend, title, color",
           "summary": null,
-          "workspace_name": 3,
-          "dashboard_name": 6,
-      }
+          "workspace_name": clickedWorkspace,
+          "dashboard_name": dashboardID,
+        }
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -88,9 +90,40 @@ function Topbar({open, setOpen}) {
       fetch('http://127.0.0.1:8000/chart/', requestOptions)
           .then(function (response) {
             // ...
-            console.log(response);
+            console.log(response.chart_id);
             setChartID(response.chart_id)
             
+            return response.json();
+          }).then(function (body) {
+            // ...
+            const dashboard_data =  {...dashboardData, "charts":dashboardData.charts + `,${body.chart_id}`}
+            const workspace_data = {...workspaceData, "charts":workspaceData.charts + `,${body.chart_id}`}
+            updateDashboard(dashboard_data)
+            updateWorkspace(workspace_data)
+            console.log(body);
+          }).catch(err => {
+              console.log(err)
+          })
+        }
+        else {
+          console.log("not happening")
+        }
+        
+      }
+
+
+      const updateDashboard =  async (data) => {
+        console.log(data)
+        data = data
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      };
+      fetch(`http://127.0.0.1:8000/dashboard/${dashboardID}/`, requestOptions)
+          .then(function (response) {
+            // ...
+            console.log(response);
             return response.json();
           }).then(function (body) {
             // ...
@@ -99,6 +132,28 @@ function Topbar({open, setOpen}) {
               console.log(err)
           })
       }
+
+      const updateWorkspace =  async (data) => {
+        console.log(data)
+        data = data
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      };
+      fetch(`http://127.0.0.1:8000/workspace/${clickedWorkspace}/`, requestOptions)
+          .then(function (response) {
+            // ...
+            console.log(response);
+            return response.json();
+          }).then(function (body) {
+            // ...
+            console.log(body);
+          }).catch(err => {
+              console.log(err)
+          })
+      }
+    
 
       const getDashboardList = async () => {
         const response = await fetch( 
@@ -121,52 +176,14 @@ function Topbar({open, setOpen}) {
         const data = await response.json()
         setDashboardData(data.response[0])
         const workspace_id = data.response[0].workspace_name.workspace
-        setWorkspaceData =  data.response[0].workspace_name
+        const workspace_data =  data.response[0].workspace_name
+        setWorkspaceData(workspace_data)
         setWorkspaceID(workspace_id)
-        console.log(workspace_id, data.response)
+        console.log(workspace_data, data.response)
         return data.response
       }
 
-      const updateDashboard =  async (data) => {
-        data = dashboardData
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-      };
-      fetch(`http://127.0.0.1:8000/dashboard/${dashboardID}/`, requestOptions)
-          .then(function (response) {
-            // ...
-            console.log(response);
-            return response.json();
-          }).then(function (body) {
-            // ...
-            console.log(body);
-          }).catch(err => {
-              console.log(err)
-          })
-      }
-
-      const updateWorkspace =  async (data) => {
-        data = workspaceData
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-      };
-      fetch(`http://127.0.0.1:8000/workspace/${workspaceID}/`, requestOptions)
-          .then(function (response) {
-            // ...
-            console.log(response);
-            return response.json();
-          }).then(function (body) {
-            // ...
-            console.log(body);
-          }).catch(err => {
-              console.log(err)
-          })
-      }
-    
+      
     
       const editChartPost = async () => {
         const data = editChart

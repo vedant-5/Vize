@@ -150,7 +150,7 @@ const fetchDashboards = async () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
-        <Topbar open={open} setOpen={setOpen} />
+        <Topbar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace} />
           <Divider />
       </AppBar>
       <Drawer
