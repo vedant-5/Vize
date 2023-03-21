@@ -64,7 +64,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
           `http://127.0.0.1:8000/chart`
         );
         const data = await response.json();
-        console.log(data.response)
+        //console.log(data.response)
         setChartList(data.response)
         return data.response
       };
@@ -90,9 +90,6 @@ function Topbar({open, setOpen, clickedWorkspace}) {
       fetch('http://127.0.0.1:8000/chart/', requestOptions)
           .then(function (response) {
             // ...
-            console.log(response.chart_id);
-            setChartID(response.chart_id)
-            
             return response.json();
           }).then(function (body) {
             // ...
@@ -112,13 +109,13 @@ function Topbar({open, setOpen, clickedWorkspace}) {
       }
 
 
-      const updateDashboard =  async (data) => {
-        console.log(data)
-        data = data
+      const updateDashboard =  async (dashboard_data) => {
+        console.log(dashboard_data)
+        const data = dashboard_data
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          body: JSON.stringify(dashboard_data),
       };
       fetch(`http://127.0.0.1:8000/dashboard/${dashboardID}/`, requestOptions)
           .then(function (response) {
@@ -135,7 +132,6 @@ function Topbar({open, setOpen, clickedWorkspace}) {
 
       const updateWorkspace =  async (data) => {
         console.log(data)
-        data = data
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -160,16 +156,16 @@ function Topbar({open, setOpen, clickedWorkspace}) {
           `http://127.0.0.1:8000/dashboard`
         );
         const data = await response.json();
-        console.log(dashboardName)
+        //console.log(dashboardName)
         const id = data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName)[0].dashboard
         setDashboardID(id)
-        console.log(data.response,id)
+        //console.log(data.response,id)
         getDashboard(id)
         return data.response
       }
 
       const getDashboard = async (id) => {
-        console.log(id)
+        //console.log(id)
         const response = await fetch( 
           `http://127.0.0.1:8000/dashboard/${id}/`
         );

@@ -12,7 +12,6 @@ function Dashboard () {
     const [chartlist, setChartlist] = useState([])
 
     const { did } = useParams();
-    console.log(did)
 
 
     useEffect(() => {
@@ -26,7 +25,7 @@ function Dashboard () {
         const data = await response.json();
         setDashboard(data.response[0]);
         setChartlist(data.response[0].charts.split(","))
-        console.log(data.response[0].charts.split(","))
+        //console.log(data.response[0].charts.split(","))
       };
     
     

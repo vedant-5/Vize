@@ -125,7 +125,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDashboards(data.response);
-    console.log(data.response)
+    //console.log(data.response)
   };
 
   const fetchDatabase = async () => {
@@ -134,7 +134,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDatabase(data[0]);
-    console.log(data)
+    //console.log(data)
   };
 
   const fetchChart = async () => {
