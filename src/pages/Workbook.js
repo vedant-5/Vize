@@ -91,7 +91,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                                         {workspaces.map((book)=>(
                                             
                                                 <Grid item id={book.workspace} onClick={(e)=>{setClickedWorkspace(e.currentTarget.id)}}>
-                                                    <Link to={`/workspace/${book.workspace}/dashboard/${book.dashboards[0]}`}>
+                                                    <Link to={`/workspace/${book.workspace}/database/${book.database}`}>
                                                     <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/></Link>
                                                 </Grid>
                                           

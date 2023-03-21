@@ -125,7 +125,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDashboards(data.response);
-    console.log(data.response)
+    //console.log(data.response)
   };
 
   const fetchDatabase = async () => {
@@ -134,7 +134,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDatabase(data[0]);
-    console.log(data)
+    //console.log(data)
   };
 
   const fetchChart = async () => {
@@ -150,7 +150,7 @@ const fetchDashboards = async () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
-        <Topbar open={open} setOpen={setOpen} />
+        <Topbar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace} />
           <Divider />
       </AppBar>
       <Drawer
