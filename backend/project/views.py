@@ -187,10 +187,26 @@ def DatabaseViewSet(request):
 class WorkspacePostViewSet(APIView):
     # workspace = Workspace
     # serializer_class = WorkspaceSerializer(workspace, many=True)
+
+    def get(self,request, id):
+        item = Workspace.objects.filter(workspace = id)
+        # item = Dashboard.objects.get(pk = id)
+        serializer_class = WorkspaceSerializer(item, many= True)
+        return Response({'response': serializer_class.data}, status=status.HTTP_200_OK)
+
     def post(self, request, id):
-        workspace_data = JSONParser().parse(request)
-        workspace_serializer = WorkspaceSerializer(data = workspace_data)
-        print(workspace_data, request,id)
+        # workspace_data = JSONParser().parse(request)
+        # workspace_serializer = WorkspaceSerializer(data = workspace_data)
+        # print(workspace_data, request,id)
+        item = Workspace.objects.get(pk=id)
+        data = WorkspaceSerializer(instance=item, data=request.data)
+
+        if data.is_valid():
+            data.save()
+            print(data.data)
+            return Response({'response': data.data}, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse(data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # class DashboardViewSet(viewsets.ModelViewSet):
 #     queryset = Dashboard.objects.all()
@@ -240,13 +256,17 @@ def DashboardUpdateViewSet(request, id):
 
     if request.method == "POST":
         item = Dashboard.objects.get(pk=id)
+        print(item)
+        # dashboard_data = JSONParser().parse(request.data)
+        # print(dashboard_data)
         data = DashboardSerializer(instance=item, data=request.data)
 
         if data.is_valid():
             data.save()
-            return Response(data.data)
+            print(data)
+            return Response({'response': data.data}, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # class DashboardUpdateViewSet(APIView):
 #     model = Dashboard
@@ -273,9 +293,7 @@ def ChartViewSet(request):
         # dashboard_serializer =  DashboardSerializer(data = dashboard_data)
         
         if chart_serializer.is_valid():
-            print(chart_serializer)
             chart_serializer.save()
-            print(chart_data)
             return JsonResponse(chart_serializer.data, status=status.HTTP_201_CREATED) 
         return JsonResponse(chart_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
