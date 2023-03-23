@@ -67,14 +67,16 @@ function IndividualChart ({chart_id}) {
 
     const fetchChart = async () => {
         const response = await fetch( 
+           chart_id ? `http://127.0.0.1:8000/chart/${chart_id}` : 
           `http://127.0.0.1:8000/chart/${text}`
         );
         const data = await response.json();
         setChart(data.response[0]);
+        console.log(data.response[0])
         const type = data.response[0].chart_type.split(" ")[0]
         const x_label = data.response[0].x_axis
         const y_label = data.response[0].y_axis
-        setXLabel(x_label)
+        setXLabel(data.response[0].x_label)
         setYLabel(y_label)
         setChartType(type)
       };
