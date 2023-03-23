@@ -1,13 +1,13 @@
-import { Box, Paper } from "@mui/material";
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Button, Divider, List, ListItem, ListItemText, ListSubheader } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import IndividualChart from "./IndividualChart";
 import { useParams } from "react-router-dom";
 import ChartDisplay from "../components/ChartDisplay";
+import Grid from "@mui/material/Unstable_Grid2";
 
 function Dashboard () {
     
-    const chartType = ['pie', 'bar', 'line', 'scatter'];
+    // const chartType = ['pie', 'bar', 'line', 'scatter'];
     const [dashboard, setDashboard] =  useState([])
     const [chartlist, setChartlist] = useState([])
 
@@ -16,6 +16,7 @@ function Dashboard () {
 
     useEffect(() => {
         fetchDashboards();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [did]);
 
     const fetchDashboards = async () => {
@@ -38,25 +39,49 @@ function Dashboard () {
     //     // color: theme.palette.text.secondary,
     // }));
 
+
+    const commandList = ["commnd one", "commdn two", "iuytfgh", "pwppwuerke", "heleleoeodnniuytrfgghghhjhgdjkd"];
+
     return(
-        <Box>
-            {/* <Grid container spacing={2}> */}
-              {/* {chartType.map((type) => ( */}
-               {/* <Grid xs={6}> */}
-                    {/* <Item> */}
-                        {/* <IndividualChart /> */}
-                    {/* </Item> */}
-                {/* </Grid> */}
-               {/* ))} */}
-            {/* </Grid> */}
-            <h3>{dashboard?.name}</h3>
-            <p>{dashboard?.text}</p>
-            <p>Some early treatises—such as those of Cicero on the pleasantness of old age or on the art of “divination,” Seneca on anger or clemency, and Plutarch on the passing of oracles—presage to a certain degree the form and tone of the essay, but not until the late 16th century was the flexible and deliberately nonchalant and versatile form of the essay perfected by the French writer Michel de Montaigne. Choosing the name essai to emphasize that his compositions were attempts or endeavours, a groping toward the expression of his personal thoughts and experiences, Montaigne used the essay as a means of self-discovery. His Essais, published in their final form in 1588, are still considered among the finest of their kind. Later writers who most nearly recall the charm of Montaigne include, in England, Robert Burton, though his whimsicality is more erudite, Sir Thomas Browne, and Laurence Sterne, and in France, with more self-consciousness and pose, André Gide and Jean Cocteau.</p>
-            <section>
-              {chartlist.map((chart)=>(
-                <ChartDisplay chart_id = {chart}/>
+        <Box sx={{display:"flex", marginRight: "-30px"}}>
+          <Grid container spacing={1} xs={10} sx={{display: "flex", flexDirection: "column"}} >
+            <h3>{dashboard.name}</h3>
+            {/* <p>{dashboard.text}</p> */}
+            <Grid container spacing={2}>
+              {chartlist.map((chart, index)=>(
+                <Grid item key={index}>
+                  <IndividualChart chart_id = {chart}/>
+                </Grid>
               ))}
-            </section>
+            </Grid>
+          </Grid>
+          <Divider orientation="vertical" flexItem sx={{height: "100vh", margin: "-94px 0"}}/> 
+          <Grid xs={2} sx={{padding: "0 20px", width: "220px"}}>
+            <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>+ Add Chart</Button>
+            <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginTop: "40px"}}>+ Add Text</Button>
+            <Box>
+              <List
+                sx={{
+                  width: '100%',
+                  padding: '16px 0',
+                  marginTop: '40px',
+                  border: '0.8px solid #A8C5DA',
+                  borderRadius: '10px',
+                  position: 'relative',
+                  overflow: 'auto',
+                  maxHeight: 300,
+                  '& ul': { padding: 0 },
+                }}
+              >
+                <ListSubheader sx={{textTransform: "uppercase", lineHeight: "160%", fontWeight: "600", fontSize: "0.85rem", color: "rgba(0,0,0,0.3)", marginBottom: "8px"}}>Voice Commands</ListSubheader>
+                  {commandList.map((item, index) => (
+                    <ListItem key={index} sx={{padding: "5px 16px"}}>
+                      <span style={{fontSize: "0.9rem", wordWrap: "break-word", overflow: "hidden"}}>{item}</span>
+                    </ListItem>
+                  ))}
+                </List>
+            </Box>
+          </Grid>
         </Box>
     )
 }

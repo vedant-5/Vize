@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Box } from "@mui/material";
 import { ColorModeContext, tokens } from "../theme";
 import { useState, useContext, useEffect } from "react";
-import {  ArcElement, Tooltip, Legend } from 'chart.js';
+import { ArcElement, Tooltip, Legend } from 'chart.js';
 import {Chart as ChartJS} from 'chart.js/auto';
 import { Chart } from "react-chartjs-2";
 // import { Chart as ChartJS, registerables } from 'chart.js';
@@ -99,11 +99,11 @@ function IndividualChart ({chart_id}) {
         console.log(data,xLabel, yLabel)
         setChartData(
             {
-                labels: data.map((data) => data.Batch), 
+                labels: data.map((data) => data.Location), // x-axis
                 datasets: [
                     {
                         label: "User Age",
-                        data: data.map((data) => data.Physics),
+                        data: data.map((data) => data.id), // y-axis
                         backgroundColor: [
                             "rgba(75,192,192,1)",
                             "#ecf0f1",

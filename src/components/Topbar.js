@@ -1,7 +1,7 @@
 import React from "react";
 import {useContext, useState, useEffect} from "react";
 // import { useLocation } from "react-router-dom";
-import {Box, IconButton, useTheme, Link, Alert} from "@mui/material";
+import {Box, IconButton, useTheme, Alert} from "@mui/material";
 import {ColorModeContext, tokens} from "../theme";
 // import {InputBase} from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -18,9 +18,9 @@ import { useParams } from "react-router-dom";
 // import Button from '@mui/material/Button';
 
 
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+// function capitalizeFirstLetter(string) {
+//     return string.charAt(0).toUpperCase() + string.slice(1);
+//   }
 
 function Topbar({open, setOpen, clickedWorkspace}) {
     const theme = useTheme();
