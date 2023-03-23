@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import {useContext, useState, useEffect} from "react";
@@ -11,9 +12,9 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Topbar from './Topbar';
 import { Button, MenuItem, MenuList, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Database from '../pages/Database';
-import Dashboard from '../pages/Dashboard';
-import IndividualChart from '../pages/IndividualChart';
+// import Database from '../pages/Database';
+// import Dashboard from '../pages/Dashboard';
+// import IndividualChart from '../pages/IndividualChart';
 
 const Item = ({title, index, to, selected, setSelected}) => {
   const theme = useTheme();
@@ -33,7 +34,7 @@ const Item = ({title, index, to, selected, setSelected}) => {
             }}
             selected={index === selected} 
             onClick={() => {setSelected(index);}}>
-            <Typography variant='body2'>{title}</Typography>
+            <Typography variant='body2' sx={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{title}</Typography>
           </MenuItem>
         </Link>
     //   </MenuList>
@@ -41,9 +42,9 @@ const Item = ({title, index, to, selected, setSelected}) => {
   )
 }
 
-const databaselist = ['one'];
-const dashboardlist = ['Inbox', 'Starred', 'Send email', 'Drafts'];
-const chartlist = ['Inbox', 'Hello', 'Send email'];
+// const databaselist = ['one'];
+// const dashboardlist = ['Inbox', 'Starred', 'Send email', 'Drafts'];
+// const chartlist = ['Inbox', 'Hello', 'Send email'];
 
 const drawerWidth = 200;
 
@@ -97,7 +98,7 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   // const [open, setOpen] = useState(true);
-  const [selected, setSelected] = useState(1);
+  const [selected, setSelected] = useState(0);
   const [dashboards, setDashboards] = useState([])
   const [database, setDatabase] = useState('')
   const [charts, setCharts] =  useState([])
@@ -125,7 +126,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDashboards(data.response);
-    //console.log(data.response)
+    console.log(dashboards, data.response);
   };
 
   const fetchDatabase = async () => {
@@ -174,7 +175,6 @@ const fetchDashboards = async () => {
           {/* </IconButton> */}
           <Typography>Home</Typography>
         </DrawerHeader>
-        <Button>+ New Dashboard</Button>
         <Paper 
           sx={{
             backgroundColor: `${colors.sidebarlight}`,
@@ -182,6 +182,7 @@ const fetchDashboards = async () => {
             boxShadow: 'none',
             padding: '30px 16px 0px 16px'
           }} >
+          <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginBottom: "28px"}}>+ New Dashboard</Button>
           <Typography variant='button'
             sx={{
               textTransform: 'uppercase',
@@ -192,7 +193,7 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            <Item title={database.name} to={`workspace/${clickedWorkspace}/database/${database.id}`} selected={selected} setSelected={setSelected} />
+            <Item title={database.name} index={0} to={`workspace/${clickedWorkspace}/database/${database.id}`} selected={selected} setSelected={setSelected} />
             {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))} */}
@@ -216,7 +217,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {dashboards.map((arr, index) => (
-              <Item title={arr.name} index={databaselist.length + index} to={`workspace/${clickedWorkspace}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
+              <Item title={arr.name} index={1+index} to={`workspace/${clickedWorkspace}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -238,7 +239,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {charts.map((chart, index) => (
-              <Item title={chart.title} index={chart.chart_id} to={`workspace/${clickedWorkspace}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
+              <Item title={chart.title} index={dashboards.length+1+index} to={`workspace/${clickedWorkspace}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>

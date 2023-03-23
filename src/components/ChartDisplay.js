@@ -20,7 +20,7 @@ function ChartDisplay ({chart_id}) {
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
 
-    const [chart, setChart] =  useState([])
+    const [chart, setChart] =  useState([]);
     const [chartTitle, setChartTitle] = useState('something something title');
     const [chartType, setChartType] = useState('pie');
     const [chartData, setChartData] = useState({
