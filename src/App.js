@@ -27,6 +27,7 @@ function App() {
     ({ theme, open }) => ({
       flexGrow: 1,
       padding: theme.spacing(3),
+      backgroundColor: '#F9F9F9',
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -58,9 +59,9 @@ function App() {
                   <Route component={Register} path="/register" /> */}
                   <Route path="/" element={<Workbook clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace} />}/>
                   <Route exact path="/voice" element={<VoiceAssistant/>}/>
-                  <Route path="workspace/:wid/dashboard/:did" element={<Dashboard/>}/>
-                  <Route path="workspace/:wid/database/:text" element={<Database/>}/>
-                  <Route path="workspace/:wid/chart/:text" element={<IndividualChart/>}/>
+                  <Route exact path="workspace/:wid/dashboard/:did" element={<Dashboard/>}/>
+                  <Route exact path="workspace/:wid/database/:text" element={<Database/>}/>
+                  <Route exact path="workspace/:wid/chart/:text" element={<IndividualChart/>}/>
                 </Routes>
               </Main>
             </div>

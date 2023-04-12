@@ -50,7 +50,7 @@ function Dashboard () {
             <Grid container spacing={2}>
               {chartlist.map((chart, index)=>(
                 <Grid item key={index}>
-                  <IndividualChart chart_id = {chart}/>
+                  <ChartDisplay chart_id = {chart}/>
                 </Grid>
               ))}
             </Grid>

@@ -3,15 +3,15 @@ import { createTheme } from "@mui/material/styles";
 
 export const tokens = (mode) => ({
     ...(mode === "light" ? {
-        bg: '#FCFCFC',
+        bg: '#F9F9F9',
         text: '#1C1C1C',
-        chartbg: '#F7F9FB',
+        chartbg: '#FFFFF',
         sidebarlight: '#DCE2F8',
         sidebardark: '#7A88D2',
         greytext: '#9A9EAE'
     } : {
         bg: '#1C1C1C',
-        text: '#FFFFFF',
+        text: '#FEFEFE',
         chartbg: '#282828',
         sidebarlight: '#1C1C1C',
         sidebardark: '#606CAA',

@@ -169,12 +169,14 @@ const fetchDashboards = async () => {
         anchor="left"
         open={open}
       >
+        <Link reloadDocument to={"/"}>
         <DrawerHeader sx={{backgroundColor: `${colors.sidebardark}`}}>
           {/* <IconButton> */}
             <HomeRoundedIcon />
           {/* </IconButton> */}
           <Typography>Home</Typography>
         </DrawerHeader>
+        </Link>
         <Paper 
           sx={{
             backgroundColor: `${colors.sidebarlight}`,
