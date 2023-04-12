@@ -16,6 +16,60 @@ import { Link } from 'react-router-dom';
 // import Dashboard from '../pages/Dashboard';
 // import IndividualChart from '../pages/IndividualChart';
 
+import Tour from 'reactour'
+import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
+
+const disableBody = target => disableBodyScroll(target)
+const enableBody = target => enableBodyScroll(target)
+
+const displaysteps = [
+  {
+      selector: '.database',
+      content: (
+        <div>
+          <h3>View your database</h3>
+          bla bla bla bla bla bla 
+          <br />
+        </div>
+      ),
+      position: 'right',
+  },
+  {
+    selector: '.new_Dashboard',
+    content: (
+      <div>
+        <h3>Create your dashboard</h3>
+        bla bla bla bla 
+        <br />
+      </div>
+    ),
+    position: 'right',
+  },
+  {
+    selector: '.dashboard',
+    content: (
+      <div>
+        <h3>View Dashboard</h3>
+        bla braujsnfjnfkj
+        <br />
+      </div>
+    ),
+    position: 'right',
+  },
+  {
+    selector: '.chart',
+    content: (
+      <div>
+        <h3>View Charts</h3>
+        majedaar yeh duniya
+        <br />
+      </div>
+    ),
+    position: 'right',
+  },
+]
+
+
 const Item = ({title, index, to, selected, setSelected}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -102,6 +156,7 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
   const [dashboards, setDashboards] = useState([])
   const [database, setDatabase] = useState('')
   const [charts, setCharts] =  useState([])
+  const [isTourOpen, setIsTourOpen] = useState(false)
 
   // const handleDrawerOpen = () => {
   //   setOpen(true);
@@ -117,7 +172,15 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
     fetchDashboards();
     fetchChart();
     fetchDatabase();
+    setIsTourOpen(true)
   }, []);
+
+  useEffect(()=> {
+    if (dashboards & charts & database) {
+        setIsTourOpen(true)
+    }
+    console.log(dashboards)
+},[dashboards, charts,database])
 
 
 const fetchDashboards = async () => {
@@ -126,7 +189,7 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDashboards(data.response);
-    console.log(dashboards, data.response);
+    //console.log(dashboards, data.response);
   };
 
   const fetchDatabase = async () => {
@@ -176,13 +239,24 @@ const fetchDashboards = async () => {
           <Typography>Home</Typography>
         </DrawerHeader>
         <Paper 
+          className='new_Dashboard'
           sx={{
             backgroundColor: `${colors.sidebarlight}`,
             borderRadius: '0px',
             boxShadow: 'none',
             padding: '30px 16px 0px 16px'
-          }} >
+            }} >
           <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginBottom: "28px"}}>+ New Dashboard</Button>
+        </Paper>
+        <Paper 
+          className='database'
+          sx={{
+            backgroundColor: `${colors.sidebarlight}`,
+            borderRadius: '0px',
+            boxShadow: 'none',
+            padding: '20px 16px 0px 16px'
+          }} >
+          
           <Typography variant='button'
             sx={{
               textTransform: 'uppercase',
@@ -200,6 +274,7 @@ const fetchDashboards = async () => {
           </MenuList>
         </Paper>
         <Paper 
+          className='dashboard'
           sx={{
             backgroundColor: `${colors.sidebarlight}`,
             borderRadius: '0px',
@@ -222,6 +297,7 @@ const fetchDashboards = async () => {
           </MenuList>
         </Paper>
         <Paper 
+          className='chart'
           sx={{
             backgroundColor: `${colors.sidebarlight}`,
             borderRadius: '0px',
@@ -258,6 +334,21 @@ const fetchDashboards = async () => {
         )} */}
         
       {/* </Main> */}
+      {/* <Tour
+        onAfterOpen={disableBody}
+        onBeforeClose={enableBody}
+        steps={displaysteps}
+        accentColor="#5F63F2"
+        style={{width: '50vw'}}
+        badgeContent={(curr, tot) => `${curr} of ${tot}`}
+        isOpen={isTourOpen}
+        maskSpace={15}
+        rounded={10}
+        onRequestClose={() => {
+        //handleTourComplete(currentUser)
+        setIsTourOpen(false)
+        }}
+      /> */}
     </Box>
   );
 }

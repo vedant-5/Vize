@@ -55,15 +55,7 @@ function IndividualChart ({chart_id}) {
     //console.log(chart_id)
     
 
-    useEffect(() => {
-        fetchChart();
-        //fetchWorkspace()
-      }, [text]);
-
-      useEffect(() => {
-        fetchWorkspace();
-        //fetchWorkspace()
-      }, [xLabel, yLabel]);
+    
 
     const fetchChart = async () => {
         const response = await fetch( 
@@ -72,11 +64,11 @@ function IndividualChart ({chart_id}) {
         );
         const data = await response.json();
         setChart(data.response[0]);
-        console.log(data.response[0])
+        //console.log(data.response[0])
         const type = data.response[0].chart_type.split(" ")[0]
         const x_label = data.response[0].x_axis
         const y_label = data.response[0].y_axis
-        setXLabel(data.response[0].x_label)
+        setXLabel(x_label)
         setYLabel(y_label)
         setChartType(type)
       };
@@ -98,14 +90,17 @@ function IndividualChart ({chart_id}) {
           `http://127.0.0.1:8000/view-file/${id}`
         );
         const data = await response.json();
-        console.log(data,xLabel, yLabel)
+        //console.log(data)
+        const x =  xLabel ? xLabel : 'name'
+        const y = yLabel ? yLabel : 'maths'
+        //store x array and y array values in a seperate variable and write it in labels and data.
         setChartData(
             {
-                labels: data.map((data) => data.Location), // x-axis
+                labels: data.map((data) => data[x]), // x-axis
                 datasets: [
                     {
-                        label: "User Age",
-                        data: data.map((data) => data.id), // y-axis
+                        label: y,
+                        data: data.map((data) => data[y]), // y-axis
                         backgroundColor: [
                             "rgba(75,192,192,1)",
                             "#ecf0f1",
@@ -126,6 +121,17 @@ function IndividualChart ({chart_id}) {
         //setChartData(data)
         return data
       };
+
+    useEffect(() => {
+        fetchChart();
+        //fetchWorkspace()
+    }, [text]);
+
+    useEffect(() => {
+        fetchWorkspace();
+        //fetchWorkspace()
+        console.log(xLabel,yLabel)
+    }, [xLabel, yLabel]);
       
     return(
         <Box width="100%" padding="30px" backgroundColor={colors.chartbg} borderRadius="20px" >

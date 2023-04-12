@@ -11,6 +11,26 @@ import Topbar from '../components/Topbar';
 import WorkbookCard from '../components/WorkbookCard';
 import NewWorkbookCard from '../components/NewWorkbookCard';
 
+import Tour from 'reactour'
+import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
+
+const disableBody = target => disableBodyScroll(target)
+const enableBody = target => enableBodyScroll(target)
+
+const displaysteps = [
+{
+    selector: '.new_Workspace',
+    content: (
+      <div>
+        <h3>Create your own workspace</h3>
+        Click on the button to create your own workspace and import data to make dashboards
+        <br />
+      </div>
+    ),
+    position: 'right',
+}
+]
+
 
 const Top = TopbarHome
 
@@ -21,6 +41,8 @@ const Top = TopbarHome
 const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
 
     const [workspaces, setWorkspaces] = useState([])
+    const [isTourOpen, setIsTourOpen] = useState(false)
+
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
@@ -54,6 +76,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
         fetchWorkspace();
       }, []);
 
+
     const fetchWorkspace = async () => {
         const response = await fetch(
           `http://127.0.0.1:8000/workspace`
@@ -64,6 +87,11 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
         console.log(data)
       };
     
+    useEffect(()=> {
+        if (workspaces) {
+            setIsTourOpen(true)
+        }
+    },[workspaces])
 
     return (
         <>
@@ -88,16 +116,20 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                                     justifyContent="left"
                                     alignItems="flex-start"
                                     >
-                                        {workspaces.map((book)=>(
+                    
+                                            {workspaces.map((book)=>(
+                                                
+                                                    <Grid item  id={book.workspace} onClick={(e)=>{setClickedWorkspace(e.currentTarget.id)}}>
+                                                        <Link to={`/workspace/${book.workspace}/database/${book.database}`}>
+                                                        <WorkbookCard className = "workspaces" cardTitle = {book.name} createdOn = {book.created_on}/></Link>
+                                                    </Grid>
                                             
-                                                <Grid item id={book.workspace} onClick={(e)=>{setClickedWorkspace(e.currentTarget.id)}}>
-                                                    <Link to={`/workspace/${book.workspace}/database/${book.database}`}>
-                                                    <WorkbookCard cardTitle = {book.name} createdOn = {book.created_on}/></Link>
-                                                </Grid>
-                                          
-                                        ))}
-                                            <Grid item>
-                                                <NewWorkbookCard/>
+                                            ))}
+                                       
+                                            <Grid item >
+                                                <div className= "new_Workspace">
+                                                    <NewWorkbookCard />
+                                                </div>
                                             </Grid>
                                     </Grid>
                                 </Box>
@@ -111,6 +143,22 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                     </Grid>
                 </Box>
             </Box>
+
+            {/* <Tour
+                onAfterOpen={disableBody}
+                onBeforeClose={enableBody}
+                steps={displaysteps}
+                accentColor="#5F63F2"
+                style={{width: '50vw'}}
+                // badgeContent={(curr, tot) => `${curr} of ${tot}`}
+                isOpen={isTourOpen}
+                maskSpace={15}
+                rounded={10}
+                onRequestClose={() => {
+                //handleTourComplete(currentUser)
+                setIsTourOpen(false)
+                }}
+            /> */}
         </>
         
     );

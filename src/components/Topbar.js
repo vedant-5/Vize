@@ -371,6 +371,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         
         useEffect(() => {
           createChart()
+          //window.location.reload()
           //updateDashboard()
           //updateWorkspace()
         }, [cols])
