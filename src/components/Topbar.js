@@ -14,6 +14,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { useSpeechSynthesis } from 'react-speech-kit';
 // import VoiceAssistant from "../pages/VoiceAssistant";
 import CheckIcon from '@mui/icons-material/Check';
+import { useParams } from "react-router-dom";
 // import Button from '@mui/material/Button';
 
 
@@ -25,6 +26,8 @@ function Topbar({open, setOpen, clickedWorkspace}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    // const {wid}  = useParams();
+    // console.log(wid)
 
     const {speak} = useSpeechSynthesis();
     const [value, setValue] = useState('');
@@ -156,10 +159,11 @@ function Topbar({open, setOpen, clickedWorkspace}) {
           `http://127.0.0.1:8000/dashboard`
         );
         const data = await response.json();
-        //console.log(dashboardName)
-        const id = data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName)[0].dashboard
+        //console.log(data.response)
+        //console.log(data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName.toLowerCase())[0].dashboard)
+        const id = data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName.toLowerCase())[0].dashboard
         setDashboardID(id)
-        //console.log(data.response,id)
+        console.log(data.response,id)
         getDashboard(id)
         return data.response
       }
@@ -175,7 +179,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         const workspace_data =  data.response[0].workspace_name
         setWorkspaceData(workspace_data)
         setWorkspaceID(workspace_id)
-        console.log(workspace_data, data.response)
+        //console.log(workspace_data, data.response[0])
         return data.response
       }
 
@@ -235,7 +239,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
             if(chartType !== '') {
               setValue(`Creating ${chartType} chart with columns ${col1} and ${col2}`);
               setIsChartOpen(true);
-              console.log(editChart)
+              //console.log(editChart)
               // call api to create chart (get chart id)
               // redirect to individual chart screen (using chart id)
               // maybe give alert about edit options
@@ -362,6 +366,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
 
         useEffect(()=>{
           getDashboardList()
+          console.log("happening")
         },[dashboardName])
         
         useEffect(() => {

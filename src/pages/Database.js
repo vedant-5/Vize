@@ -13,7 +13,7 @@ function Database() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const location = useLocation();
-  console.log(location.pathname.split("/"))
+  //console.log(location.pathname.split("/"))
   const currentID = location.pathname.split("/")[4];
 
   const [chartData, setChartData] =  useState([])
@@ -49,7 +49,7 @@ function Database() {
 
 
   useEffect(()=>{
-    console.log(columnNames)
+    //console.log(columnNames)
   },[columnNames])
 
 
@@ -57,7 +57,7 @@ function Database() {
     return { field: item, headerName: capitalizeFirstLetter(item),  flex: 1 };
   });
 
-  console.log(columns)
+  //console.log(columns)
 
 
   const columns2 = [
