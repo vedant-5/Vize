@@ -27,8 +27,9 @@ const displaysteps = [
       selector: '.database',
       content: (
         <div>
-          <h3>View your database</h3>
-          bla bla bla bla bla bla 
+          <h3>View your data</h3>
+          Click on your database to view the attributes that could contribute to accurate visualizations. 
+          Perform visual analysis of the data file or give voice commands for vize to create charts from the columns you select. 
           <br />
         </div>
       ),
@@ -39,7 +40,8 @@ const displaysteps = [
     content: (
       <div>
         <h3>Create your dashboard</h3>
-        bla bla bla bla 
+        Dashboards can help convey stories about your visualizations. They help to provide a cohesive view of your charts.
+        Create your dashboard by clicking on this button and add charts to provide a comprehensive view of the story you want to convey. 
         <br />
       </div>
     ),
@@ -50,7 +52,7 @@ const displaysteps = [
     content: (
       <div>
         <h3>View Dashboard</h3>
-        bla braujsnfjnfkj
+        Vize provides you with the list of dashboards you have created inside your workbook. Each dashboard can help convey a different story. 
         <br />
       </div>
     ),
@@ -61,7 +63,8 @@ const displaysteps = [
     content: (
       <div>
         <h3>View Charts</h3>
-        majedaar yeh duniya
+        You can select the chart that you want to view from the Chart list. Any editing or modifications on charts can be made by either selecting commands on the user interface 
+        or giving voice commands. 
         <br />
       </div>
     ),
@@ -157,16 +160,9 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
   const [database, setDatabase] = useState('')
   const [charts, setCharts] =  useState([])
   const [isTourOpen, setIsTourOpen] = useState(false)
-
-  // const handleDrawerOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleDrawerClose = () => {
-  //   setOpen(false);
-  // };
-
-  // const chartType=['pie', 'bar', 'line', 'scatter'];
+  const [workspaceId, setWorkspaceId] =  useState(clickedWorkspace)
+  const [count,setCount] = useState(0)
+  
 
   useEffect(() => {
     fetchDashboards();
@@ -175,12 +171,6 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
     setIsTourOpen(true)
   }, []);
 
-  useEffect(()=> {
-    if (dashboards & charts & database) {
-        setIsTourOpen(true)
-    }
-    console.log(dashboards)
-},[dashboards, charts,database])
 
 
 const fetchDashboards = async () => {
@@ -189,7 +179,8 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setDashboards(data.response);
-    //console.log(dashboards, data.response);
+    setWorkspaceId(data.response[0].workspace_name.workspace)
+    //console.log(data.response[0].workspace_name.workspace, data.response);
   };
 
   const fetchDatabase = async () => {
@@ -207,14 +198,47 @@ const fetchDashboards = async () => {
     );
     const data = await response.json();
     setCharts(data.response);
-    // console.log(data.response)
+    //console.log(data.response)
   };
+
+  useEffect(() => {
+    // Retrieve the count from localStorage on component mount
+    const storedCount = localStorage.getItem('count');
+    if (storedCount) {
+      setCount(parseInt(storedCount));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save the count to localStorage whenever it changes
+    localStorage.setItem('count', count);
+  }, [count]);
+
+
+  useEffect(()=> {
+    const wasRefreshed = sessionStorage.getItem("wasRefreshed")
+    if(!wasRefreshed) {
+      sessionStorage.setItem('wasRefreshed','true')
+      setIsTourOpen(true)
+    } else {
+      sessionStorage.removeItem(wasRefreshed)
+      setIsTourOpen(false)
+    }
+    // if (dashboards & charts & database & count === 0) {
+    //     //localStorage.setItem('setCount', count+1);
+    //     setIsTourOpen(true)
+    // }
+    // return()=>{
+    //   setIsTourOpen(null)
+    // }
+    //console.log(dashboards)
+  },[])
 
 
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
-        <Topbar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace} />
+        <Topbar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace ? clickedWorkspace :  workspaceId} />
           <Divider />
       </AppBar>
       <Drawer
@@ -232,12 +256,14 @@ const fetchDashboards = async () => {
         anchor="left"
         open={open}
       >
+        <Link reloadDocument to={"/"}>
         <DrawerHeader sx={{backgroundColor: `${colors.sidebardark}`}}>
           {/* <IconButton> */}
             <HomeRoundedIcon />
           {/* </IconButton> */}
           <Typography>Home</Typography>
         </DrawerHeader>
+        </Link>
         <Paper 
           className='new_Dashboard'
           sx={{
@@ -267,7 +293,7 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            <Item title={database.name} index={0} to={`workspace/${clickedWorkspace}/database/${database.id}`} selected={selected} setSelected={setSelected} />
+            <Item title={database.name} index={0} to={`workspace/${clickedWorkspace ? clickedWorkspace :  workspaceId}/database/${database.id}`} selected={selected} setSelected={setSelected} />
             {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))} */}
@@ -292,7 +318,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {dashboards.map((arr, index) => (
-              <Item title={arr.name} index={1+index} to={`workspace/${clickedWorkspace}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
+              <Item title={arr.name} index={1+index} to={`workspace/${clickedWorkspace ? clickedWorkspace :  workspaceId}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -315,7 +341,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {charts.map((chart, index) => (
-              <Item title={chart.title} index={dashboards.length+1+index} to={`workspace/${clickedWorkspace}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
+              <Item title={chart.title} index={dashboards.length+1+index} to={`workspace/${clickedWorkspace ? clickedWorkspace :  workspaceId}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -334,21 +360,24 @@ const fetchDashboards = async () => {
         )} */}
         
       {/* </Main> */}
-      {/* <Tour
+      <Tour
         onAfterOpen={disableBody}
         onBeforeClose={enableBody}
         steps={displaysteps}
         accentColor="#5F63F2"
-        style={{width: '50vw'}}
+        style={{width: '80vw'}}
         badgeContent={(curr, tot) => `${curr} of ${tot}`}
         isOpen={isTourOpen}
         maskSpace={15}
         rounded={10}
         onRequestClose={() => {
         //handleTourComplete(currentUser)
+        setCount(count + 1);
+        //localStorage.setItem("count",count+1)
+        console.log(count)
         setIsTourOpen(false)
         }}
-      /> */}
+      />
     </Box>
   );
 }

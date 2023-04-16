@@ -40,7 +40,7 @@ function Dashboard () {
     // }));
 
 
-    const commandList = ["commnd one", "commdn two", "iuytfgh", "pwppwuerke", "heleleoeodnniuytrfgghghhjhgdjkd"];
+    const commandList = ["Create <type> Chart", "Go to Chart <name>", "Create Dashboard", "command 4", "command 5"];
 
     return(
         <Box sx={{display:"flex", marginRight: "-30px"}}>
@@ -50,7 +50,7 @@ function Dashboard () {
             <Grid container spacing={2}>
               {chartlist.map((chart, index)=>(
                 <Grid item key={index}>
-                  <IndividualChart chart_id = {chart}/>
+                  <ChartDisplay chart_id = {chart}/>
                 </Grid>
               ))}
             </Grid>

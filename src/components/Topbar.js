@@ -26,6 +26,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    
     // const {wid}  = useParams();
     // console.log(wid)
 
@@ -37,8 +38,6 @@ function Topbar({open, setOpen, clickedWorkspace}) {
     const [title, setTitle] = useState('');
     const [isChartOpen, setIsChartOpen] = useState(false);
     const [chartName, setChartName] =  useState('')
-    const [xLabel, setXLabel] = useState('');
-    const [yLabel, setYLabel] = useState('');
     const [chartID, setChartID] =  useState('')
     const [editChart, setEditChart] = useState({})
     const [chartList, setChartList] = useState([])
@@ -47,6 +46,11 @@ function Topbar({open, setOpen, clickedWorkspace}) {
     const [dashboardID, setDashboardID] = useState('')
     const [workspaceData, setWorkspaceData] = useState({})
     const [dashboardData, setDashboardData] =  useState({})
+    const [getDatabase, setGetDatabase] = useState(false)
+    const [xLabel, setXLabel] = useState('')
+    const [yLabel, setYLabel] = useState('')
+    const [xAxis, setXAxis] = useState('')
+    const [yAxis, setYAxis] = useState('')
 
     const handleMicrophone = () => {
         setMicrophone(!microphone);
@@ -76,7 +80,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         if(clickedWorkspace) {
           console.log(clickedWorkspace, dashboardID)
         const data = {
-          "title": cols[0] + " vs " + cols[1],
+          "title": cols[0] + " and " + cols[1],
           "x_axis": cols[0],
           "y_axis": cols[1],
           "chart_type": chartType,
@@ -205,7 +209,56 @@ function Topbar({open, setOpen, clickedWorkspace}) {
               console.log(err)
           })
       }
-    
+
+
+    const fetchWorkspace= async () => {
+      const response = await fetch( 
+        `http://127.0.0.1:8000/workspace/${workspaceID}`
+      );
+      const data = await response.json();
+      console.log(data.response)
+      const database_id = data.response[0].database
+      //setChartData(data)
+      fetchData(database_id)
+      return data
+    };
+
+    const fetchData =  async (id)=> {
+      const response = await fetch( 
+        `http://127.0.0.1:8000/view-file/${id}`
+      );
+      const data = await response.json();
+      //console.log(data)
+      const x_values  = data.map((data) => data[xAxis])
+      const y_values  = data.map((data) => data[yAxis])
+      createSummary(x_values,y_values)
+    }
+
+    const createSummary =  async(x_values,y_values) => {
+      const data = {
+        x_values: x_values,
+        y_values : y_values,
+        chart_id: chartID
+      }
+      console.log(data)
+
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    };
+    fetch(`http://127.0.0.1:8000/chart-summary/${chartID}/`, requestOptions)
+        .then(function (response) {
+          // ...
+          console.log(response);
+          return response.json();
+        }).then(function (body) {
+          // ...
+          console.log(body);
+        }).catch(err => {
+            console.log(err)
+        })
+    }    
     
     
     const commands = [
@@ -227,6 +280,15 @@ function Topbar({open, setOpen, clickedWorkspace}) {
             //console.log(chartType, value);
           } //create handle function and call it here to make charts
         },
+        {
+          command: 'dashboard *',
+          callback: (dashboard) => {
+            setDashboardName(dashboard); 
+            //setValue(`Specify which dashboard you want to add the chart to`)
+            setValue(`Select variables for the ${chartType} chart`);
+            //console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
         // {
         //   command: 'The weather is :condition today',
         //   callback: (condition) => setValue(`Today, the weather is ${condition}`)
@@ -234,11 +296,33 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         {
           command: '* and *',
           callback: (col1, col2) => {
-            setCols([col1, col2])
+
+            setCols([col1.toLowerCase(), col2.toLowerCase()])
             // setEditChart(...cols,{"x_axis":col1, "y_axis":col2, "chart_type":chartType});
             if(chartType !== '') {
               setValue(`Creating ${chartType} chart with columns ${col1} and ${col2}`);
               setIsChartOpen(true);
+              window.location.reload()
+              //console.log(editChart)
+              // call api to create chart (get chart id)
+              // redirect to individual chart screen (using chart id)
+              // maybe give alert about edit options
+            }
+            else {
+              setValue('Please specify which chart you want to create');
+            }
+          }
+        },
+        {
+          command: 'select variables * and *',
+          callback: (col1, col2) => {
+
+            setCols([col1.toLowerCase(), col2.toLowerCase()])
+            // setEditChart(...cols,{"x_axis":col1, "y_axis":col2, "chart_type":chartType});
+            if(chartType !== '') {
+              setValue(`Creating ${chartType} chart with columns ${col1} and ${col2}`);
+              setIsChartOpen(true);
+              window.location.reload()
               //console.log(editChart)
               // call api to create chart (get chart id)
               // redirect to individual chart screen (using chart id)
@@ -255,10 +339,47 @@ function Topbar({open, setOpen, clickedWorkspace}) {
             setChartName(chart_name)
             const chart_list =  chartList
             const chart_id = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].chart_id
+            const x_axis = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].x_axis
+            const y_axis = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].y_axis
+            const workspace_id =  chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].workspace_name
             setChartID(chart_id)
+            setWorkspaceID(workspace_id)
             setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            setXAxis(x_axis)
+            setYAxis(y_axis)
             setIsChartOpen(true)
             setValue(`Chart ${chart_name} selected`)
+          }
+        },
+        {
+          command: 'Add Summary',
+          callback: () => {
+            setGetDatabase(true)
+            // setEditChart({...editChart,"y_axis":yLabel})
+            // setYLabel(yLabel);
+            if(isChartOpen) {
+              setValue(`Generating Summary for ${chartName}`);
+              //window.location.reload()
+              
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Generate Summary',
+          callback: () => {
+            setGetDatabase(true)
+            // setEditChart({...editChart,"y_axis":yLabel})
+            // setYLabel(yLabel);
+            if(isChartOpen) {
+              setValue(`Generating Summary for ${chartName}`);
+              //window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
           }
         },
         {
@@ -281,6 +402,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
             setTitle(title);
             if(isChartOpen) {
               setValue(`Title changed to ${title}`);
+              window.location.reload()
             }
             else {
               setValue('Please select your desired chart first');
@@ -294,6 +416,77 @@ function Topbar({open, setOpen, clickedWorkspace}) {
             setXLabel(xLabel);
             if(isChartOpen) {
               setValue(`X label changed to ${xLabel}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change x level to *',
+          callback: (xLabel) => {
+            setEditChart({...editChart,"x_axis":xLabel})
+            setXLabel(xLabel);
+            if(isChartOpen) {
+              setValue(`X label changed to ${xLabel}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change x label 2 *',
+          callback: (xLabel) => {
+            setEditChart({...editChart,"x_axis":xLabel})
+            setXLabel(xLabel);
+            if(isChartOpen) {
+              setValue(`X label changed to ${xLabel}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change x level 2 *',
+          callback: (xLabel) => {
+            setEditChart({...editChart,"x_axis":xLabel})
+            setXLabel(xLabel);
+            if(isChartOpen) {
+              setValue(`X label changed to ${xLabel}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change acceleable 2 *',
+          callback: (xLabel) => {
+            setEditChart({...editChart,"x_axis":xLabel})
+            setXLabel(xLabel);
+            if(isChartOpen) {
+              setValue(`X label changed to ${xLabel}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change acceleable to *',
+          callback: (xLabel) => {
+            setEditChart({...editChart,"x_axis":xLabel})
+            setXLabel(xLabel);
+            if(isChartOpen) {
+              setValue(`X label changed to ${xLabel}`);
+              //window.location.reload()
             }
             else {
               setValue('Please select your desired chart first');
@@ -302,11 +495,58 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         },
         {
           command: 'Change y label to *',
+          callback: (y_Label) => {
+            setEditChart({...editChart,"y_axis":y_Label})
+            setYLabel(y_Label);
+            if(isChartOpen) {
+              setValue(`Y label changed to ${y_Label}`);
+              //window.location.reload()
+              
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change y level to *',
           callback: (yLabel) => {
             setEditChart({...editChart,"y_axis":yLabel})
             setYLabel(yLabel);
             if(isChartOpen) {
               setValue(`Y label changed to ${yLabel}`);
+              window.location.reload()
+              
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change y label 2 *',
+          callback: (yLabel) => {
+            setEditChart({...editChart,"y_axis":yLabel})
+            setYLabel(yLabel);
+            if(isChartOpen) {
+              setValue(`Y label changed to ${yLabel}`);
+              window.location.reload()
+              
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change y level 2 *',
+          callback: (yLabel) => {
+            setEditChart({...editChart,"y_axis":yLabel})
+            setYLabel(yLabel);
+            if(isChartOpen) {
+              setValue(`Y label changed to ${yLabel}`);
+              window.location.reload()
+              
             }
             else {
               setValue('Please select your desired chart first');
@@ -318,6 +558,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
           callback: () => {
             if(isChartOpen) {
               setValue(`Legend added`);
+              window.location.reload()
               // call api to add legend
             }
             else {
@@ -330,6 +571,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
           callback: () => {
             if(isChartOpen) {
               setValue(`Chart is deleted`);
+              window.location.reload()
               // call api to delete chart
               // redirect to dashboard page
             }
@@ -340,7 +582,11 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         },
         {
           command: 'clear',
-          callback: ({ resetTranscript }) => resetTranscript()
+          callback: ({ resetTranscript }) => {
+            setValue("Give commands to visualize with Vize!")
+            resetTranscript();
+            
+          }
         }
       ]
 
@@ -362,6 +608,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
       
         useEffect(() => {
           speak({text: value})
+          console.log(value)
         }, [value])
 
         useEffect(()=>{
@@ -377,6 +624,11 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         }, [cols])
       
       
+        useEffect(() => {
+          fetchWorkspace()
+          console.log(workspaceID,chartID)
+        }, [getDatabase])
+
         useEffect(() => {
           editChartPost()
           console.log(editChart)

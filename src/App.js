@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import {ColorModeContext, useMode} from './theme';
 import {AppBar, CssBaseline, Divider, ThemeProvider} from "@mui/material";
 // import Topbar from './components/Topbar';
@@ -22,11 +22,13 @@ function App() {
   const [theme, colorMode] = useMode();
   const [open, setOpen] = useState(true);
   const [clickedWorkspace, setClickedWorkspace] = useState();
+  //const [clicked, setClicked] =  useState()
 
   const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
       flexGrow: 1,
       padding: theme.spacing(3),
+      backgroundColor: '#F9F9F9',
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -42,6 +44,16 @@ function App() {
     }),
   );
 
+  // useEffect(()=>{
+  //   const selected = localStorage.getItem("clicked")
+  //   if (selected) {
+  //     setClickedWorkspace(selected)
+  //   }
+  //   console.log(clickedWorkspace,selected)
+  // },[clickedWorkspace])
+ 
+  
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -56,11 +68,11 @@ function App() {
                 <Routes>
                   {/* <Route component={Login} path="/login" />
                   <Route component={Register} path="/register" /> */}
-                  <Route path="/" element={<Workbook clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace} />}/>
+                  <Route path="/" element={<Workbook clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace}/>}/>
                   <Route exact path="/voice" element={<VoiceAssistant/>}/>
-                  <Route path="workspace/:wid/dashboard/:did" element={<Dashboard/>}/>
-                  <Route path="workspace/:wid/database/:text" element={<Database/>}/>
-                  <Route path="workspace/:wid/chart/:text" element={<IndividualChart/>}/>
+                  <Route exact path="workspace/:wid/dashboard/:did" element={<Dashboard/>}/>
+                  <Route exact path="workspace/:wid/database/:text" element={<Database/>}/>
+                  <Route exact path="workspace/:wid/chart/:text" element={<IndividualChart/>}/>
                 </Routes>
               </Main>
             </div>

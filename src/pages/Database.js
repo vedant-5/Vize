@@ -15,6 +15,7 @@ function Database() {
   const location = useLocation();
   //console.log(location.pathname.split("/"))
   const currentID = location.pathname.split("/")[4];
+  //console.log(currentID)
 
   const [chartData, setChartData] =  useState([])
   const [columnNames, setColumnNames] = useState([]);
