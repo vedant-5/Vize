@@ -38,6 +38,7 @@ function IndividualChart ({chart_id}) {
     const [xLabel, setXLabel] = useState('')
     const [yLabel, setYLabel] = useState('')
     const [summary, setSummary] = useState('')
+    const [data,setData] = useState({})
     const [chartData, setChartData] = useState({
         labels: mockDataTeam.map((data) => data.name), 
         datasets: [
@@ -60,12 +61,8 @@ function IndividualChart ({chart_id}) {
             },
         ]
     });
-
     
     //console.log(chart_id)
-    
-
-    
 
     const fetchChart = async () => {
         const response = await fetch( 
@@ -101,9 +98,14 @@ function IndividualChart ({chart_id}) {
           `http://127.0.0.1:8000/view-file/${id}`
         );
         const data = await response.json();
+        
         //console.log(xLabel,yLabel)
         const x =  xLabel ? xLabel : 'name'
         const y = yLabel ? yLabel : 'maths'
+        setData({
+            "x_values" : data.map((data) => data[x]),
+            "y_values" : data.map((data) => data[y])
+        })
         //console.log(data.map((data) => data[y]),data.map((data) => data[x]))
         //store x array and y array values in a seperate variable and write it in labels and data.
         setChartData(
@@ -133,6 +135,32 @@ function IndividualChart ({chart_id}) {
         //setChartData(data)
         return data
       };
+
+    const generateSummary = async ()=>{
+        const data = {
+            x_values: data.x_values,
+            y_values : data.y_values,
+            chart_id: chart_id ?  chart_id : text
+          }
+          console.log(data)
+    
+          const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        };
+        fetch(`http://127.0.0.1:8000/chart-summary/${chart_id ? chart_id : text}/`, requestOptions)
+            .then(function (response) {
+              // ...
+              console.log(response);
+              return response.json();
+            }).then(function (body) {
+              // ...
+              console.log(body);
+            }).catch(err => {
+                console.log(err)
+            })
+    }
 
     useEffect(() => {
         fetchChart();
@@ -198,7 +226,9 @@ function IndividualChart ({chart_id}) {
             </Grid>
             <Divider orientation="vertical" flexItem sx={{height: "100vh", margin: "-94px 0"}}/> 
             <Grid xs={2} sx={{padding: "0 20px", width: "220px"}}>
-                <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>+ Generate Summary</Button>
+                <Button onClick={generateSummary()} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>
+                    + Generate Summary
+                </Button>
                 <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.4)">
                     <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%"}}>Customize Chart</Button>
                     <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">

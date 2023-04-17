@@ -3,16 +3,20 @@ import { useState, useContext, useEffect } from 'react';
 import { ColorModeContext, tokens } from "../theme";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { AppBar, Divider, Grid } from '@mui/material';
+import { AppBar, Button, Divider, Grid } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import { Link } from 'react-router-dom';
 import TopbarHome from '../components/TopbarHome';
 import Topbar from '../components/Topbar';
 import WorkbookCard from '../components/WorkbookCard';
 import NewWorkbookCard from '../components/NewWorkbookCard';
+import Modal from '@mui/material/Modal';
+
+import newWorkspaceModal from "../components/NewWorkspaceModel";
 
 import Tour from 'reactour'
 import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
+import NewWorkspaceModel from '../components/NewWorkspaceModel';
 
 const disableBody = target => disableBodyScroll(target)
 const enableBody = target => enableBodyScroll(target)
@@ -32,6 +36,18 @@ const displaysteps = [
 ]
 
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
 const Top = TopbarHome
 
 // const workbooks = [{id:1, name: "Workbook 1", created: "08/24"}, 
@@ -42,6 +58,9 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
 
     const [workspaces, setWorkspaces] = useState([])
     const [isTourOpen, setIsTourOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -130,7 +149,10 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                                        
                                             <Grid item >
                                                 <div className= "new_Workspace">
-                                                    <NewWorkbookCard />
+                                                    <Button onClick={handleOpen}>
+                                                        <NewWorkbookCard />
+                                                    </Button>
+                                                    
                                                 </div>
                                             </Grid>
                                     </Grid>
@@ -140,11 +162,19 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                         </Grid>
                         <Divider orientation="vertical" flexItem sx={{height: "100vh", mt:"-36px", mb:"-36px"}}/> 
                         <Grid item xs={2} >
-                            
                         </Grid>
                     </Grid>
                 </Box>
             </Box>
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                // aria-labelledby="modal-modal-title"
+                // aria-describedby="modal-modal-description"
+            >
+                <NewWorkspaceModel/>
+            </Modal>
 
             <Tour
                 onAfterOpen={disableBody}
