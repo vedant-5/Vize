@@ -37,3 +37,12 @@ a {
 ::-webkit-scrollbar-track:hover {
   background: #555; 
 }
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  min-height: 60vh;
+  min-width: 45vw;
+}
+
+.css-9wocm4-MuiButtonBase-root-MuiCheckbox-root.Mui-checked, .css-9wocm4-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
+  color: initial;
+}
