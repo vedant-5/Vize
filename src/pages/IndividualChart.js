@@ -137,17 +137,17 @@ function IndividualChart ({chart_id}) {
       };
 
     const generateSummary = async ()=>{
-        const data = {
+        const data_columns = {
             x_values: data.x_values,
             y_values : data.y_values,
             chart_id: chart_id ?  chart_id : text
           }
-          console.log(data)
+          console.log(data_columns)
     
           const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data_columns),
         };
         fetch(`http://127.0.0.1:8000/chart-summary/${chart_id ? chart_id : text}/`, requestOptions)
             .then(function (response) {
@@ -157,6 +157,7 @@ function IndividualChart ({chart_id}) {
             }).then(function (body) {
               // ...
               console.log(body);
+              window.location.reload()
             }).catch(err => {
                 console.log(err)
             })
@@ -226,7 +227,7 @@ function IndividualChart ({chart_id}) {
             </Grid>
             <Divider orientation="vertical" flexItem sx={{height: "100vh", margin: "-94px 0"}}/> 
             <Grid xs={2} sx={{padding: "0 20px", width: "220px"}}>
-                <Button onClick={generateSummary()} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>
+                <Button onClick={generateSummary} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>
                     + Generate Summary
                 </Button>
                 <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.4)">

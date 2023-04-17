@@ -12,11 +12,11 @@ import WorkbookCard from '../components/WorkbookCard';
 import NewWorkbookCard from '../components/NewWorkbookCard';
 import Modal from '@mui/material/Modal';
 
-import newWorkspaceModal from "../components/NewWorkspaceModel";
+
 
 import Tour from 'reactour'
 import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
-import NewWorkspaceModel from '../components/NewWorkspaceModel';
+import NewWorkspaceModal from '../components/NewWorkspaceModal';
 
 const disableBody = target => disableBodyScroll(target)
 const enableBody = target => enableBodyScroll(target)
@@ -59,6 +59,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
     const [workspaces, setWorkspaces] = useState([])
     const [isTourOpen, setIsTourOpen] = useState(false)
     const [open, setOpen] = useState(false);
+    const [workspaceModalOpen, setWorkspaceModalOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -149,7 +150,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                                        
                                             <Grid item >
                                                 <div className= "new_Workspace">
-                                                    <Button onClick={handleOpen}>
+                                                    <Button onClick={()=>{setWorkspaceModalOpen(true)}}>
                                                         <NewWorkbookCard />
                                                     </Button>
                                                     
@@ -167,14 +168,16 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                 </Box>
             </Box>
 
-            <Modal
+            {/* <Modal
                 open={open}
                 onClose={handleClose}
                 // aria-labelledby="modal-modal-title"
                 // aria-describedby="modal-modal-description"
             >
-                <NewWorkspaceModel/>
-            </Modal>
+                <NewWorkspaceModal/>
+            </Modal> */}
+
+            <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen}/>
 
             <Tour
                 onAfterOpen={disableBody}
