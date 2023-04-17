@@ -4,12 +4,14 @@ import IndividualChart from "./IndividualChart";
 import { useParams } from "react-router-dom";
 import ChartDisplay from "../components/ChartDisplay";
 import Grid from "@mui/material/Unstable_Grid2";
+import ChartModal from "../components/ChartModal";
 
 function Dashboard () {
     
     // const chartType = ['pie', 'bar', 'line', 'scatter'];
-    const [dashboard, setDashboard] =  useState([])
-    const [chartlist, setChartlist] = useState([])
+    const [dashboard, setDashboard] =  useState([]);
+    const [chartlist, setChartlist] = useState([]);
+    const [chartModalOpen, setChartModalOpen] = useState(false);
 
     const { did } = useParams();
 
@@ -57,7 +59,7 @@ function Dashboard () {
           </Grid>
           <Divider orientation="vertical" flexItem sx={{height: "100vh", margin: "-94px 0"}}/> 
           <Grid xs={2} sx={{padding: "0 20px", width: "220px"}}>
-            <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>+ Add Chart</Button>
+            <Button onClick={()=>{setChartModalOpen(true)}} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>+ Add Chart</Button>
             <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginTop: "40px"}}>+ Add Text</Button>
             <Box>
               <List
@@ -82,6 +84,7 @@ function Dashboard () {
                 </List>
             </Box>
           </Grid>
+          <ChartModal chartModalOpen={chartModalOpen} setChartModalOpen={setChartModalOpen}/>
         </Box>
     )
 }
