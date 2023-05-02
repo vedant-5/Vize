@@ -14,6 +14,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
 import pandas as pd
+import numpy as np
+from scipy.stats import skew, pearsonr
+from collections import Counter
 from rest_framework.parsers import MultiPartParser, FormParser
 import csv
 import json
@@ -81,6 +84,7 @@ class FileUploadView(generics.CreateAPIView):
     queryset = FileModel.objects.all()
     serializer_class = FileModelSerializer
     parser_classes = (MultiPartParser, FormParser)
+    
 
 class FileDownloadView(generics.RetrieveAPIView):
     queryset = FileModel.objects.all()
@@ -320,4 +324,123 @@ def ChartUpdateViewSet(request, id):
             return Response(data.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
+
+@api_view(['POST'])
+def chart_summary_view(request,id):
+    """
+    Compute summary statistics, identify patterns and trends, describe the distribution of y values,
+    state the type of values (continuous or categorical) for x and y, and state whether they are correlated.
+    """
+
+    # print(request)
+    # Get input data
+    data = json.loads(request.body)
+    x_values = data.get('x_values', [])
+    y_values = data.get('y_values', [])
+    chartid = data.get('chart_id', None)
+    print(x_values,y_values,chartid,id)
+
+    # x_values = request.GET.getlist('x_values', [])
+    # y_values = request.GET.getlist('y_values', [])
+
+    # Convert input data to proper types
+    x_values = [int(x) if x.isdigit() else float(x) if is_float(x) else x for x in x_values]
+    y_values = [int(y) if y.isdigit() else float(y) if is_float(y) else y for y in y_values]
+    
+    # Determine the data types for x and y
+    x_type = "continuous" if isinstance(x_values[0], (int, float)) else "categorical"
+    y_type = "continuous" if y_values and isinstance(y_values[0], (int, float)) else "categorical"
+
+    # Calculate summary statistics
+    mean_y = np.mean(y_values) if y_type == "continuous" else None
+    max_y = np.max(y_values) if y_type == "continuous" else None
+    min_y = np.min(y_values) if y_type == "continuous" else None
+    range_y = max_y - min_y if y_type == "continuous" else None
+
+    # Identify trends and patterns
+    if y_type == "continuous":
+        if y_values == sorted(y_values):
+            trend = "The y values increase consistently."
+        elif y_values == sorted(y_values, reverse=True):
+            trend = "The y values decrease consistently."
+        else:
+            trend = "There is no consistent trend in the y values."
+    else:
+        trend = ""
+
+    # Describe the distribution of y values
+    if y_type == "continuous":
+        if abs(skew(y_values)) > 1:
+            distribution = "The y values are highly skewed."
+        elif abs(skew(y_values)) > 0.5:
+            distribution = "The y values are moderately skewed."
+        else:
+            distribution = "The y values are roughly symmetric."
+    else:
+        distribution = ""
+
+    # Calculate the correlation between x and y
+    if x_type == "continuous" and y_type == "continuous":
+        corr, p_value = pearsonr(x_values, y_values)
+        if abs(corr) >= 0.7:
+            correlation = "There is a strong positive correlation between x and y."
+        elif abs(corr) >= 0.3:
+            correlation = "There is a moderate positive correlation between x and y."
+        elif abs(corr) > 0:
+            correlation = "There is a weak positive correlation between x and y."
+        else:
+            correlation = "There is no correlation between x and y."
+    else:
+        correlation = ""
+        
+    if x_type == "categorical":
+        counts = Counter(x_values)
+        if len(counts) == 0:
+            summary_text_x = ""
+        else:
+            num_categories = len(counts)
+            category_names = list(counts.keys())
+            summary_text_x = f"The chart shows {num_categories} unique categories: {', '.join(category_names)}.\n"
+            if num_categories > 1:
+                summary_text_x += f"The largest category is {max(counts, key=counts.get)}, which makes up {counts[max(counts, key=counts.get)]/sum(counts.values())*100:.2f}% of the pie chart.\n"
+            if num_categories > 2:
+                sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+                summary_text_x += f"The second and third largest categories are {sorted_counts[1][0]} ({sorted_counts[1][1]/sum(counts.values())*100:.2f}%) and {sorted_counts[2][0]} ({sorted_counts[2][1]/sum(counts.values())*100:.2f}%), respectively.\n"
+
+
+    # Generate summary text
+    summary_text = ""
+    if y_type == "continuous":
+        summary_text += f"The mean value of y is {mean_y:.2f}. The maximum value of y is {max_y}, the minimum value of y is {min_y}, and the range of y is {range_y}.\n{trend} \n{distribution} \n{correlation}"
+    # elif x_type == "categorical":
+    #     summary_text += f"The chart shows {len(x_values)} categories: {', '.join(str(x) for x in x_values)}"
+    #     if len(x_values) > 0:
+    #         top_parts = sorted(x_values, reverse=True)[:3]
+    #         summary_text += f"\nTop 3 categories: {', '.join(str(x) for x in top_parts)}"
+    
+    # Print and return summary
+    if y_values:
+        print(summary_text)
+        # chart_id = request.GET.get(chartid)
+        chart = Chart.objects.get(chart_id=chartid)
+        chart.summary = summary_text
+        chart.save()
+        return Response({'summary': summary_text})
+    else:
+        print(summary_text_x)
+        # chart_id = request.GET.get(chartid)
+        chart = Chart.objects.get(chart_id=chartid)
+        chart.summary = summary_text_x
+        chart.save()
+        return Response({'summary': summary_text_x})
+    
     

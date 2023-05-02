@@ -58,6 +58,17 @@ class DatabaseSerializer(serializers.ModelSerializer):
         fields =  "__all__"
 
 class WorkspaceSerializer(serializers.ModelSerializer):
+    # created_by = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field='Username'
+    #  )
+    
+    # database = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field='file_name'
+    #  )
 
     class Meta:
         model = Workspace
