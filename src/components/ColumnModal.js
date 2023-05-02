@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import List from '@mui/material/List';
@@ -8,13 +8,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 
-function ColumnModal ({columnModalOpen, setColumnModalOpen}) {
+function ColumnModal ({columnModalOpen, setColumnModalOpen, chartSelected}) {
 
     const handleClose = () => {
         setColumnModalOpen(false);
+        setChecked([])
     }
 
-    const [checked, setChecked] = React.useState([]);
+    const [checked, setChecked] = useState([]);
 
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
@@ -31,9 +32,19 @@ function ColumnModal ({columnModalOpen, setColumnModalOpen}) {
 
     const columnNames = ['col one', 'col two', 'col three'];
 
+    const createChartAPI = () => {
+        //API call to create chart
+            // chart type you will get from "chartSelected" state
+            // column names you will get as an array from "checked" state 
+
+        console.log(chartSelected);
+        console.log(checked);
+    }
+    
+
     return(
         <Dialog onClose={handleClose} open={columnModalOpen} sx={{overflowY: "hidden"}}>
-            <DialogTitle sx={{fontWeight: "600"}}>Select columns</DialogTitle>
+            <DialogTitle sx={{fontWeight: "600"}}>Select 2 columns names</DialogTitle>
             <DialogContent sx={{marginTop: "16px"}}>
                 <List sx={{ width: '100%', maxWidth: 360 }}>
                     {columnNames.map((value, index) => {
@@ -60,12 +71,12 @@ function ColumnModal ({columnModalOpen, setColumnModalOpen}) {
                     })}
                 </List>
             </DialogContent>
-            <DialogActions sx={{padding: "12px"}}>
-                <Button sx={{color: '#1c1c1c', fontWeight: '600', letterSpacing: '1px'}}>
+            {checked.length === 2 && <DialogActions sx={{padding: "12px"}}>
+                <Button onClick={createChartAPI} sx={{color: '#1c1c1c', fontWeight: '600', letterSpacing: '1px'}}>
                     Create chart
                     <ArrowForwardIosIcon sx={{fontSize: "0.8em", marginLeft: "5px"}}/>
                 </Button>
-            </DialogActions>
+            </DialogActions>}
         </Dialog>
     )
 }

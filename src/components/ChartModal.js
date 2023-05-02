@@ -3,13 +3,19 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Typography, Button }
 import Grid from "@mui/material/Unstable_Grid2";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ColumnModal from "./ColumnModal";
+// import Bar from "../images/bar-chart.png";
+// import Line from "../images/line-chart.png";
+// import Pie from "../images/pie-chart.png";
+// import Doughnut from "../images/doughnut-chart.png";
 
 function ChartModal ({chartModalOpen, setChartModalOpen}) {
 
     const [columnModalOpen, setColumnModalOpen] = useState(false);
+    const [chartSelected, setChartSelected] = useState();
 
     const handleClose = () => {
         setChartModalOpen(false);
+        setChartSelected();
     }
 
     const handleColumnModal = () => {
@@ -17,7 +23,12 @@ function ChartModal ({chartModalOpen, setChartModalOpen}) {
         setColumnModalOpen(true);
     }
 
-    const chartTypeList = ['Bar', 'Pie', 'Line']
+    const handleSelectChart = (chart) => {
+        setChartSelected(chartTypeList[chart])
+        console.log(chart, chartTypeList[chart]);
+    }
+
+    const chartTypeList = ['Bar', 'Pie', 'Line', 'Doughnut']
 
     return(
         <>
@@ -26,21 +37,23 @@ function ChartModal ({chartModalOpen, setChartModalOpen}) {
                 <DialogContent sx={{marginTop: "16px"}}>
                     <Grid container spacing={2}>
                         {chartTypeList.map((type, index) => (
-                            <Grid item key={index}>
-                                {/* <img /> */}
-                                <Typography>{type} Chart</Typography>
+                            <Grid item xs={3} key={index} id={index} onClick={(e)=>{handleSelectChart(e.currentTarget.id)}}>
+                                <div>
+                                    <img src={`../images/${type}.png`} alt={`${type} chart`} />
+                                    <Typography>{type} Chart</Typography>
+                                </div>
                             </Grid>
                         ))}
                     </Grid>
                 </DialogContent>
-                <DialogActions sx={{padding: "12px"}}>
+                {chartSelected && <DialogActions sx={{padding: "12px"}}>
                     <Button onClick={handleColumnModal} sx={{color: '#1c1c1c', fontWeight: '600', letterSpacing: '1px'}}>
                         Next
                         <ArrowForwardIosIcon sx={{fontSize: "0.8em", marginLeft: "5px"}}/>
                     </Button>
-                </DialogActions>
+                </DialogActions>}
             </Dialog>
-            <ColumnModal columnModalOpen={columnModalOpen} setColumnModalOpen={setColumnModalOpen}/>
+            <ColumnModal columnModalOpen={columnModalOpen} setColumnModalOpen={setColumnModalOpen} chartSelected={chartSelected} />
         </>
     )
 }

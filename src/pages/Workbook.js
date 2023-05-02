@@ -140,7 +140,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                     
                                             {workspaces.map((book)=>(
                                                 
-                                                    <Grid item  id={book.workspace} onClick={(e)=>{handleLocal(e.currentTarget.id)}}>
+                                                    <Grid item id={book.workspace} onClick={(e)=>{handleLocal(e.currentTarget.id)}}>
                                                         <Link to={`/workspace/${book.workspace}/database/${book.database}`}>
                                                             <WorkbookCard className = "workspaces" cardTitle = {book.name} createdOn = {book.created_on}/>
                                                         </Link>

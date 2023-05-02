@@ -1,4 +1,4 @@
-import { Box, Button, Divider, List, ListItem, ListItemText, ListSubheader } from "@mui/material";
+import { Box, Button, Divider, List, ListItem, ListSubheader } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import IndividualChart from "./IndividualChart";
 import { useParams } from "react-router-dom";
@@ -75,7 +75,7 @@ function Dashboard () {
                   '& ul': { padding: 0 },
                 }}
               >
-                <ListSubheader sx={{textTransform: "uppercase", lineHeight: "160%", fontWeight: "600", fontSize: "0.85rem", color: "rgba(0,0,0,0.3)", marginBottom: "8px"}}>Voice Commands</ListSubheader>
+                <ListSubheader sx={{textTransform: "uppercase", lineHeight: "160%", fontWeight: "600", fontSize: "0.85rem", color: "rgba(0,0,0,0.3)", marginBottom: "8px", backgroundColor: "transparent"}}>Voice Commands</ListSubheader>
                   {commandList.map((item, index) => (
                     <ListItem key={index} sx={{padding: "5px 16px"}}>
                       <span style={{fontSize: "0.9rem", wordWrap: "break-word", overflow: "hidden"}}>{item}</span>
