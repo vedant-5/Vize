@@ -43,9 +43,7 @@ const NewWorkbookCard = () => {
     return (
         <NewCard>
             <Plus src={plus} alt="add new workbook"/>
-            <Title>New Workbook</Title>
-
-            
+            <Title>New Workbook</Title>   
         </NewCard>
             
         

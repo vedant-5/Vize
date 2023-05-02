@@ -177,7 +177,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                 <NewWorkspaceModal/>
             </Modal> */}
 
-            <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen}/>
+            <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace}/>
 
             <Tour
                 onAfterOpen={disableBody}

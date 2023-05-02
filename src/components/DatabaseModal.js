@@ -9,16 +9,19 @@ import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
+import CreateWorkspace from "./CreateWorkspace";
 
 
-function DatabaseModal ({databaseModalOpen, setDatabaseModalOpen}) {
+function DatabaseModal ({ databaseName, setDatabaseName}) {
 
-    const handleClose = () => {
-        setDatabaseModalOpen(false);
-    }
+    // const handleClose = () => {
+    //     setDatabaseModalOpen(false);
+    // }
 
     const [file, setFile] = useState(null);
     const [progress, setProgress] = useState(0);
+    //const [databaseName, setDatabaseName] =  useState("")
+    const [createWorkspaceOpen,setCreateWorkspaceOpen] =  useState(false)
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -40,20 +43,55 @@ function DatabaseModal ({databaseModalOpen, setDatabaseModalOpen}) {
             );
             setProgress(progressPercent);
             },
-        });
+        })
+        .then(function (response) {
+            return response.json()
+        }).then (function (body){
+            console.log(body)
+            console.log('File uploaded successfully!' );
+            setDatabaseName([body.id, body.name])
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        console.log('File uploaded successfully!', response);
+        })
         } catch (error) {
         console.error('Error uploading file:', error);
         }
         };
+
+    // const handleDatabaseModal = () => {
+    //         setDatabaseModalOpen(false);
+    //         setCreateWorkspaceOpen(true);
+    // }
+    
     
     return(
-        <Dialog onClose={handleClose} open={databaseModalOpen} sx={{overflowY: "hidden"}}>
-            <DialogTitle sx={{fontWeight: "600"}}>Select Database File</DialogTitle>
+        // <Dialog onClose={handleClose} open={databaseModalOpen} sx={{overflowY: "hidden"}}>
+        //     <DialogTitle sx={{fontWeight: "600"}}>Select Database File</DialogTitle>
+        //     <DialogContent sx={{marginTop: "16px"}}>
+        //         <form onSubmit={handleSubmit}>
+        //             <input type="file" onChange={handleFileChange} />
+        //             <br />
+        //             <LinearProgress variant="determinate" value={progress} />
+        //             <br />
+        //             <button type="submit" disabled={!file}>
+        //                 Upload
+        //             </button>
+        //             {progress === 100 && <CircularProgress />}
+        //         </form>
+        //     </DialogContent>
+        //     {/* <DialogActions sx={{padding: "12px"}}>
+        //             <Button onClick={handleDatabaseModal} sx={{color: '#1c1c1c', fontWeight: '600', letterSpacing: '1px'}}>
+        //                 View Details
+        //                 <ArrowForwardIosIcon sx={{fontSize: "0.8em", marginLeft: "5px"}}/>
+        //             </Button>
+        //     </DialogActions> */}
+
+
+
+        //     <CreateWorkspace workspace_name= {name} database_name={databaseName} createWorkspaceOpen = {createWorkspaceOpen} setCreateWorkspaceOpen={setCreateWorkspaceOpen} /> 
+            
+            
+        // </Dialog>
+        <>
             <form onSubmit={handleSubmit}>
                 <input type="file" onChange={handleFileChange} />
                 <br />
@@ -64,8 +102,7 @@ function DatabaseModal ({databaseModalOpen, setDatabaseModalOpen}) {
                 </button>
                 {progress === 100 && <CircularProgress />}
             </form>
-            
-        </Dialog>
+        </>
     )
 }
 

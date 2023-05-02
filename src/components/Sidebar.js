@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Topbar from './Topbar';
 import { Button, MenuItem, MenuList, Paper } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 // import Database from '../pages/Database';
 // import Dashboard from '../pages/Dashboard';
 // import IndividualChart from '../pages/IndividualChart';
@@ -161,13 +161,17 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
   const [charts, setCharts] =  useState([])
   const [isTourOpen, setIsTourOpen] = useState(false)
   const [workspaceId, setWorkspaceId] =  useState(clickedWorkspace)
+  const [workspace, setWorkspace] =  useState("")
   const [count,setCount] = useState(0)
   
+  const params = useParams()
+  //console.log(params)
 
   useEffect(() => {
     fetchDashboards();
     fetchChart();
-    fetchDatabase();
+    fetchWorkspace();
+    //fetchDatabase();
     setIsTourOpen(true)
   }, []);
 
@@ -178,18 +182,33 @@ const fetchDashboards = async () => {
       `http://127.0.0.1:8000/dashboard/`
     );
     const data = await response.json();
-    setDashboards(data.response);
-    setWorkspaceId(data.response[0].workspace_name.workspace)
-    //console.log(data.response[0].workspace_name.workspace, data.response);
+    const dashboard_filter =  data.response.filter((dashboard)=> dashboard.workspace_name.workspace === parseInt(clickedWorkspace))
+    setDashboards(dashboard_filter);
+    setWorkspaceId(clickedWorkspace)
+    console.log(dashboard_filter)
+    //console.log(data.response[0].workspace_name.workspace === parseInt(clickedWorkspace), clickedWorkspace);
   };
 
-  const fetchDatabase = async () => {
+  const fetchWorkspace = async () => {
+    const response = await fetch(
+      `http://127.0.0.1:8000/workspace/${clickedWorkspace}`
+    );
+    const data = await response.json();
+    setWorkspace(data.response[0]);
+    const database_id  =  data.response[0].database
+    fetchDatabase(database_id)
+    //console.log(database_id)
+  };
+
+  const fetchDatabase = async (database_id) => {
     const response = await fetch(
       `http://127.0.0.1:8000/view-file`
     );
     const data = await response.json();
-    setDatabase(data[0]);
-    //console.log(data)
+    console.log(data)
+    const database_filter = data.filter((d) => d.id === database_id)
+    setDatabase(database_filter[0]);
+    console.log(database_filter)
   };
 
   const fetchChart = async () => {
@@ -197,8 +216,9 @@ const fetchDashboards = async () => {
       `http://127.0.0.1:8000/chart/`
     );
     const data = await response.json();
-    setCharts(data.response);
-    //console.log(data.response)
+    const chart_filter =  data.response.filter((chart)=> chart.workspace_name === parseInt(clickedWorkspace))
+    setCharts(chart_filter);
+    //console.log(chart_filter)
   };
 
   useEffect(() => {
