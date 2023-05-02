@@ -88,8 +88,8 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
     const [value, setValue] = useState('1');
 
     const handleLocal = (workspace) => {
-        //localStorage.setItem("clicked",workspace)
         setClickedWorkspace(workspace)
+        localStorage.setItem('clicked',workspace)
     };
 
     
@@ -103,7 +103,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
           `http://127.0.0.1:8000/workspace`
         );
         const data = await response.json();
-        // const w_id = data
+        //const w_id = data[0].workspace
         setWorkspaces(data);
         //console.log(data)
       };
@@ -179,7 +179,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
 
             <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace}/>
 
-            <Tour
+            {/* <Tour
                 onAfterOpen={disableBody}
                 onBeforeClose={enableBody}
                 steps={displaysteps}
@@ -193,7 +193,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                 //handleTourComplete(currentUser)
                 setIsTourOpen(false)
                 }}
-            />
+            /> */}
         </>
         
     );

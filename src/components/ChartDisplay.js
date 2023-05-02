@@ -56,6 +56,7 @@ function ChartDisplay ({chart_id}) {
             },
         ]
     });
+    //const [chartData, setChartData] = useState({});
 
     
     //console.log(chart_id)
@@ -73,42 +74,45 @@ function ChartDisplay ({chart_id}) {
         const type = data.response[0].chart_type.split(" ")[0]
         const x_label = data.response[0].x_axis
         const y_label = data.response[0].y_axis
+        fetchWorkspace(x_label,y_label)
         setXLabel(x_label)
         setYLabel(y_label)
         setChartType(type)
       };
 
-      const fetchWorkspace= async () => {
+      const fetchWorkspace= async (x_label, y_label) => {
         const response = await fetch( 
           `http://127.0.0.1:8000/workspace/${wid}`
         );
         const data = await response.json();
-        console.log(data.response)
+        //console.log(data.response)
         const database_id = data.response[0].database
         //setChartData(data)
-        fetchData(database_id)
+        fetchData(database_id, x_label, y_label)
         return data
       };
 
-      const fetchData = async (id) => {
+      const fetchData = async (id, x_label, y_label) => {
         const response = await fetch( 
           `http://127.0.0.1:8000/view-file/${id}`
         );
         const data = await response.json();
-        console.log(xLabel, yLabel)
+        //console.log(xLabel, yLabel)
         // const x =  xLabel ? xLabel : 'name'
         // const y = yLabel ? yLabel : 'maths'
-        const x =  xLabel
-        const y = yLabel 
+        const x =  x_label
+        const y = y_label 
+
+        console.log(data)
         
         //console.log(data,xLabel, yLabel)
         setChartData(
             {
-                labels: data.map((data) => data[xLabel]), // x-axis
+                labels: data.map((data) => data[x_label]), // x-axis
                 datasets: [
                     {
                         label: y,
-                        data: data.map((data) => data[yLabel]), // y-axis
+                        data: data.map((data) => data[y_label]), // y-axis
                         backgroundColor: [
                             "rgba(75,192,192,1)",
                             "#ecf0f1",
@@ -135,16 +139,16 @@ function ChartDisplay ({chart_id}) {
         //fetchWorkspace()
       }, [chart_id]);
 
-      useEffect(() => {
-        fetchWorkspace();
-        //fetchWorkspace()
-      }, [xLabel, yLabel]);
+    //   useEffect(() => {
+    //     fetchWorkspace();
+    //     //fetchWorkspace()
+    //   }, [xLabel, yLabel]);
 
     return(
         <Box width="100%" padding="30px" backgroundColor="#FEFEFE" borderRadius="20px" >
 
             {/* <Grid container spacing={1} xs={10} sx={{display: "flex", flexDirection: "column"}} > */}
-                {xLabel ? <Chart
+                {chartData ? <Chart
                     type={chartType}
                     data={chartData}
                     options={{

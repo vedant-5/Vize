@@ -151,6 +151,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function Sidebar({open, setOpen, clickedWorkspace}) {
+  const workspace_id =  localStorage.getItem('clicked')
+  //console.log(workspace_id)
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -160,17 +162,18 @@ export default function Sidebar({open, setOpen, clickedWorkspace}) {
   const [database, setDatabase] = useState('')
   const [charts, setCharts] =  useState([])
   const [isTourOpen, setIsTourOpen] = useState(false)
-  const [workspaceId, setWorkspaceId] =  useState(clickedWorkspace)
+  //const [workspaceId, setWorkspaceId] =  useState(clickedWorkspace ? clickedWorkspace : localStorage.getItem('clicked'))
+  const [workspaceId, setWorkspaceId] =  useState(workspace_id ?  workspace_id :  clickedWorkspace)
   const [workspace, setWorkspace] =  useState("")
   const [count,setCount] = useState(0)
   
-  const params = useParams()
-  //console.log(params)
+  //const {wid} = useParams()
+  //console.log(clickedWorkspace, workspaceId)
 
   useEffect(() => {
     fetchDashboards();
-    fetchChart();
-    fetchWorkspace();
+    // fetchChart();
+    // fetchWorkspace();
     //fetchDatabase();
     setIsTourOpen(true)
   }, []);
@@ -182,21 +185,27 @@ const fetchDashboards = async () => {
       `http://127.0.0.1:8000/dashboard/`
     );
     const data = await response.json();
-    const dashboard_filter =  data.response.filter((dashboard)=> dashboard.workspace_name.workspace === parseInt(clickedWorkspace))
-    setDashboards(dashboard_filter);
-    setWorkspaceId(clickedWorkspace)
+    //console.log(workspace_id)
+    const dashboard_filter =  data.response.filter((dashboard)=> dashboard?.workspace_name.workspace === parseInt(workspace_id))
+    setDashboards(dashboard_filter)
+    const w_id = dashboard_filter[0]?.workspace_name.workspace
     console.log(dashboard_filter)
+    setWorkspaceId(w_id ? w_id : parseInt(workspace_id) )
+    fetchWorkspace(w_id ? w_id : parseInt(workspace_id))
+
     //console.log(data.response[0].workspace_name.workspace === parseInt(clickedWorkspace), clickedWorkspace);
   };
 
-  const fetchWorkspace = async () => {
+  const fetchWorkspace = async (workspace_id) => {
+    console.log(workspace_id)
     const response = await fetch(
-      `http://127.0.0.1:8000/workspace/${clickedWorkspace}`
+      `http://127.0.0.1:8000/workspace/${workspace_id ? workspace_id : workspaceId}`
     );
     const data = await response.json();
     setWorkspace(data.response[0]);
     const database_id  =  data.response[0].database
     fetchDatabase(database_id)
+    fetchChart(workspace_id ?  workspace_id : clickedWorkspace)
     //console.log(database_id)
   };
 
@@ -205,34 +214,34 @@ const fetchDashboards = async () => {
       `http://127.0.0.1:8000/view-file`
     );
     const data = await response.json();
-    console.log(data)
+    //console.log(data)
     const database_filter = data.filter((d) => d.id === database_id)
     setDatabase(database_filter[0]);
-    console.log(database_filter)
+    //console.log(database_filter)
   };
 
-  const fetchChart = async () => {
+  const fetchChart = async (workspace_id) => {
     const response = await fetch(
       `http://127.0.0.1:8000/chart/`
     );
     const data = await response.json();
-    const chart_filter =  data.response.filter((chart)=> chart.workspace_name === parseInt(clickedWorkspace))
+    const chart_filter =  data.response.filter((chart)=> chart.workspace_name === parseInt(workspace_id))
     setCharts(chart_filter);
     //console.log(chart_filter)
   };
 
-  useEffect(() => {
-    // Retrieve the count from localStorage on component mount
-    const storedCount = localStorage.getItem('count');
-    if (storedCount) {
-      setCount(parseInt(storedCount));
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Retrieve the count from localStorage on component mount
+  //   const storedCount = localStorage.getItem('count');
+  //   if (storedCount) {
+  //     setCount(parseInt(storedCount));
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    // Save the count to localStorage whenever it changes
-    localStorage.setItem('count', count);
-  }, [count]);
+  // useEffect(() => {
+  //   // Save the count to localStorage whenever it changes
+  //   localStorage.setItem('count', count);
+  // }, [count]);
 
 
   useEffect(()=> {
@@ -313,7 +322,7 @@ const fetchDashboards = async () => {
             Database
           </Typography>
           <MenuList>
-            <Item title={database.name} index={0} to={`workspace/${clickedWorkspace ? clickedWorkspace :  workspaceId}/database/${database.id}`} selected={selected} setSelected={setSelected} />
+            <Item title={database.name} index={0} to={`workspace/${workspaceId}/database/${database.id}`} selected={selected} setSelected={setSelected} />
             {/* {databaselist.map((text, index) => (
               <Item title={text} index={index} to={`/database/${text}`} selected={selected} setSelected={setSelected} />
             ))} */}
@@ -338,7 +347,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {dashboards.map((arr, index) => (
-              <Item title={arr.name} index={1+index} to={`workspace/${clickedWorkspace ? clickedWorkspace :  workspaceId}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
+              <Item title={arr.name} index={1+index} to={`workspace/${workspaceId}/dashboard/${arr.dashboard}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
@@ -361,7 +370,7 @@ const fetchDashboards = async () => {
           </Typography>
           <MenuList>
             {charts.map((chart, index) => (
-              <Item title={chart.title} index={dashboards.length+1+index} to={`workspace/${clickedWorkspace ? clickedWorkspace :  workspaceId}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
+              <Item title={chart.title} index={dashboards.length+1+index} to={`workspace/${workspaceId}/chart/${chart.chart_id}`} selected={selected} setSelected={setSelected} />
             ))}
           </MenuList>
         </Paper>
