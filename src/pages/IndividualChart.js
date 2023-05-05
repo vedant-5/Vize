@@ -70,6 +70,7 @@ function IndividualChart ({chart_id}) {
         );
         const data = await response.json();
         setChart(data.response[0]);
+        console.log(data)
         //console.log(data.response[0])
         const type = data.response[0].chart_type.split(" ")[0]
         const x_label = data.response[0].x_axis

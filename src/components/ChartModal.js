@@ -39,12 +39,12 @@ function ChartModal ({chartModalOpen, setChartModalOpen}) {
                         {chartTypeList.map((type, index) => (
                             <Grid item xs={3} key={index} id={index} onClick={(e)=>{handleSelectChart(e.currentTarget.id)}}>
                                 <div>
-                                    <img src={`../images/${type}.png`} alt={`${type} chart`} />
+                                    <img src={require(`../images/${type}.png`)} alt={`${type} chart`} />
                                     <Typography>{type} Chart</Typography>
                                 </div>
                             </Grid>
                         ))}
-                    </Grid>
+                    </Grid> 
                 </DialogContent>
                 {chartSelected && <DialogActions sx={{padding: "12px"}}>
                     <Button onClick={handleColumnModal} sx={{color: '#1c1c1c', fontWeight: '600', letterSpacing: '1px'}}>

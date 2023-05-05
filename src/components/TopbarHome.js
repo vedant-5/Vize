@@ -51,6 +51,20 @@ function TopbarHome() {
     const colorMode = useContext(ColorModeContext);
     // const [fullScreen, setFullScreen] = useState(false);
 
+    // const handleMicrophone = () => {
+    //     setMicrophone(!microphone);
+    //     if(microphone) {
+    //       SpeechRecognition.startListening({ continuous: true });
+
+    //       console.log(listening, transcript)
+    //     }
+    //     else {
+    //       SpeechRecognition.abortListening();
+    //       console.log(listening);
+    //       resetTranscript();
+    //     }
+    //   }
+
     return(
         <>
             <Box width="100vw">
@@ -69,7 +83,7 @@ function TopbarHome() {
                     <IconButton>
                         <SettingsIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton >
                         <MicIcon />
                     </IconButton>
                     <IconButton>

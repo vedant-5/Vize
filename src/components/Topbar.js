@@ -14,7 +14,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { useSpeechSynthesis } from 'react-speech-kit';
 // import VoiceAssistant from "../pages/VoiceAssistant";
 import CheckIcon from '@mui/icons-material/Check';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import Button from '@mui/material/Button';
 
 
@@ -29,6 +29,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
     
     // const {wid}  = useParams();
     // console.log(wid)
+    const navigate = useNavigate()
 
     const {speak} = useSpeechSynthesis();
     const [value, setValue] = useState('');
@@ -115,6 +116,41 @@ function Topbar({open, setOpen, clickedWorkspace}) {
         
       }
 
+      const createDashboard = async (name) => {
+        if(clickedWorkspace) {
+          console.log(clickedWorkspace)
+        const data = {
+          "name" : name,
+          "charts" : null,
+          "text": null,
+          "created_by" : "1",
+          "workspace_name" :  parseInt(clickedWorkspace),
+        }
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      };
+      fetch('http://127.0.0.1:8000/dashboard/', requestOptions)
+          .then(function (response) {
+            // ...
+            return response.json();
+          }).then(function (body) {
+            // ...
+            const workspace_data = {...workspaceData, "charts":workspaceData.charts + `,${body.dashboard}`}
+            updateWorkspace(workspace_data)
+            console.log(body);
+            window.location.reload()
+            navigate(`/workspace/${clickedWorkspace}/database/${body.dashboard}`)
+            
+          }).catch(err => {
+              console.log(err)
+          })
+        }
+        else {
+          console.log("not happening")
+        }}
+       
 
       const updateDashboard =  async (dashboard_data) => {
         console.log(dashboard_data)
@@ -269,6 +305,16 @@ function Topbar({open, setOpen, clickedWorkspace}) {
             setValue(`Select which dashboard you want to add the chart to`)
             // setValue(`Select variables for the ${chart} chart`);
             console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'create dashboard *',
+          callback: (dashboard) => {
+            //setChartType(chart); 
+            createDashboard(dashboard)
+            setValue(`Dashboard ${dashboard} being created`)
+            // setValue(`Select variables for the ${chart} chart`);
+            //console.log(chartType, value);
           } //create handle function and call it here to make charts
         },
         {
@@ -698,4 +744,4 @@ function Topbar({open, setOpen, clickedWorkspace}) {
     )
 }
 
-export default Topbar;
+export default Topbar
