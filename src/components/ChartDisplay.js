@@ -62,7 +62,6 @@ function ChartDisplay ({chart_id}) {
     //console.log(chart_id)
     
 
-  
 
     const fetchChart = async () => {
         console.log(chart_id)
@@ -103,16 +102,16 @@ function ChartDisplay ({chart_id}) {
         const x =  x_label
         const y = y_label 
 
-        console.log(data)
+        console.log(data, x_label,y_label)
         
         //console.log(data,xLabel, yLabel)
         setChartData(
             {
-                labels: data.map((data) => data[x_label]), // x-axis
+                labels: data.map((data) => data[x]), // x-axis
                 datasets: [
                     {
                         label: y,
-                        data: data.map((data) => data[y_label]), // y-axis
+                        data: data.map((data) => data[y]), // y-axis
                         backgroundColor: [
                             "rgba(75,192,192,1)",
                             "#ecf0f1",

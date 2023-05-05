@@ -1,17 +1,18 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
-import { useState, useEffect} from "react";
+import { useState} from "react";
 import {ColorModeContext, useMode} from './theme';
 import {AppBar, CssBaseline, Divider, ThemeProvider} from "@mui/material";
 // import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Workbook from "./pages/Workbook";
 import Database from "./pages/Database";
 import Dashboard from "./pages/Dashboard";
 import IndividualChart from "./pages/IndividualChart";
 import VoiceAssistant from "./pages/VoiceAssistant";
 import Topbar from "./components/Topbar";
+import DashboardModal from "./components/DashboardModal";
 // import { AuthProvider } from "./context/AuthContext";
 // import Register from "./pages/Register";
 // import Login from "./pages/Login";
@@ -22,7 +23,7 @@ function App() {
   const [theme, colorMode] = useMode();
   const [open, setOpen] = useState(true);
   const [clickedWorkspace, setClickedWorkspace] = useState();
-  //const [clicked, setClicked] =  useState()
+  const [dashboardModalOpen, setDashboardModalOpen] = useState(false);
 
   const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -59,12 +60,13 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
             <div className="app">
-              {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace}/>)}
+              {window.location.pathname === '/' ? (<></>) : (<Sidebar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace} setDashboardModalOpen={setDashboardModalOpen}/>)}
               <Main className='content' open={open}>
               {/* <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
                 <Topbar open={open} setOpen={setOpen} />
                   <Divider />
               </AppBar> */}
+                <DashboardModal dashboardModalOpen={dashboardModalOpen} setDashboardModalOpen={setDashboardModalOpen}/>
                 <Routes>
                   {/* <Route component={Login} path="/login" />
                   <Route component={Register} path="/register" /> */}

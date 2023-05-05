@@ -231,9 +231,9 @@ function IndividualChart ({chart_id}) {
                 <Button onClick={generateSummary} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>
                     + Generate Summary
                 </Button>
-                <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.4)">
+                <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.4)" borderRadius="8px">
                     <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%"}}>Customize Chart</Button>
-                    <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
+                    <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" sx={{margin: "10px 0"}}>
                         <WhiteButtons>Add title</WhiteButtons>
                         <WhiteButtons>Change color palette</WhiteButtons>
                         <WhiteButtons>Change x label</WhiteButtons>
@@ -241,28 +241,6 @@ function IndividualChart ({chart_id}) {
                         <WhiteButtons>Add legend</WhiteButtons>
                     </ButtonGroup>
                 </Box>
-                {/* <Box>
-                <List
-                    sx={{
-                    width: '100%',
-                    padding: '16px 0',
-                    marginTop: '40px',
-                    border: '0.8px solid #A8C5DA',
-                    borderRadius: '10px',
-                    position: 'relative',
-                    overflow: 'auto',
-                    maxHeight: 300,
-                    '& ul': { padding: 0 },
-                    }}
-                >
-                    <ListSubheader sx={{textTransform: "uppercase", lineHeight: "160%", fontWeight: "600", fontSize: "0.85rem", color: "rgba(0,0,0,0.3)", marginBottom: "8px"}}>Voice Commands</ListSubheader>
-                    {commandList.map((item, index) => (
-                        <ListItem key={index} sx={{padding: "5px 16px"}}>
-                        <span style={{fontSize: "0.9rem", wordWrap: "break-word", overflow: "hidden"}}>{item}</span>
-                        </ListItem>
-                    ))}
-                    </List>
-                </Box> */}
             </Grid>
         </Box>
     )
@@ -271,9 +249,11 @@ function IndividualChart ({chart_id}) {
 export default IndividualChart;
 
 const WhiteButtons =  styled.button`
+    background-color: white;
     color: #1c1c1c !important;
     text-transform: initial !important;
     border: none !important;
     font-size: 14px;
     text-align: left !important;
+    padding: 9px 20px;
 `

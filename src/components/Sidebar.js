@@ -150,10 +150,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function Sidebar({open, setOpen, clickedWorkspace}) {
-  const workspace_id =  localStorage.getItem('clicked')
-  //console.log(workspace_id)
+export default function Sidebar({open, setOpen, clickedWorkspace, setDashboardModalOpen}) {
   const theme = useTheme();
+  const workspace_id =  localStorage.getItem('clicked')
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   // const [open, setOpen] = useState(true);
@@ -301,7 +300,7 @@ const fetchDashboards = async () => {
             boxShadow: 'none',
             padding: '30px 16px 0px 16px'
             }} >
-          <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginBottom: "28px"}}>+ New Dashboard</Button>
+          <Button onClick={()=>{setDashboardModalOpen(true)}} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginBottom: "28px"}}>+ New Dashboard</Button>
         </Paper>
         <Paper 
           className='database'
