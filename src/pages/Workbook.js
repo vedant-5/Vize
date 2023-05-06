@@ -118,7 +118,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
         <>
             <Box >
                 <AppBar position="fixed" sx={{boxShadow: "none"}}>
-                    <Top/>
+                    <Top clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace}/>
                     <Divider />
                 </AppBar>
             

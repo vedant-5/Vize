@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+
+
 import { Dialog, DialogActions, DialogContent, DialogTitle, Typography, Button } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -16,12 +18,12 @@ import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 //import Typography from '@mui/material/Typography';
 
+const { forwardRef, useRef, useImperativeHandle } = React;
 
-
-const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWorkspace, setClickedWorkspace}) => {
+const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen, clickedWorkspace, setClickedWorkspace,workspaceName },databaseRef,detailsRef,childRef) => {
 
   const [databaseModalOpen, setDatabaseModalOpen] = useState(false);
-  const [name, setName] = useState("")
+  const [name, setName] = useState(workspaceName? workspaceName : "")
   const [databaseName,setDatabaseName] =  useState([])
   const navigate = useNavigate()
 
@@ -54,8 +56,6 @@ const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWo
         const mm = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
         const yyyy = d.getFullYear();
         const today = yyyy + '-' + mm + '-' + dd;
-
-        
 
         const data = {
           "created_by" : "1",
@@ -91,6 +91,38 @@ const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWo
           })
         }
 
+    // useEffect(() => {
+    //       databaseRef.current = {handleNext};
+    // }, [databaseRef]);
+
+    
+    // useEffect(() => {
+    //   detailsRef.current = {handleNext};
+    // }, [detailsRef]);
+
+
+    // useEffect(() => {
+    //       childRef.current = {createWorkspace};
+    // }, [childRef]);
+
+    useImperativeHandle(childRef, () => ({
+      createWorkspace (){
+        createWorkspace()
+      }
+    }))
+
+    useImperativeHandle(databaseRef, () => ({
+      handleNext () {
+        handleNext()
+      }
+    }))
+
+    useImperativeHandle(detailsRef, () => ({
+      handleNext() {
+        handleNext()
+      }
+    }))
+
 
     return (
       <>
@@ -105,8 +137,8 @@ const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWo
                               <Typography>Enter Workspace Name</Typography>
                           </StepLabel>
                             <StepContent>
-                            <TextField id="outlined-basic" variant="outlined" onChange={(e)=>{
-                              setName(e.target.value)
+                            <TextField id="outlined-basic" variant="outlined"  defaultValue={ workspaceName ? workspaceName: ""} onChange={(e)=>{
+                              setName(e.target.value ? e.target.value : workspaceName)
                               }}/>
                             <Box sx={{ mb: 2 }}>
                                 <div>
@@ -187,6 +219,6 @@ const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWo
             
         </>
     );
-}
+})
 
 export default NewWorkspaceModal;

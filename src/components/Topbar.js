@@ -26,7 +26,7 @@ import TopbarIcons from "./TopbarIcons";
 //     return string.charAt(0).toUpperCase() + string.slice(1);
 //   }
 
-function Topbar({open, setOpen, clickedWorkspace}) {
+function Topbar({open, setOpen, clickedWorkspace, setClickedWorkspace}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
@@ -740,7 +740,7 @@ function Topbar({open, setOpen, clickedWorkspace}) {
                     <MicIcon />
                 </IconButton>
             </Box> */}
-            <TopbarIcons clickedWorkspace={clickedWorkspace}/>
+            <TopbarIcons clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace}/>
         </Box>
     )
 }

@@ -150,7 +150,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function Sidebar({open, setOpen, clickedWorkspace, setDashboardModalOpen}) {
+export default function Sidebar({open, setOpen, clickedWorkspace,setClickedWorkspace, setDashboardModalOpen}) {
   const theme = useTheme();
   const workspace_id =  localStorage.getItem('clicked')
   const colors = tokens(theme.palette.mode);
@@ -266,7 +266,7 @@ const fetchDashboards = async () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" open={open} sx={{boxShadow: "none"}} >
-        <Topbar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace ? clickedWorkspace :  workspaceId} />
+        <Topbar open={open} setOpen={setOpen} clickedWorkspace={clickedWorkspace ? clickedWorkspace :  workspaceId} setClickedWorkspace={setClickedWorkspace}/>
           <Divider />
       </AppBar>
       <Drawer

@@ -17,9 +17,11 @@ import { deepOrange, deepPurple } from '@mui/material/colors';
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
+import { useRef } from "react";
+import NewWorkspaceModal from "./NewWorkspaceModal";
 
 
-function TopbarIcons({clickedWorkspace}) {
+function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -46,6 +48,9 @@ function TopbarIcons({clickedWorkspace}) {
     const [workspaceData, setWorkspaceData] = useState({})
     const [dashboardData, setDashboardData] =  useState({})
     const [getDatabase, setGetDatabase] = useState(false)
+    const [workspaceName, setWorkspaceName] =  useState('')
+    const [databaseName, setDatabaseName] =  useState('')
+    const [workspaceModalOpen, setWorkspaceModalOpen] = useState(false);
     const [xLabel, setXLabel] = useState('')
     const [yLabel, setYLabel] = useState('')
     const [xAxis, setXAxis] = useState('')
@@ -74,7 +79,7 @@ function TopbarIcons({clickedWorkspace}) {
         setChartList(data.response)
         return data.response
     };
-    
+
     const createChart = async () => {
         if(clickedWorkspace) {
           console.log(clickedWorkspace, dashboardID)
@@ -290,6 +295,21 @@ function TopbarIcons({clickedWorkspace}) {
         })
     };
     
+    const childRef = useRef();
+    const databaseRef = useRef();
+    const detailsRef = useRef(); 
+
+    const createWorkspace = ()=>{
+      childRef.current.createWorkspace();
+    }
+
+    const uploadDatabase =  ()=>{
+      databaseRef.current.handleNext()
+    }
+
+    const viewDetails = ()=>{
+      detailsRef.current.handleNext()
+    }
     
     const commands = [
         {
@@ -297,6 +317,44 @@ function TopbarIcons({clickedWorkspace}) {
           callback: (chart) => {
             setChartType(chart); 
             setValue(`Select which dashboard you want to add the chart to`)
+            // setValue(`Select variables for the ${chart} chart`);
+            console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'create workspace *',
+          callback: (workspace) => {
+            setWorkspaceName(workspace); 
+            setWorkspaceModalOpen(true)
+            setValue(`Please select what database you want to upload`)
+            // setValue(`Select variables for the ${chart} chart`);
+            //console.log(workspace, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'upload database *',
+          callback: (database) => {
+            setDatabaseName(database); 
+            uploadDatabase()
+            setValue(`Please review details of workspace, say view details`)
+            // setValue(`Select variables for the ${chart} chart`);
+            console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'view details',
+          callback: () => {
+            viewDetails()
+            setValue(`Workspace ${workspaceName} with database ${databaseName} will be created `)
+            // setValue(`Select variables for the ${chart} chart`);
+            console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'finalize workspace',
+          callback: () => {
+            createWorkspace()
+            setValue(`Workspace ${workspaceName} created`)
             // setValue(`Select variables for the ${chart} chart`);
             console.log(chartType, value);
           } //create handle function and call it here to make charts
@@ -709,11 +767,12 @@ function TopbarIcons({clickedWorkspace}) {
 
 
     return(
+      <>
         <Box display="flex">
-            {listening ? <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+            <Box display="flex">
+            {listening ? <Alert icon={<CheckIcon fontSize="inherit" />} severity="success" sx={{marginTop: "-10px", padding: "8px 12px"}}>
                             {transcript}
                          </Alert>: <p></p>}
-            <Box display="flex">
                 <IconButton onClick={handleMicrophone} sx={{marginTop: "3px", padding: "8px 12px"}}>
                     <MicIcon />
                 </IconButton>
@@ -736,6 +795,8 @@ function TopbarIcons({clickedWorkspace}) {
                 </IconButton>
             </Box>
         </Box>
+        {/* <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} databaseRef={databaseRef} detailsRef={detailsRef} childRef={childRef}/> */}
+      </>
     )
 }
 
