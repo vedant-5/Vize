@@ -98,6 +98,7 @@ const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWo
                 <Dialog onClose={handleClose} open={workspaceModalOpen} sx={{overflowY: "hidden"}}>
                   <DialogContent>
                     <Box sx={{ maxWidth: 400 }}>
+                      <DialogTitle>Enter Workspace Details</DialogTitle>
                     <Stepper activeStep={activeStep} orientation="vertical">
                         <Step>
                           <StepLabel>
