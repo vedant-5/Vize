@@ -27,7 +27,7 @@ function DashboardModal({dashboardModalOpen, setDashboardModalOpen}) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    {/* call an api here to get the list of all the created charts */}
+    // call an api here to get the list of all the created charts
 
     const fetchChart = async () => {
         const response = await fetch( `http://127.0.0.1:8000/chart/`)

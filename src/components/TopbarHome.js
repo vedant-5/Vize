@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from "react";
 import {useContext, useState} from "react";
 import {Box, IconButton, useTheme, Breadcrumbs, Link} from "@mui/material";
@@ -14,6 +16,7 @@ import Divider from '@mui/material/Divider';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
+import TopbarIcons from "./TopbarIcons";
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -72,7 +75,7 @@ function TopbarHome() {
                 <Box display="flex" justifyContent="space-between" ml={"60px"} alignItems="center">
                     <p style={{fontWeight:"bold", fontFamily:"Inter"}}>Hello, Palka Dhirawani</p>
                 </Box>
-                <Box display="flex" mr={"36px"}>
+                {/* <Box display="flex" mr={"36px"}>
                     <IconButton onClick={colorMode.toggleColorMode}>
                         {theme.palette.mode === 'light' ? (
                             <LightModeIcon />
@@ -93,12 +96,14 @@ function TopbarHome() {
                             variant="dot"
                             >
                             <Avatar sx={{ bgcolor: deepOrange[500], width: 24, height: 24}}></Avatar>
-                            {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
                         </StyledBadge>
-                    </IconButton>
+                    </IconButton> */}
+                    <Box display="flex" mr={"36px"}>
+                        <TopbarIcons />
+                    </Box>
                     
                     {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
-                </Box>
+                {/* </Box> */}
             </Box>
             </Box>
         </>
