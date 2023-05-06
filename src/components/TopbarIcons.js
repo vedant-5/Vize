@@ -714,8 +714,10 @@ function TopbarIcons({clickedWorkspace}) {
                             {transcript}
                          </Alert>: <p></p>}
             <Box display="flex">
-                <IconButton onClick={handleMicrophone} sx={{marginTop: "3px", padding: "8px 12px"}}>
-                    <MicIcon />
+                <IconButton onClick={handleMicrophone} sx={{marginTop: "3px", padding: "8px 12px", position: "relative"}}>
+                    {microphone ? (<MicIcon />) : 
+                                  (<><div style={{width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#B1CF51", position: "absolute", top: "-7px", zIndex: "-1"}}></div> 
+                                  <MicIcon sx={{color: "white"}}/> </>)}
                 </IconButton>
                 <IconButton onClick={colorMode.toggleColorMode} sx={{padding: "8px 12px"}}>
                     {theme.palette.mode === 'light' ? (
