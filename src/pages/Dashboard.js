@@ -1,6 +1,6 @@
 import { Box, Button, Divider, List, ListItem, ListSubheader } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import IndividualChart from "./IndividualChart";
+// import IndividualChart from "./IndividualChart";
 import { useParams } from "react-router-dom";
 import ChartDisplay from "../components/ChartDisplay";
 import Grid from "@mui/material/Unstable_Grid2";

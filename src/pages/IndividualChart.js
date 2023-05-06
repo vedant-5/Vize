@@ -18,6 +18,10 @@ import { Chart } from "react-chartjs-2";
 import { mockDataTeam } from "../data/mockData";
 import { useParams } from "react-router-dom";
 import ChartDisplay from "../components/ChartDisplay";
+import ChangeTitle from "../components/CCTitleModal";
+import ChangeColor from "../components/CCColorModal";
+import ChangeXLabel from "../components/CCXLabelModal";
+import ChangeYLabel from "../components/CCYLabelModal";
 
 
 
@@ -61,6 +65,12 @@ function IndividualChart ({chart_id}) {
             },
         ]
     });
+
+    const [titleModalOpen, setTitleModalOpen] = useState(false);
+    const [xLabelModalOpen, setXLabelModalOpen] = useState(false);
+    const [yLabelModalOpen, setYLabelModalOpen] = useState(false);
+    const [colorModalOpen, setColorModalOpen] = useState(false);
+
     
     //console.log(chart_id)
 
@@ -234,14 +244,18 @@ function IndividualChart ({chart_id}) {
                 <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.4)" borderRadius="8px">
                     <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%"}}>Customize Chart</Button>
                     <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" sx={{margin: "10px 0"}}>
-                        <WhiteButtons>Add title</WhiteButtons>
-                        <WhiteButtons>Change color palette</WhiteButtons>
-                        <WhiteButtons>Change x label</WhiteButtons>
-                        <WhiteButtons>Change y label</WhiteButtons>
+                        <WhiteButtons onClick={() => {setTitleModalOpen(true)}}>Add/change title</WhiteButtons>
+                        <WhiteButtons onClick={() => {setColorModalOpen(true)}}>Change color palette</WhiteButtons>
+                        <WhiteButtons onClick={() => {setXLabelModalOpen(true)}}>Change x label</WhiteButtons>
+                        <WhiteButtons onClick={() => {setYLabelModalOpen(true)}}>Change y label</WhiteButtons>
                         <WhiteButtons>Add legend</WhiteButtons>
                     </ButtonGroup>
                 </Box>
             </Grid>
+            <ChangeTitle titleModalOpen={titleModalOpen} setTitleModalOpen={setTitleModalOpen} chartDetails={chart}/>
+            <ChangeColor colorModalOpen={colorModalOpen} setColorModalOpen={setColorModalOpen} chartDetails={chart}/>
+            <ChangeXLabel xLabelModalOpen={xLabelModalOpen} setXLabelModalOpen={setXLabelModalOpen} chartDetails={chart}/>
+            <ChangeYLabel yLabelModalOpen={yLabelModalOpen} setYLabelModalOpen={setYLabelModalOpen} chartDetails={chart}/>
         </Box>
     )
 }

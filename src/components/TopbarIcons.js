@@ -766,15 +766,17 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
           }));
 
 
-    return(
-      <>
+    return (
         <Box display="flex">
             <Box display="flex">
             {listening ? <Alert icon={<CheckIcon fontSize="inherit" />} severity="success" sx={{marginTop: "-10px", padding: "8px 12px"}}>
                             {transcript}
                          </Alert>: <p></p>}
-                <IconButton onClick={handleMicrophone} sx={{marginTop: "3px", padding: "8px 12px"}}>
-                    <MicIcon />
+            <Box display="flex">
+                <IconButton onClick={handleMicrophone} sx={{marginTop: "3px", padding: "8px 12px", position: "relative"}}>
+                    {microphone ? (<MicIcon />) : 
+                                  (<><div style={{width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#B1CF51", position: "absolute", top: "-7px", zIndex: "-1"}}></div> 
+                                  <MicIcon sx={{color: "white"}}/> </>)}
                 </IconButton>
                 <IconButton onClick={colorMode.toggleColorMode} sx={{padding: "8px 12px"}}>
                     {theme.palette.mode === 'light' ? (
@@ -796,7 +798,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
             </Box>
         </Box>
         {/* <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} databaseRef={databaseRef} detailsRef={detailsRef} childRef={childRef}/> */}
-      </>
+    </Box>
     )
 }
 
