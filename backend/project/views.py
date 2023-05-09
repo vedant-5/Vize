@@ -347,7 +347,9 @@ def chart_summary_view(request,id):
     x_values = data.get('x_values', [])
     y_values = data.get('y_values', [])
     chartid = data.get('chart_id', None)
-    print(x_values,y_values,chartid,id)
+    x_label = data.get('x_label', None)
+    y_label = data.get('y_label', None)
+    print(x_values,y_values,chartid,id,x_label,y_label)
 
     # x_values = request.GET.getlist('x_values', [])
     # y_values = request.GET.getlist('y_values', [])
@@ -369,22 +371,22 @@ def chart_summary_view(request,id):
     # Identify trends and patterns
     if y_type == "continuous":
         if y_values == sorted(y_values):
-            trend = "The y values increase consistently."
+            trend = "The "+y_label+" increase consistently."
         elif y_values == sorted(y_values, reverse=True):
-            trend = "The y values decrease consistently."
+            trend = "The "+y_label+" decrease consistently."
         else:
-            trend = "There is no consistent trend in the y values."
+            trend = "There is no consistent trend in the "+y_label+" values."
     else:
         trend = ""
 
     # Describe the distribution of y values
     if y_type == "continuous":
         if abs(skew(y_values)) > 1:
-            distribution = "The y values are highly skewed."
+            distribution = "The "+y_label+" are highly skewed."
         elif abs(skew(y_values)) > 0.5:
-            distribution = "The y values are moderately skewed."
+            distribution = "The "+y_label+" are moderately skewed."
         else:
-            distribution = "The y values are roughly symmetric."
+            distribution = "The "+y_label+" are roughly symmetric."
     else:
         distribution = ""
 
@@ -392,13 +394,13 @@ def chart_summary_view(request,id):
     if x_type == "continuous" and y_type == "continuous":
         corr, p_value = pearsonr(x_values, y_values)
         if abs(corr) >= 0.7:
-            correlation = "There is a strong positive correlation between x and y."
+            correlation = "There is a strong positive correlation between "+x_label+" and "+y_label+"."
         elif abs(corr) >= 0.3:
-            correlation = "There is a moderate positive correlation between x and y."
+            correlation = "There is a moderate positive correlation between "+x_label+" and "+y_label+"."
         elif abs(corr) > 0:
-            correlation = "There is a weak positive correlation between x and y."
+            correlation = "There is a weak positive correlation between "+x_label+" and "+y_label+"."
         else:
-            correlation = "There is no correlation between x and y."
+            correlation = "There is no correlation between "+x_label+" and "+y_label+"."
     else:
         correlation = ""
         
@@ -420,7 +422,7 @@ def chart_summary_view(request,id):
     # Generate summary text
     summary_text = ""
     if y_type == "continuous":
-        summary_text += f"The mean value of y is {mean_y:.2f}. The maximum value of y is {max_y}, the minimum value of y is {min_y}, and the range of y is {range_y}.\n{trend} \n{distribution} \n{correlation}"
+        summary_text += f"The mean value of {y_label} is {mean_y:.2f}. The maximum value of {y_label} is {max_y}, the minimum value of {y_label} is {min_y}, and the range of {y_label} is {range_y}.\n{trend} \n{distribution} \n{correlation}"
     # elif x_type == "categorical":
     #     summary_text += f"The chart shows {len(x_values)} categories: {', '.join(str(x) for x in x_values)}"
     #     if len(x_values) > 0:
