@@ -115,8 +115,11 @@ function IndividualChart ({chart_id}) {
         const y = yLabel ? yLabel : 'maths'
         setData({
             "x_values" : data.map((data) => data[x]),
-            "y_values" : data.map((data) => data[y])
+            "y_values" : data.map((data) => data[y]),
+            "x_label" : x,
+            "y_label" : y
         })
+        console.log(data)
         //console.log(data.map((data) => data[y]),data.map((data) => data[x]))
         //store x array and y array values in a seperate variable and write it in labels and data.
         setChartData(
@@ -148,10 +151,13 @@ function IndividualChart ({chart_id}) {
       };
 
     const generateSummary = async ()=>{
+        console.log(data)
         const data_columns = {
             x_values: data.x_values,
             y_values : data.y_values,
-            chart_id: chart_id ?  chart_id : text
+            chart_id: chart_id ?  chart_id : text,
+            x_label : data.x_label,
+            y_label : data.y_label
           }
           console.log(data_columns)
     
