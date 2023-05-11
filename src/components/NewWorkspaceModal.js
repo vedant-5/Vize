@@ -20,10 +20,14 @@ import { useNavigate } from 'react-router-dom';
 
 const { forwardRef, useRef, useImperativeHandle } = React;
 
-const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen, clickedWorkspace, setClickedWorkspace,workspaceName },databaseRef,detailsRef,childRef) => {
+const NewWorkspaceModal = ({workspaceModalOpen, setWorkspaceModalOpen, clickedWorkspace, setClickedWorkspace,workspaceName }) => {
 
   const [databaseModalOpen, setDatabaseModalOpen] = useState(false);
   const [name, setName] = useState(workspaceName? workspaceName : "")
+
+  console.log("workspce nme", workspaceName);
+  console.log("nm", name);
+
   const [databaseName,setDatabaseName] =  useState([])
   const navigate = useNavigate()
 
@@ -105,23 +109,23 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
     //       childRef.current = {createWorkspace};
     // }, [childRef]);
 
-    useImperativeHandle(childRef, () => ({
-      createWorkspace (){
-        createWorkspace()
-      }
-    }))
+    // useImperativeHandle(childRef, () => ({
+    //   createWorkspace (){
+    //     createWorkspace()
+    //   }
+    // }))
 
-    useImperativeHandle(databaseRef, () => ({
-      handleNext () {
-        handleNext()
-      }
-    }))
+    // useImperativeHandle(databaseRef, () => ({
+    //   handleNext () {
+    //     handleNext()
+    //   }
+    // }))
 
-    useImperativeHandle(detailsRef, () => ({
-      handleNext() {
-        handleNext()
-      }
-    }))
+    // useImperativeHandle(detailsRef, () => ({
+    //   handleNext() {
+    //     handleNext()
+    //   }
+    // }))
 
 
     return (
@@ -130,16 +134,14 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
                 <Dialog onClose={handleClose} open={workspaceModalOpen} sx={{overflowY: "hidden"}}>
                   <DialogContent>
                     <Box sx={{ maxWidth: 400 }}>
-                      <DialogTitle>Enter Workspace Details</DialogTitle>
+                      <DialogTitle sx={{fontWeight: "600"}}>Creating New Workspace</DialogTitle>
                     <Stepper activeStep={activeStep} orientation="vertical">
                         <Step>
                           <StepLabel>
                               <Typography>Enter Workspace Name</Typography>
                           </StepLabel>
                             <StepContent>
-                            <TextField id="outlined-basic" variant="outlined"  defaultValue={ workspaceName ? workspaceName: ""} onChange={(e)=>{
-                              setName(e.target.value ? e.target.value : workspaceName)
-                              }}/>
+                            <TextField id="outlined-basic" variant="outlined"  defaultValue={ workspaceName ? workspaceName: ""} onChange={(e)=>{setName(e.target.value ? e.target.value : workspaceName)}}/>
                             <Box sx={{ mb: 2 }}>
                                 <div>
                                 <Button
@@ -219,6 +221,6 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
             
         </>
     );
-})
+}
 
 export default NewWorkspaceModal;

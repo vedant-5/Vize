@@ -44,9 +44,10 @@ function ChangeColor({colorModalOpen, setColorModalOpen,chartDetails}) {
             <DialogContent>
                 <FormControl>
                     <RadioGroup aria-labelledby="demo-controlled-radio-buttons-group" name="controlled-radio-buttons-group" value={newColor} onChange={(e)=>{setNewColor(e.target.value)}}>
-                        <FormControlLabel value="pastel" control={<Radio />} label="Pastel" />
-                        <FormControlLabel value="palette two" control={<Radio />} label="Palette Two" />
-                        <FormControlLabel value="third" control={<Radio />} label="Third" />
+                        <FormControlLabel value="Light" control={<Radio />} label="Light" />
+                        <FormControlLabel value="Dark" control={<Radio />} label="Dark" />
+                        <FormControlLabel value="Yellow" control={<Radio />} label="Yellow" />
+                        <FormControlLabel value="Blue" control={<Radio />} label="Blue" />
                     </RadioGroup>
                 </FormControl>
             </DialogContent>

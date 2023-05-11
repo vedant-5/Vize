@@ -7,16 +7,14 @@ import { AppBar, Button, Divider, Grid } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import { Link } from 'react-router-dom';
 import TopbarHome from '../components/TopbarHome';
-import Topbar from '../components/Topbar';
+// import Topbar from '../components/Topbar';
 import WorkbookCard from '../components/WorkbookCard';
 import NewWorkbookCard from '../components/NewWorkbookCard';
 import Modal from '@mui/material/Modal';
-
-
-
 import Tour from 'reactour'
 import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock'
 import NewWorkspaceModal from '../components/NewWorkspaceModal';
+import { WorkspaceContext } from '../MyContext';
 
 const disableBody = target => disableBodyScroll(target)
 const enableBody = target => enableBodyScroll(target)
@@ -115,7 +113,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
     },[workspaces])
 
     return (
-        <>
+        <WorkspaceContext.Provider value={{workspaceModalOpen, setWorkspaceModalOpen}}>
             <Box >
                 <AppBar position="fixed" sx={{boxShadow: "none"}}>
                     <Top clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace}/>
@@ -194,7 +192,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                 setIsTourOpen(false)
                 }}
             /> */}
-        </>
+        </WorkspaceContext.Provider>
         
     );
 }

@@ -13,15 +13,16 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { useSpeechSynthesis } from 'react-speech-kit';
 import CheckIcon from '@mui/icons-material/Check';
 import { useNavigate } from "react-router-dom";
-import { deepOrange, deepPurple } from '@mui/material/colors';
+import { deepOrange } from '@mui/material/colors';
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import { useRef } from "react";
 import NewWorkspaceModal from "./NewWorkspaceModal";
+import { WorkspaceContext } from "../MyContext";
 
 
-function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
+function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -50,11 +51,13 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     const [getDatabase, setGetDatabase] = useState(false)
     const [workspaceName, setWorkspaceName] =  useState('')
     const [databaseName, setDatabaseName] =  useState('')
-    const [workspaceModalOpen, setWorkspaceModalOpen] = useState(false);
+    // const [workspaceModalOpen, setWorkspaceModalOpen] = useState(false);
     const [xLabel, setXLabel] = useState('')
     const [yLabel, setYLabel] = useState('')
     const [xAxis, setXAxis] = useState('')
     const [yAxis, setYAxis] = useState('')
+
+    const {workspaceModalOpen, setWorkspaceModalOpen} = useContext(WorkspaceContext);
 
     const handleMicrophone = () => {
         setMicrophone(!microphone);
@@ -248,7 +251,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
 
     const fetchWorkspace= async () => {
       const response = await fetch( 
-        `http://127.0.0.1:8000/workspace/${workspaceID}`
+        `http://127.0.0.1:8000/workspace/${workspaceID?workspaceID:clickedWorkspace}`
       );
       const data = await response.json();
       console.log(data.response)
@@ -295,21 +298,21 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
         })
     };
     
-    const childRef = useRef();
-    const databaseRef = useRef();
-    const detailsRef = useRef(); 
+    // const childRef = useRef();
+    // const databaseRef = useRef();
+    // const detailsRef = useRef(); 
 
-    const createWorkspace = ()=>{
-      childRef.current.createWorkspace();
-    }
+    // const createWorkspace = ()=>{
+    //   childRef.current.createWorkspace();
+    // }
 
-    const uploadDatabase =  ()=>{
-      databaseRef.current.handleNext()
-    }
+    // const uploadDatabase =  ()=>{
+    //   databaseRef.current.handleNext()
+    // }
 
-    const viewDetails = ()=>{
-      detailsRef.current.handleNext()
-    }
+    // const viewDetails = ()=>{
+    //   detailsRef.current.handleNext()
+    // }
     
     const commands = [
         {
@@ -335,7 +338,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
           command: 'upload database *',
           callback: (database) => {
             setDatabaseName(database); 
-            uploadDatabase()
+            // uploadDatabase()
             setValue(`Please review details of workspace, say view details`)
             // setValue(`Select variables for the ${chart} chart`);
             console.log(chartType, value);
@@ -344,7 +347,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
         {
           command: 'view details',
           callback: () => {
-            viewDetails()
+            // viewDetails()
             setValue(`Workspace ${workspaceName} with database ${databaseName} will be created `)
             // setValue(`Select variables for the ${chart} chart`);
             console.log(chartType, value);
@@ -353,7 +356,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
         {
           command: 'finalize workspace',
           callback: () => {
-            createWorkspace()
+            // createWorkspace()
             setValue(`Workspace ${workspaceName} created`)
             // setValue(`Select variables for the ${chart} chart`);
             console.log(chartType, value);
@@ -500,6 +503,34 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
             setTitle(title);
             if(isChartOpen) {
               setValue(`Title changed to ${title}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change colour palette to *',
+          callback: (colour) => {
+            // setEditChart({...editChart,"title":title})
+            // setTitle(title);
+            if(isChartOpen) {
+              setValue(`Colour palette changed to ${colour}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change color palette to *',
+          callback: (colour) => {
+            // setEditChart({...editChart,"title":title})
+            // setTitle(title);
+            if(isChartOpen) {
+              setValue(`Color palette changed to ${colour}`);
               window.location.reload()
             }
             else {
@@ -797,7 +828,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
                 </IconButton>
             </Box>
         </Box>
-        {/* <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} databaseRef={databaseRef} detailsRef={detailsRef} childRef={childRef}/> */}
+        <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} />
     </Box>
     )
 }
