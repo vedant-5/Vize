@@ -210,6 +210,21 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
         return data.response
     }
 
+    const getChartID = async (chartName) => {  //function that receives chartname and gives its id
+      const response = await fetch( 
+        `http://127.0.0.1:8000/chart`
+      );
+      const data = await response.json();
+      //console.log(data.response)
+      //console.log(data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName.toLowerCase())[0].dashboard)
+      console.log(data);
+      const chartId = data.response.filter((chart) => chart.title.toLowerCase() === chartName.toLowerCase())[0].chart
+      // setDashboardID(id)
+      console.log(data.response)
+      console.log(chartID)
+      return chartID
+  }
+
     const getDashboard = async (id) => {
         //console.log(id)
         const response = await fetch( 
@@ -233,7 +248,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
       };
-      fetch(`http://127.0.0.1:8000/chart/${chartID}/`, requestOptions)
+      fetch(`http://127.0.0.1:8000/chart/${chartID}`, requestOptions)
           .then(function (response) {
             // ...
             console.log(response);
@@ -299,6 +314,26 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     const databaseRef = useRef();
     const detailsRef = useRef(); 
 
+    const deleteChartByName = async (chartName) => {
+      try {
+        // Fetch the chart list from the API
+        console.log("Inside deletechartbyname function")
+        console.log(`${chartName}`)
+        const chartID = await getChartID(chartName);
+        console.log(`the id is ${chartID} for the name ${chartName} `);
+        // // Delete the chart by ID using the API
+        const deleteUrl = `http://127.0.0.1:8000/delete_chart/${chartID}/`;
+        const deleteResponse = await fetch(deleteUrl, { method: 'DELETE' });
+        if (!deleteResponse.ok) {
+          throw new Error(`HTTP error ${deleteResponse.status}`);
+        }
+        console.log(`Chart '${chartName}' deleted successfully function`);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+
     const createWorkspace = ()=>{
       childRef.current.createWorkspace();
     }
@@ -312,6 +347,31 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     }
     
     const commands = [
+        {
+          command: 'delete chart with name *',
+          callback: (chartName) => {
+            console.log("Delete chart command heard. You are here");
+            console.log(`${chartName}`)
+            console.log(`${isChartOpen}`)
+            if(isChartOpen) {
+            console.log("Chart is open");
+            //window.location.reload()
+            // call api to delete chart
+            try {
+                deleteChartByName(chartName);
+                setValue(`Chart '${chartName}' deleted successfully`);
+                console.log(`Now the chart is deleted, check through admin`)
+                // Redirect to dashboard page or do any other action here
+              } catch (error) {
+                console.error(error);
+                setValue(`Error deleting chart '${chartName}': ${error.message}`);
+              }
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
         {
           command: 'create * chart',
           callback: (chart) => {
@@ -387,10 +447,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
             //console.log(chartType, value);
           } //create handle function and call it here to make charts
         },
-        // {
-        //   command: 'The weather is :condition today',
-        //   callback: (condition) => setValue(`Today, the weather is ${condition}`)
-        // },
+        
         {
           command: '* and *',
           callback: (col1, col2) => {
@@ -664,20 +721,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
             }
           }
         },
-        {
-          command: 'Delete the chart',
-          callback: () => {
-            if(isChartOpen) {
-              setValue(`Chart is deleted`);
-              window.location.reload()
-              // call api to delete chart
-              // redirect to dashboard page
-            }
-            else {
-              setValue('Please select your desired chart first');
-            }
-          }
-        },
+        
         {
           command: 'clear',
           callback: ({ resetTranscript }) => {
