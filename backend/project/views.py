@@ -445,4 +445,24 @@ def chart_summary_view(request,id):
         chart.save()
         return Response({'summary': summary_text_x})
     
-    
+    # @api_view(['DELETE']) 
+#delete chart via chartname
+# def delete_chart(request, chartName):
+#     try:
+#         chart = Chart.objects.get(title=chartName)
+#     except Chart.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     chart.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+#delete chart via chartid
+def delete_chart(request, chartID):
+    try:
+        chart = Chart.objects.get(chart_id=chartID)
+    except Chart.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    chart.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)

@@ -28,4 +28,6 @@ urlpatterns = [
     path('view-file/', views.view_all_files, name='view_file_all'), 
     path('view-file/<int:pk>/', views.view_file, name='view_file'), #display content
     path('chart-summary/<int:id>/', views.chart_summary_view, name='chart_summary_view'),#generates and display summary
+    # path('delete_chart/<str:chartName>/',views.delete_chart ,name='delete-chart')#to delete chart
+    path('delete_chart/<int:chartID>/',views.delete_chart ,name='delete-chart')#to delete chart
 ]
