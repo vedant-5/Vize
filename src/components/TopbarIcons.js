@@ -311,8 +311,8 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     };
     
     const childRef = useRef();
-    const databaseRef = useRef();
-    const detailsRef = useRef(); 
+    // const databaseRef = useRef(null);
+    // const detailsRef = useRef(null); 
 
     const deleteChartByName = async (chartName) => {
       try {
@@ -339,11 +339,11 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     }
 
     const uploadDatabase =  ()=>{
-      databaseRef.current.handleNext()
+      childRef.current.handleNext()
     }
 
     const viewDetails = ()=>{
-      detailsRef.current.handleNext()
+      childRef.current.handleNext()
     }
     
     const commands = [
@@ -841,7 +841,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
                 </IconButton>
             </Box>
         </Box>
-        {/* <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} databaseRef={databaseRef} detailsRef={detailsRef} childRef={childRef}/> */}
+        <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} childRef={childRef}/>
     </Box>
     )
 }

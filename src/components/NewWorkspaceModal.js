@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const { forwardRef, useRef, useImperativeHandle } = React;
 
-const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen, clickedWorkspace, setClickedWorkspace,workspaceName },databaseRef,detailsRef,childRef) => {
+const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen, clickedWorkspace, setClickedWorkspace,workspaceName },childRef) => {
 
   const [databaseModalOpen, setDatabaseModalOpen] = useState(false);
   const [name, setName] = useState(workspaceName? workspaceName : "")
@@ -106,23 +106,15 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
     // }, [childRef]);
 
     useImperativeHandle(childRef, () => ({
-      createWorkspace (){
+      createWorkspace(){
         createWorkspace()
-      }
-    }))
+      },
 
-    useImperativeHandle(databaseRef, () => ({
       handleNext () {
         handleNext()
       }
-    }))
-
-    useImperativeHandle(detailsRef, () => ({
-      handleNext() {
-        handleNext()
-      }
-    }))
-
+    })) 
+    
 
     return (
       <>
