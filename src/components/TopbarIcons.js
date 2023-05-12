@@ -316,7 +316,6 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
         if (key !== 'id') {
         speak({text: key})}; // Output: id, name, batch, maths, physics, biology, chemistry
       }
-
     }
 
     const fetchData =  async (id)=> {
