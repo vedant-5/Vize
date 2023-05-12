@@ -29,6 +29,22 @@ function ChartDisplay ({chart_id}) {
     const {wid}  = useParams()
     const {text} = useParams();
 
+    const colourPalettes = [
+        {
+            "Light": ["#65647C", "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
+        },
+        {
+            "Dark": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"]
+        },
+        {
+            "Yellow": ["#C09C22", "#FFCA1A", "#FFD94D", "#FFE880", "#FFF099", "#FFFFCC"]
+        },
+        {
+            "Blue": ["#1E3F66", "#2E5984", "#528AAE", "#73A5C6", "#AAD1EC", "#D2E9FF"]
+        },
+    ];
+
+
     const [chart, setChart] =  useState([])
     const [chartTitle, setChartTitle] = useState('something something title');
     const [chartType, setChartType] = useState('pie');

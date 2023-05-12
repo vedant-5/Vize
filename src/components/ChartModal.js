@@ -35,11 +35,11 @@ function ChartModal ({chartModalOpen, setChartModalOpen}) {
             <Dialog onClose={handleClose} open={chartModalOpen} sx={{overflowY: "hidden"}}>
                 <DialogTitle sx={{fontWeight: "600"}}>Select type of chart</DialogTitle>
                 <DialogContent sx={{marginTop: "16px"}}>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={3}>
                         {chartTypeList.map((type, index) => (
-                            <Grid item xs={3} key={index} id={index} onClick={(e)=>{handleSelectChart(e.currentTarget.id)}}>
-                                <div>
-                                    <img src={require(`../images/${type}.png`)} alt={`${type} chart`} />
+                            <Grid item xs={3} key={index} id={index} onClick={(e)=>{handleSelectChart(e.currentTarget.id)}} >
+                                <div style={{backgroundColor: "rgba(220, 226, 248, 0.6)", padding: "14px", textAlign: "center", borderRadius: "8px", height: "100%", border: chartSelected === chartTypeList[index] ? ("5px solid rgba(122, 136, 210, 0.3)") : "none"}}>
+                                    <img src={require(`../images/${type}.png`)} alt={`${type} chart`} style={{width: "100%", borderRadius: "5px"}} />
                                     <Typography>{type} Chart</Typography>
                                 </div>
                             </Grid>

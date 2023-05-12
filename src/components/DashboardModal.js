@@ -50,7 +50,7 @@ function DashboardModal({dashboardModalOpen, setDashboardModalOpen}) {
                                 <Typography>Enter Dashboard Name</Typography>
                             </StepLabel>
                             <StepContent>
-                                <TextField id="outlined-basic" variant="outlined" value={dbName} onChange={(e)=>{setDbName(e.target.value)}}/>
+                                <TextField id="filled-basic" variant="filled" value={dbName} onChange={(e)=>{setDbName(e.target.value)}}/>
                                 <Box sx={{ mb: 2 }}>
                                     <div>
                                         <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }}> Continue </Button>

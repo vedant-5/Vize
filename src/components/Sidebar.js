@@ -287,9 +287,9 @@ const fetchDashboards = async () => {
         <Link reloadDocument to={"/"}>
         <DrawerHeader sx={{backgroundColor: `${colors.sidebardark}`}}>
           {/* <IconButton> */}
-            <HomeRoundedIcon />
+            <HomeRoundedIcon sx={{marginRight: "8px", width: "0.8em", height: "0.8em", color: "#272D66"}}/>
           {/* </IconButton> */}
-          <Typography>Home</Typography>
+          <Typography sx={{textTransform: "uppercase", fontWeight: "600", fontSize: "14px", color: "#272D66"}}>Home</Typography>
         </DrawerHeader>
         </Link>
         <Paper 
@@ -300,7 +300,7 @@ const fetchDashboards = async () => {
             boxShadow: 'none',
             padding: '30px 16px 0px 16px'
             }} >
-          <Button onClick={()=>{setDashboardModalOpen(true)}} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginBottom: "28px"}}>+ New Dashboard</Button>
+          <BlackButtons onClick={()=>{setDashboardModalOpen(true)}} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginBottom: "28px"}}>+ New Dashboard</BlackButtons>
         </Paper>
         <Paper 
           className='database'
@@ -409,3 +409,9 @@ const fetchDashboards = async () => {
     </Box>
   );
 }
+
+const BlackButtons = styled(Button) ({
+  '&:hover': {
+    backgroundColor: '#272D66',
+  },
+})

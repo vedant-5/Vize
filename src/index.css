@@ -46,3 +46,27 @@ a {
 .css-9wocm4-MuiButtonBase-root-MuiCheckbox-root.Mui-checked, .css-9wocm4-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
   color: initial;
 }
+
+.css-qtomf8-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+  color: #7A88D2 !important;
+}
+
+.css-qtomf8-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
+  color: #DCE2F8 !important;
+}
+
+.css-opt7yd-MuiStepIcon-text {
+  fill: white !important;
+}
+
+.css-10botns-MuiInputBase-input-MuiFilledInput-input {
+  height: 13px !important;
+}
+
+.css-9wocm4-MuiButtonBase-root-MuiCheckbox-root.Mui-checked, .css-9wocm4-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
+  color: #7A88D2 !important;
+}
+
+.css-1km1op1-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+  color: #7A88D2 !important;
+}

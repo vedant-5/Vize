@@ -13,7 +13,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { useSpeechSynthesis } from 'react-speech-kit';
 import CheckIcon from '@mui/icons-material/Check';
 import { useNavigate } from "react-router-dom";
-import { deepOrange, deepPurple } from '@mui/material/colors';
+import { deepOrange } from '@mui/material/colors';
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
@@ -21,7 +21,7 @@ import { useRef } from "react";
 import NewWorkspaceModal from "./NewWorkspaceModal";
 
 
-function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
+function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -682,6 +682,34 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             setTitle(title);
             if(isChartOpen) {
               setValue(`Title changed to ${title}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change colour palette to *',
+          callback: (colour) => {
+            // setEditChart({...editChart,"title":title})
+            // setTitle(title);
+            if(isChartOpen) {
+              setValue(`Colour palette changed to ${colour}`);
+              window.location.reload()
+            }
+            else {
+              setValue('Please select your desired chart first');
+            }
+          }
+        },
+        {
+          command: 'Change color palette to *',
+          callback: (colour) => {
+            // setEditChart({...editChart,"title":title})
+            // setTitle(title);
+            if(isChartOpen) {
+              setValue(`Color palette changed to ${colour}`);
               window.location.reload()
             }
             else {

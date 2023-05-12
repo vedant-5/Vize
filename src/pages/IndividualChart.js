@@ -29,12 +29,29 @@ import ChangeYLabel from "../components/CCYLabelModal";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function IndividualChart ({chart_id}) {
+
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
     const {wid}  = useParams()
     //console.log(wid)
     const {text} = useParams();
+
+    const colourPalettes = [
+        {
+            "Light": ["#65647C", "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
+        },
+        {
+            "Dark": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"]
+        },
+        {
+            "Yellow": ["#C09C22", "#FFCA1A", "#FFD94D", "#FFE880", "#FFF099", "#FFFFCC"]
+        },
+        {
+            "Blue": ["#1E3F66", "#2E5984", "#528AAE", "#73A5C6", "#AAD1EC", "#D2E9FF"]
+        },
+    ];
+
 
     const [chart, setChart] =  useState([])
     const [chartTitle, setChartTitle] = useState('something something title');
@@ -192,8 +209,8 @@ function IndividualChart ({chart_id}) {
     }, [xLabel, yLabel]);
       
     return(
-        <Box sx={{display: "flex", width: "100%"}}>
-            <Grid container spacing={4} xs={10} sx={{display: "flex", flexDirection: "column", maxWidth: "calc(100% - 220px)", paddingRight: "30px"}} >
+        <Box sx={{display: "flex", marginRight: "-30px"}}>
+            <Grid container xs={10} sx={{display: "flex", flexDirection: "column", maxWidth: "calc(100% - 220px)", paddingRight: "30px", margin: "0 auto"}} >
                 {/* <Chart
                     type={chartType}
                     data={chartData}
@@ -208,7 +225,7 @@ function IndividualChart ({chart_id}) {
                     }}
                     // {...props}
                 /> */}
-                <Grid item>
+                <Grid item sx={{backgroundColor: "white", margin: "20px 0 30px !important", borderRadius: "14px", padding: "16px"}}>
                     <Chart
                         type={chartType}
                         data={chartData}
@@ -225,8 +242,8 @@ function IndividualChart ({chart_id}) {
                     />
                     {/* <ChartDisplay chart_id={1} /> */}
                 </Grid>
-                <Grid item>
-                    <Accordion defaultExpanded={true} sx={{boxShadow: "none", borderRadius: "20px !important"}}>
+                <Grid item sx={{backgroundColor: "transparent", padding: "0"}}>
+                    <Accordion defaultExpanded={true} sx={{boxShadow: "none", borderRadius: "14px !important"}}>
                         <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -242,14 +259,14 @@ function IndividualChart ({chart_id}) {
                     </Accordion>
                 </Grid>
             </Grid>
-            <Divider orientation="vertical" flexItem sx={{height: "100vh", margin: "-94px 0"}}/> 
+            <Divider orientation="vertical" flexItem sx={{height: "97vh", margin: "-94px 0"}}/> 
             <Grid xs={2} sx={{padding: "0 20px", width: "220px"}}>
                 <Button onClick={generateSummary} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>
                     + Generate Summary
                 </Button>
-                <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.4)" borderRadius="8px">
-                    <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%"}}>Customize Chart</Button>
-                    <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" sx={{margin: "10px 0"}}>
+                <Box backgroundColor="#FFFFFF" marginTop="40px" boxShadow="0px 4px 10px rgba(0, 0, 0, 0.2)" borderRadius="8px">
+                    <Button disabled sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", cursor: "initial", color: "#f9f9f9 !important"}} >Customize Chart</Button>
+                    <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" sx={{margin: "10px 0", width: "100%"}}>
                         <WhiteButtons onClick={() => {setTitleModalOpen(true)}}>Add/change title</WhiteButtons>
                         <WhiteButtons onClick={() => {setColorModalOpen(true)}}>Change color palette</WhiteButtons>
                         <WhiteButtons onClick={() => {setXLabelModalOpen(true)}}>Change x label</WhiteButtons>
@@ -276,4 +293,8 @@ const WhiteButtons =  styled.button`
     font-size: 14px;
     text-align: left !important;
     padding: 9px 20px;
+    cursor: pointer;
+    &:hover {
+        background-color: rgba(220, 226, 248, 0.6);
+      }
 `

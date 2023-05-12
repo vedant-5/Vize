@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import ChartDisplay from "../components/ChartDisplay";
 import Grid from "@mui/material/Unstable_Grid2";
 import ChartModal from "../components/ChartModal";
+import { styled } from "@mui/material/styles";
 
 function Dashboard () {
     
@@ -42,7 +43,7 @@ function Dashboard () {
     // }));
 
 
-    const commandList = ["Create <type> Chart", "Go to Chart <name>", "Create Dashboard", "command 4", "command 5"];
+    const commandList = ["Create <type> chart", "Read variables", "<v1> and <v2>", "Create dashboard", "Select dashboard <name>", "Select chart <name>"];
 
     return(
         <Box sx={{display:"flex", marginRight: "-30px"}}>
@@ -59,8 +60,8 @@ function Dashboard () {
           </Grid>
           <Divider orientation="vertical" flexItem sx={{height: "100vh", margin: "-94px 0"}}/> 
           <Grid xs={2} sx={{padding: "0 20px", width: "220px"}}>
-            <Button onClick={()=>{setChartModalOpen(true)}} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>+ Add Chart</Button>
-            <Button sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginTop: "40px"}}>+ Add Text</Button>
+            <BlackButtons onClick={()=>{setChartModalOpen(true)}} sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)"}}>+ Add Chart</BlackButtons>
+            <BlackButtons sx={{backgroundColor: "#1C1C1C", borderRadius: "8px", textTransform: "capitalize", padding: "6px", width: "100%", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)", marginTop: "40px"}}>+ Add Text</BlackButtons>
             <Box>
               <List
                 sx={{
@@ -90,3 +91,9 @@ function Dashboard () {
 }
 
 export default Dashboard;
+
+const BlackButtons = styled(Button) ({
+  '&:hover': {
+    backgroundColor: '#272D66',
+  },
+})
