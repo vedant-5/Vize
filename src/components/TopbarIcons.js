@@ -26,9 +26,6 @@ function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
-    
-    // const {wid}  = useParams();
-    // console.log(wid)
     const navigate = useNavigate()
 
     const {speak} = useSpeechSynthesis();
@@ -56,7 +53,10 @@ function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
     const [yLabel, setYLabel] = useState('')
     const [xAxis, setXAxis] = useState('')
     const [yAxis, setYAxis] = useState('')
-    const [chartData, setChartData] =  useState({})
+    const [ delName, setDelName ] = useState('') //deletedashboard
+    const [delCName, setDelCName ] = useState('') //deletechart
+    const [delWName, setDelWName ] = useState('') //deleteworkspace
+    
 
     const handleMicrophone = () => {
         setMicrophone(!microphone);
@@ -217,8 +217,6 @@ function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
         `http://127.0.0.1:8000/chart`
       );
       const data = await response.json();
-      //console.log(data.response)
-      //console.log(data.response.filter((dashboard) => dashboard.name.toLowerCase() === dashboardName.toLowerCase())[0].dashboard)
       console.log(data);
       const chartId = data.response.filter((chart) => chart.title.toLowerCase() === chartName.toLowerCase())[0].chart
       // setDashboardID(id)
@@ -379,6 +377,7 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
         // // Delete the chart by ID using the API
         const deleteUrl = `http://127.0.0.1:8000/delete_chart/${chartID}/`;
         const deleteResponse = await fetch(deleteUrl, { method: 'DELETE' });
+        
         if (!deleteResponse.ok) {
           throw new Error(`HTTP error ${deleteResponse.status}`);
         }
@@ -447,30 +446,71 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           callback: (chartName) => {
             console.log("Delete chart command heard. You are here");
             console.log(`${chartName}`)
-            console.log(`${isChartOpen}`)
-            if(isChartOpen) {
-            console.log("Chart is open");
-            // Show confirmation dialog
-            const confirmed = window.confirm(`Are you sure you want to delete Chart named '${chartName}'?`);
-            if (!confirmed) {
-              console.log("User canceled delete operation");
-              return;
-            }
-            // call api to delete chart
-            try {
-                deleteChartByName(chartName);
-                setValue(`Chart '${chartName}' deleted successfully`);
-                console.log(`Now the chart is deleted, check through admin`)
-                // Redirect to dashboard page or do any other action here
-                window.location.reload() //palka instead of this reload, we may need redirect to uska dashboard screen
-              } catch (error) {
-                console.error(error);
-                setValue(`Error deleting chart '${chartName}': ${error.message}`);
-              }
-            }
-            else {
-              setValue('Please select your desired chart first');
-            }
+            setDelCName(chartName);
+            setValue(`Are you sure you want to delete Chart named '${chartName}'?`);
+          // callback: (chartName) => {
+          //   console.log("Delete chart command heard. You are here");
+          //   console.log(`${chartName}`)
+          //   console.log(`${isChartOpen}`)
+          //   if(isChartOpen) {
+          //   console.log("Chart is open");
+          //   // Show confirmation dialog
+          //   const confirmed = window.confirm(`Are you sure you want to delete Chart named '${chartName}'?`);
+          //   if (!confirmed) {
+          //     console.log("User canceled delete operation");
+          //     return;
+          //   }
+          //   // call api to delete chart
+          //   try {
+          //       deleteChartByName(chartName);
+          //       setValue(`Chart '${chartName}' deleted successfully`);
+          //       console.log(`Now the chart is deleted, check through admin`)
+          //       // Redirect to dashboard page or do any other action here
+          //       window.location.reload() //palka instead of this reload, we may need redirect to uska dashboard screen
+          //     } catch (error) {
+          //       console.error(error);
+          //       setValue(`Error deleting chart '${chartName}': ${error.message}`);
+          //     }
+            // }
+            // else {
+            //   setValue('Please select your desired chart first');
+            // }
+          }
+        },
+        {
+          command: 'delete chat with name *',
+          callback: (chartName) => {
+            console.log("Delete chart command heard. You are here");
+            console.log(`${chartName}`)
+            setDelCName(chartName);
+            setValue(`Are you sure you want to delete Chart named '${chartName}'?`);
+          // callback: (chartName) => {
+          //   console.log("Delete chart command heard. You are here");
+          //   console.log(`${chartName}`)
+          //   console.log(`${isChartOpen}`)
+          //   if(isChartOpen) {
+          //   console.log("Chart is open");
+          //   // Show confirmation dialog
+          //   const confirmed = window.confirm(`Are you sure you want to delete Chart named '${chartName}'?`);
+          //   if (!confirmed) {
+          //     console.log("User canceled delete operation");
+          //     return;
+          //   }
+          //   // call api to delete chart
+          //   try {
+          //       deleteChartByName(chartName);
+          //       setValue(`Chart '${chartName}' deleted successfully`);
+          //       console.log(`Now the chart is deleted, check through admin`)
+          //       // Redirect to dashboard page or do any other action here
+          //       window.location.reload() //palka instead of this reload, we may need redirect to uska dashboard screen
+          //     } catch (error) {
+          //       console.error(error);
+          //       setValue(`Error deleting chart '${chartName}': ${error.message}`);
+          //     }
+            // }
+            // else {
+            //   setValue('Please select your desired chart first');
+            // }
           }
         },
         {
@@ -478,24 +518,65 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           callback: (dashboardName) => {
             console.log("Delete dashboard command heard. You are here");
             console.log(`${dashboardName}`)
-            //window.location.reload()
-            // Show confirmation dialog
-            const confirmed = window.confirm(`Are you sure you want to delete Dashboard named '${dashboardName}'?`);
-            if (!confirmed) {
-              console.log("User canceled delete operation");
-              return;
-            }
+            setDelName(dashboardName);
+            setValue(`Are you sure you want to delete Dashboard named '${dashboardName}'?`);
+            // const confirmed = window.confirm(`Are you sure you want to delete Dashboard named '${dashboardName}'?`);
+            // if (!confirmed) {
+            //   console.log("User canceled delete operation");
+            //   return;
+            // }
             // call api to delete dashboard
-            try {
-                deleteDashboardByName(dashboardName);
-                setValue(`Dashboard '${dashboardName}' deleted successfully`);
-                console.log(`Now the dashboard is deleted, check through admin`)
-                // Redirect to dashboard page or do any other action here
-                window.location.reload()
-              } catch (error) {
-                console.error(error);
-                setValue(`Error deleting dashboard '${dashboardName}': ${error.message}`);
-              }
+          //   try {
+          //       deleteDashboardByName(dashboardName);
+          //       setValue(`Dashboard '${dashboardName}' deleted successfully`);
+          //       console.log(`Now the dashboard is deleted, check through admin`)
+          //       // Redirect to dashboard page or do any other action here
+          //       window.location.reload()
+          //     } catch (error) {
+          //       console.error(error);
+          //       setValue(`Error deleting dashboard '${dashboardName}': ${error.message}`);
+          //     }
+          // }
+          }
+        },
+        {
+          command:'yes delete the dashboard',
+          callback: () => {
+            if (delName !== ''){
+              deleteDashboardByName(delName);
+              window.location.reload();
+              setValue(`Dashboard ${delName} has been deleted`);
+            }
+          }
+        },
+        {
+          command:'yes delete the chart',
+          callback: () => {
+            if (delCName !== ''){
+              deleteChartByName(delCName);
+              window.location.reload();
+              setValue(`Chart ${delCName} has been deleted`);
+            }
+          }
+        },
+        {
+          command:'yes delete the chat',
+          callback: () => {
+            if (delCName !== ''){
+              deleteChartByName(delCName);
+              window.location.reload();
+              setValue(`Chart ${delCName} has been deleted`);
+            }
+          }
+        },
+        {
+          command:'yes delete the workspace',
+          callback: () => {
+            if (delWName !== ''){
+              deleteWorkspaceByName(delWName);
+              window.location.reload();
+              setValue(`Workspace ${delWName} has been deleted`);
+            }
           }
         },
         {
@@ -503,27 +584,23 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           callback: (workspaceName) => {
             console.log("Delete workspace command heard. You are here");
             console.log(`${workspaceName}`)
-            // Show confirmation dialog
-            const confirmed = window.confirm(`Are you sure you want to delete Workspace named '${workspaceName}'?`);
-            if (!confirmed) {
-              console.log("User canceled delete operation");
-              return;
-            }
-            // call api to delete workspace
-            try {
-                deleteWorkspaceByName(workspaceName);
-                setValue(`Workspace '${workspaceName}' deleted successfully`);
-                console.log(`Now the workspace is deleted, check through admin`)
-                // Redirect to dashboard page or do any other action here
-                window.location.reload()
-              } catch (error) {
-                console.error(error);
-                setValue(`Error deleting workspace '${workspaceName}': ${error.message}`);
-              }
+            //window.location.reload()          
+            setDelWName(workspaceName);
+            setValue(`Are you sure you want to delete workspace named '${workspaceName}'?`);
           }
           },
+
         {
           command: 'create * chart',
+          callback: (chart) => {
+            setChartType(chart); 
+            setValue(`Select which dashboard you want to add the chart to`)
+            // setValue(`Select variables for the ${chart} chart`);
+            console.log(chartType, value);
+          } //create handle function and call it here to make charts
+        },
+        {
+          command: 'create * chat',
           callback: (chart) => {
             setChartType(chart); 
             setValue(`Select which dashboard you want to add the chart to`)
@@ -673,6 +750,24 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           }
         },
         {
+          command: 'select chat *',
+          callback: (chart_name) => {
+            setChartName(chart_name)
+            const chart_list =  chartList
+            const chart_id = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].chart_id
+            const x_axis = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].x_axis
+            const y_axis = chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].y_axis
+            const workspace_id =  chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].workspace_name
+            setChartID(chart_id)
+            setWorkspaceID(workspace_id)
+            setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            setXAxis(x_axis)
+            setYAxis(y_axis)
+            setIsChartOpen(true)
+            setValue(`Chart ${chart_name} selected`)
+          }
+        },
+        {
           command: 'Add Summary',
           callback: () => {
             setGetDatabase(true)
@@ -708,6 +803,8 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           callback: (title) => {
             setEditChart({...editChart,"title":title})
             setTitle(title);
+            console.log(isChartOpen)
+            console.log(title)
             if(isChartOpen) {
               setValue(`Title ${title} added`);
               window.location.reload()
@@ -723,6 +820,8 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             //editChartPost({...chartData, "title": title})
             setEditChart({...editChart,"title":title})
             setTitle(title);
+            console.log(isChartOpen)
+            console.log(title)
             if(isChartOpen) {
               setValue(`Title changed to ${title}`);
               window.location.reload()
