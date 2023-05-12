@@ -50,7 +50,7 @@ function Dashboard () {
           <Grid container spacing={1} xs={10} sx={{display: "flex", flexDirection: "column"}} >
             <h3>{dashboard.name}</h3>
             {/* <p>{dashboard.text}</p> */}
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {chartlist.map((chart, index)=>(
                 <Grid item key={index}>
                   <ChartDisplay chart_id = {chart}/>

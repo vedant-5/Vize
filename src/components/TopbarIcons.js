@@ -303,14 +303,14 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
         `http://127.0.0.1:8000/workspace/${clickedWorkspace}`
       );
       const data1 = await response1.json();
-      //console.log(data1.response)
+      console.log(data1.response)
       const database_id = data1.response[0].database
       const response2 = await fetch( 
         `http://127.0.0.1:8000/view-file/${database_id}`
       )
       const data2 = await response2.json();
       const keys = Object.keys(data2[0]);
-      //console.log(keys)
+      console.log(keys)
       for (const key in data2[0]) {
         console.log(key)
         if (key !== 'id') {
@@ -426,7 +426,6 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
       }
     };
     
-
     const createWorkspace = ()=>{
       childRef.current.createWorkspace();
     }
@@ -1015,7 +1014,6 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             }
           }
         },
-        
         {
           command: 'clear',
           callback: ({ resetTranscript }) => {

@@ -41,9 +41,9 @@ function IndividualChart ({chart_id}) {
     //console.log(wid)
     const {text} = useParams();
 
-    const colourPalettes = [
+    const colourPalette = [
         {
-            "Light": ["#65647C", "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
+            "Light": ["#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
         },
         {
             "Dark": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"]
@@ -67,6 +67,8 @@ function IndividualChart ({chart_id}) {
         ]}
     ];
 
+    console.log(colourPalette[0].Light);
+
 
     const [chart, setChart] =  useState([])
     const [chartTitle, setChartTitle] = useState('something something title');
@@ -83,15 +85,7 @@ function IndividualChart ({chart_id}) {
                 label: "User Age",
                 data: mockDataTeam.map((data) => data.age),
                 backgroundColor: [
-                    "rgba(75,192,192,1)",
-                    "#ecf0f1",
-                    "#50AF95",
-                    "#f3ba2f",
-                    "#2a71d0",
-                    "#ecf0f1",
-                    "#50AF95",
-                    "#f3ba2f",
-                    "#2a71d0",
+                    "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"
                 ],
                 // borderColor: "black",
                 // borderWidth: 2
@@ -114,12 +108,13 @@ function IndividualChart ({chart_id}) {
         const data = await response.json();
         setChart(data.response[0]);
         //console.log(data)
-        //console.log(data.response[0])
+        console.log(data.response[0])
         const type = data.response[0].chart_type.split(" ")[0]
         const x_label = data.response[0].x_axis
         const y_label = data.response[0].y_axis
         const summary_data =  data.response[0].summary ? data.response[0].summary : null
-        setColor(data.response[0].options.split[2])
+        setColor(data.response[0].options.split(",")[2])
+        console.log(data.response[0].options.split(", ")[2])
         setSummary(summary_data)
         setXLabel(x_label)
         setYLabel(y_label)
@@ -167,7 +162,7 @@ function IndividualChart ({chart_id}) {
                     {
                         label: y,
                         data: data.map((data) => data[y]), // y-axis
-                        backgroundColor: color ?  colourPalettes[color] : colourPalettes.BG ,
+                        backgroundColor: color!=='' ?  colourPalette[1].Dark : colourPalette[0].Light ,
                         // borderColor: "black",
                         // borderWidth: 2
                     },
@@ -306,6 +301,6 @@ const WhiteButtons =  styled.button`
     padding: 9px 20px;
     cursor: pointer;
     &:hover {
-        background-color: rgba(220, 226, 248, 0.6);
-      }
+        background-color: rgba(220, 226, 248, 0.6);
+    }
 `

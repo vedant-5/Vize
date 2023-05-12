@@ -6,12 +6,12 @@ import { useParams } from "react-router-dom";
 function ChangeColor({colorModalOpen, setColorModalOpen,chartDetails}) {
 
     const {text} =  useParams()
-    const [newColor, setNewColor] = useState('pastel');
+    const [newColor, setNewColor] = useState('Light');
 
 
     const handleClose = () => {
         setColorModalOpen(false);
-        setNewColor('pastel');
+        setNewColor('Light');
     }
 
 

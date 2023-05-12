@@ -31,7 +31,7 @@ function ChartDisplay ({chart_id}) {
 
     const colourPalettes = [
         {
-            "Light": ["#65647C", "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
+            "Light": ["#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
         },
         {
             "Dark": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"]
@@ -57,15 +57,7 @@ function ChartDisplay ({chart_id}) {
                 label: "User Age",
                 data: mockDataTeam.map((data) => data.age),
                 backgroundColor: [
-                    "rgba(75,192,192,1)",
-                    "#ecf0f1",
-                    "#50AF95",
-                    "#f3ba2f",
-                    "#2a71d0",
-                    "#ecf0f1",
-                    "#50AF95",
-                    "#f3ba2f",
-                    "#2a71d0",
+                    "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"
                 ],
                 // borderColor: "black",
                 // borderWidth: 2
@@ -129,15 +121,7 @@ function ChartDisplay ({chart_id}) {
                         label: y,
                         data: data.map((data) => data[y]), // y-axis
                         backgroundColor: [
-                            "rgba(75,192,192,1)",
-                            "#ecf0f1",
-                            "#50AF95",
-                            "#f3ba2f",
-                            "#2a71d0",
-                            "#ecf0f1",
-                            "#50AF95",
-                            "#f3ba2f",
-                            "#2a71d0",
+                            "#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"
                         ],
                         // borderColor: "black",
                         // borderWidth: 2
@@ -160,16 +144,18 @@ function ChartDisplay ({chart_id}) {
     //   }, [xLabel, yLabel]);
 
     return(
-        <Box width="100%" padding="30px" backgroundColor="#FEFEFE" borderRadius="20px" >
+        <Box width="100%" padding="30px 16px" backgroundColor="#FEFEFE" borderRadius="20px" >
 
             {/* <Grid container spacing={1} xs={10} sx={{display: "flex", flexDirection: "column"}} > */}
                 {chartData ? <Chart
                     type={chartType}
                     data={chartData}
+                    width={350}
+                    height={180}
                     options={{
                         plugins: {
                             title: {
-                                display: true,
+                                display: false,
                                 text: chart?.title
                             },
                         },

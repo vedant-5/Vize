@@ -1,7 +1,7 @@
 import React from "react";
-import { styled } from '@mui/material/styles';
-import { useState} from "react";
-import {ColorModeContext, useMode} from './theme';
+import { styled, useTheme } from '@mui/material/styles';
+import { useState, useContext } from "react";
+import {ColorModeContext, useMode, tokens} from './theme';
 import {AppBar, CssBaseline, Divider, ThemeProvider} from "@mui/material";
 // import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
@@ -21,6 +21,9 @@ import DashboardModal from "./components/DashboardModal";
 
 function App() {
   const [theme, colorMode] = useMode();
+  const theme2 = useTheme();
+  const colors = tokens(theme2.palette.mode);
+  const colorMode2 = useContext(ColorModeContext);
   const [open, setOpen] = useState(true);
   const [clickedWorkspace, setClickedWorkspace] = useState();
   const [dashboardModalOpen, setDashboardModalOpen] = useState(false);
@@ -29,7 +32,7 @@ function App() {
     ({ theme, open }) => ({
       flexGrow: 1,
       padding: theme.spacing(3),
-      backgroundColor: '#F9F9F9',
+      backgroundColor: `${colors.bg}`,
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
