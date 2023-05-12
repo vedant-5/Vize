@@ -179,7 +179,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
 
             <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace}/>
 
-            {/* <Tour
+            <Tour
                 onAfterOpen={disableBody}
                 onBeforeClose={enableBody}
                 steps={displaysteps}
@@ -193,7 +193,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                 //handleTourComplete(currentUser)
                 setIsTourOpen(false)
                 }}
-            /> */}
+            />
         </>
         
     );

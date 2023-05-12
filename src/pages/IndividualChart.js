@@ -80,7 +80,7 @@ function IndividualChart ({chart_id}) {
         );
         const data = await response.json();
         setChart(data.response[0]);
-        console.log(data)
+        //console.log(data)
         //console.log(data.response[0])
         const type = data.response[0].chart_type.split(" ")[0]
         const x_label = data.response[0].x_axis
@@ -119,7 +119,7 @@ function IndividualChart ({chart_id}) {
             "x_label" : x,
             "y_label" : y
         })
-        console.log(data)
+        //console.log(data)
         //console.log(data.map((data) => data[y]),data.map((data) => data[x]))
         //store x array and y array values in a seperate variable and write it in labels and data.
         setChartData(
@@ -159,7 +159,7 @@ function IndividualChart ({chart_id}) {
             x_label : data.x_label,
             y_label : data.y_label
           }
-          console.log(data_columns)
+          //console.log(data_columns)
     
           const requestOptions = {
             method: 'POST',
@@ -188,7 +188,7 @@ function IndividualChart ({chart_id}) {
     useEffect(() => {
         fetchWorkspace();
         //fetchWorkspace()
-        console.log(xLabel,yLabel)
+        //console.log(xLabel,yLabel)
     }, [xLabel, yLabel]);
       
     return(

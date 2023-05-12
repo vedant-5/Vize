@@ -55,6 +55,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     const [yLabel, setYLabel] = useState('')
     const [xAxis, setXAxis] = useState('')
     const [yAxis, setYAxis] = useState('')
+    const [chartData, setChartData] =  useState({})
 
     const handleMicrophone = () => {
         setMicrophone(!microphone);
@@ -272,7 +273,7 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
       };
-      fetch(`http://127.0.0.1:8000/chart/${chartID}`, requestOptions)
+      fetch(`http://127.0.0.1:8000/chart/${chartID}/`, requestOptions)
           .then(function (response) {
             // ...
             console.log(response);
@@ -280,6 +281,7 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           }).then(function (body) {
             // ...
             console.log(body);
+            
           }).catch(err => {
               console.log(err)
           })
@@ -329,6 +331,7 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
         }).then(function (body) {
           // ...
           console.log(body);
+          window.location.reload()
         }).catch(err => {
             console.log(err)
         })
@@ -618,7 +621,8 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             const workspace_id =  chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].workspace_name
             setChartID(chart_id)
             setWorkspaceID(workspace_id)
-            setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            // setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            setChartData(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
             setXAxis(x_axis)
             setYAxis(y_axis)
             setIsChartOpen(true)
@@ -663,6 +667,7 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             setTitle(title);
             if(isChartOpen) {
               setValue(`Title ${title} added`);
+              window.location.reload()
             }
             else {
               setValue('Please select your desired chart first');
@@ -672,6 +677,7 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
         {
           command: 'Change title to *',
           callback: (title) => {
+            //editChartPost({...chartData, "title": title})
             setEditChart({...editChart,"title":title})
             setTitle(title);
             if(isChartOpen) {
