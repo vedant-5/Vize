@@ -12,12 +12,14 @@ function ChangeColor({colorModalOpen, setColorModalOpen,chartDetails}) {
     const handleClose = () => {
         setColorModalOpen(false);
         setNewColor('pastel');
-        window.location.reload()
     }
 
 
     const editChartPost = async () => {
-        const data = {...chartDetails,"options":chartDetails.options.concat(",").concat(newColor)}
+        const originalString = chartDetails.options
+        const newString = originalString.replace(originalString[2], "") + `${newColor}`;
+        
+        const data = {...chartDetails,"options":newString}
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -27,11 +29,13 @@ function ChangeColor({colorModalOpen, setColorModalOpen,chartDetails}) {
           .then(function (response) {
             // ...
             console.log(response);
-            handleClose()
+            
             return response.json();
           }).then(function (body) {
             // ...
             console.log(body);
+            window.location.reload()
+            handleClose()
           }).catch(err => {
               console.log(err)
           })

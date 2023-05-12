@@ -45,6 +45,7 @@ function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
     const [dashboardName, setDashboardName] =  useState('')
     const [workspaceID, setWorkspaceID] = useState('')
     const [dashboardID, setDashboardID] = useState('')
+    const [databaseID, setDatabaseID] = useState('')
     const [workspaceData, setWorkspaceData] = useState({})
     const [dashboardData, setDashboardData] =  useState({})
     const [getDatabase, setGetDatabase] = useState(false)
@@ -61,7 +62,6 @@ function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
         setMicrophone(!microphone);
         if(microphone) {
           SpeechRecognition.startListening({ continuous: true });
-
           console.log(listening, transcript)
         }
         else {
@@ -89,7 +89,7 @@ function TopbarIcons({clickedWorkspace, setClickedWorkspace}) {
           "x_axis": cols[0],
           "y_axis": cols[1],
           "chart_type": chartType,
-          "options": "Legend, title, color",
+          "options": "Legend, title, Blue",
           "summary": null,
           "workspace_name": clickedWorkspace,
           "dashboard_name": dashboardID,
@@ -295,9 +295,31 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
       console.log(data.response)
       const database_id = data.response[0].database
       //setChartData(data)
+      setDatabaseID(database_id)
       fetchData(database_id)
       return data
     };
+
+    const readColumnNames =  async () => {
+      const response1 = await fetch( 
+        `http://127.0.0.1:8000/workspace/${clickedWorkspace}`
+      );
+      const data1 = await response1.json();
+      //console.log(data1.response)
+      const database_id = data1.response[0].database
+      const response2 = await fetch( 
+        `http://127.0.0.1:8000/view-file/${database_id}`
+      )
+      const data2 = await response2.json();
+      const keys = Object.keys(data2[0]);
+      //console.log(keys)
+      for (const key in data2[0]) {
+        console.log(key)
+        if (key !== 'id') {
+        speak({text: key})}; // Output: id, name, batch, maths, physics, biology, chemistry
+      }
+
+    }
 
     const fetchData =  async (id)=> {
       const response = await fetch( 
@@ -307,14 +329,18 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
       //console.log(data)
       const x_values  = data.map((data) => data[xAxis])
       const y_values  = data.map((data) => data[yAxis])
-      createSummary(x_values,y_values)
+      const x_label =  xAxis
+      const y_label =  yAxis
+      createSummary(x_values,y_values,x_label,y_label)
     };
 
-    const createSummary =  async(x_values,y_values) => {
+    const createSummary =  async(x_values,y_values, x_label,y_label) => {
       const data = {
         x_values: x_values,
         y_values : y_values,
-        chart_id: chartID
+        chart_id: chartID,
+        x_label : x_label,
+        y_label : y_label
       }
       console.log(data)
 
@@ -336,6 +362,8 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             console.log(err)
         })
     };
+
+    
     
     const childRef = useRef();
     const databaseRef = useRef();
@@ -591,6 +619,21 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
           }
         },
         {
+          command : "read column names",
+          callback: ()=>{
+            readColumnNames();
+            console.log("reading??")
+          }
+
+        },
+        {
+          command : "read column name",
+          callback: ()=>{
+            readColumnNames();
+          }
+
+        },
+        {
           command: 'select variables * and *',
           callback: (col1, col2) => {
 
@@ -621,8 +664,8 @@ const getWorkspaceID = async (workspaceName) => {  //function that receives work
             const workspace_id =  chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0].workspace_name
             setChartID(chart_id)
             setWorkspaceID(workspace_id)
-            // setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
-            setChartData(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            setEditChart(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
+            //setChartData(chart_list?.filter((chart) => chart.title.toLowerCase() === chart_name)[0])
             setXAxis(x_axis)
             setYAxis(y_axis)
             setIsChartOpen(true)

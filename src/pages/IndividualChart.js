@@ -28,6 +28,10 @@ import ChangeYLabel from "../components/CCYLabelModal";
 // ChartJS.register(...registerables);
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+function containsUppercase(str) {
+    return Boolean(str.match(/[A-Z]/));
+}
+
 function IndividualChart ({chart_id}) {
 
     const theme = useTheme();
@@ -50,6 +54,17 @@ function IndividualChart ({chart_id}) {
         {
             "Blue": ["#1E3F66", "#2E5984", "#528AAE", "#73A5C6", "#AAD1EC", "#D2E9FF"]
         },
+        { "BG" :  [
+            "rgba(75,192,192,1)",
+            "#ecf0f1",
+            "#50AF95",
+            "#f3ba2f",
+            "#2a71d0",
+            "#ecf0f1",
+            "#50AF95",
+            "#f3ba2f",
+            "#2a71d0",
+        ]}
     ];
 
 
@@ -59,6 +74,7 @@ function IndividualChart ({chart_id}) {
     const [xLabel, setXLabel] = useState('')
     const [yLabel, setYLabel] = useState('')
     const [summary, setSummary] = useState('')
+    const [color,setColor] = useState('')
     const [data,setData] = useState({})
     const [chartData, setChartData] = useState({
         labels: mockDataTeam.map((data) => data.name), 
@@ -103,10 +119,12 @@ function IndividualChart ({chart_id}) {
         const x_label = data.response[0].x_axis
         const y_label = data.response[0].y_axis
         const summary_data =  data.response[0].summary ? data.response[0].summary : null
+        setColor(data.response[0].options.split[2])
         setSummary(summary_data)
         setXLabel(x_label)
         setYLabel(y_label)
         setChartType(type)
+        console.log(x_label, y_label)
       };
 
       const fetchWorkspace= async () => {
@@ -130,13 +148,16 @@ function IndividualChart ({chart_id}) {
         //console.log(xLabel,yLabel)
         const x =  xLabel ? xLabel : 'name'
         const y = yLabel ? yLabel : 'maths'
+
+
         setData({
             "x_values" : data.map((data) => data[x]),
             "y_values" : data.map((data) => data[y]),
             "x_label" : x,
             "y_label" : y
         })
-        //console.log(data)
+        console.log(color)
+        console.log(data)
         //console.log(data.map((data) => data[y]),data.map((data) => data[x]))
         //store x array and y array values in a seperate variable and write it in labels and data.
         setChartData(
@@ -146,17 +167,7 @@ function IndividualChart ({chart_id}) {
                     {
                         label: y,
                         data: data.map((data) => data[y]), // y-axis
-                        backgroundColor: [
-                            "rgba(75,192,192,1)",
-                            "#ecf0f1",
-                            "#50AF95",
-                            "#f3ba2f",
-                            "#2a71d0",
-                            "#ecf0f1",
-                            "#50AF95",
-                            "#f3ba2f",
-                            "#2a71d0",
-                        ],
+                        backgroundColor: color ?  colourPalettes[color] : colourPalettes.BG ,
                         // borderColor: "black",
                         // borderWidth: 2
                     },

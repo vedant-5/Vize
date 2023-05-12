@@ -245,11 +245,13 @@ const fetchDashboards = async () => {
 
   useEffect(()=> {
     const wasRefreshed = sessionStorage.getItem("wasRefreshed")
-    if(!wasRefreshed) {
+    const count =  sessionStorage.getItem("count")
+    if(!wasRefreshed && count < 3) {
       sessionStorage.setItem('wasRefreshed','true')
       setIsTourOpen(true)
+      sessionStorage.setItem('count',1)
     } else {
-      sessionStorage.removeItem(wasRefreshed)
+      sessionStorage.setItem('count',4)
       setIsTourOpen(false)
     }
     // if (dashboards & charts & database & count === 0) {

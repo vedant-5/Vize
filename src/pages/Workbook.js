@@ -106,11 +106,32 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
         //console.log(data)
       };
     
+    // useEffect(()=> {
+    //     if (workspaces) {
+    //         setIsTourOpen(true)
+    //     }
+    // },[workspaces])
+
     useEffect(()=> {
-        if (workspaces) {
-            setIsTourOpen(true)
+        const wasRefreshed = sessionStorage.getItem("wasRefreshed")
+        const count =  sessionStorage.getItem("count")
+        if(!wasRefreshed && count < 3) {
+          sessionStorage.setItem('wasRefreshed','true')
+          setIsTourOpen(true)
+          sessionStorage.setItem('count',1)
+        } else {
+          sessionStorage.setItem('count',4)
+          setIsTourOpen(false)
         }
-    },[workspaces])
+        // if (dashboards & charts & database & count === 0) {
+        //     //localStorage.setItem('setCount', count+1);
+        //     setIsTourOpen(true)
+        // }
+        // return()=>{
+        //   setIsTourOpen(null)
+        // }
+        //console.log(dashboards)
+      },[])
 
     return (
         <>
