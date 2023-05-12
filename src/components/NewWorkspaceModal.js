@@ -24,10 +24,6 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
 
   const [databaseModalOpen, setDatabaseModalOpen] = useState(false);
   const [name, setName] = useState(workspaceName? workspaceName : "")
-
-  console.log("workspce nme", workspaceName);
-  console.log("nm", name);
-
   const [databaseName,setDatabaseName] =  useState([])
   const navigate = useNavigate()
 
@@ -126,14 +122,16 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
                 <Dialog onClose={handleClose} open={workspaceModalOpen} sx={{overflowY: "hidden"}}>
                   <DialogContent>
                     <Box sx={{ maxWidth: 400 }}>
-                      <DialogTitle sx={{fontWeight: "600"}}>Creating New Workspace</DialogTitle>
+                      <DialogTitle sx={{fontWeight: "600"}} >Enter Workspace Details</DialogTitle>
                     <Stepper activeStep={activeStep} orientation="vertical">
                         <Step>
                           <StepLabel>
                               <Typography>Enter Workspace Name</Typography>
                           </StepLabel>
                             <StepContent>
-                            <TextField id="outlined-basic" variant="outlined"  defaultValue={ workspaceName ? workspaceName: ""} onChange={(e)=>{setName(e.target.value ? e.target.value : workspaceName)}}/>
+                            <TextField id="outlined-basic" variant="outlined"  defaultValue={ workspaceName ? workspaceName: ""} onChange={(e)=>{
+                              setName(e.target.value ? e.target.value : workspaceName)
+                              }}/>
                             <Box sx={{ mb: 2 }}>
                                 <div>
                                 <Button

@@ -113,7 +113,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
     },[workspaces])
 
     return (
-        <WorkspaceContext.Provider value={{workspaceModalOpen, setWorkspaceModalOpen}}>
+        <>
             <Box >
                 <AppBar position="fixed" sx={{boxShadow: "none"}}>
                     <Top clickedWorkspace={clickedWorkspace} setClickedWorkspace={setClickedWorkspace}/>
@@ -192,7 +192,7 @@ const Workbook = ({clickedWorkspace, setClickedWorkspace}) => {
                 setIsTourOpen(false)
                 }}
             /> */}
-        </WorkspaceContext.Provider>
+        </>
         
     );
 }
