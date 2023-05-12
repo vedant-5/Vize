@@ -23,7 +23,8 @@ import json
 from django.shortcuts import get_object_or_404
 import os
 from django.conf import settings
-
+# from dvrs.py import *
+from .dvrs import *
 from .models import *
 from .serializer import *
 
@@ -77,11 +78,26 @@ def FileUpload(request):
         file = request.FILES['file']
         obj = models.Database.objects.create(file = file)
         create_db(obj.file)
+        print(obj.file)
         return Response({'response': obj}, status=status.HTTP_201_CREATED)
     return Response({}, status=status.HTTP_201_CREATED)
 
 class FileUploadView(generics.CreateAPIView):
     queryset = FileModel.objects.all()
+    last_instance = FileModel.objects.last().content
+    print(last_instance)
+    a = dvrs(last_instance)
+    workspace = Workspace.objects.get(workspace=1)
+    dashboard =  Dashboard.objects.get(dashboard=1)
+    for i in a:
+        ctype = i['chart_type'] 
+        x=i['top_columns'][0][0].lower()
+        y=i['top_columns'][0][1].lower()
+        ctitle = str(x)+" vs " +str(y)
+        rec_chart = Chart(title= ctitle, x_axis=x, y_axis=y, chart_type= ctype, options='legend,title,color', workspace_name= workspace, dashboard_name=dashboard)
+        print(Chart.objects.all())
+        rec_chart.save()
+        print(rec_chart.chart_id)
     serializer_class = FileModelSerializer
     parser_classes = (MultiPartParser, FormParser)
     
@@ -114,13 +130,16 @@ def view_file(request, pk):
     with open(file_path, 'r') as f:
         if file_path.endswith('.csv'):
             file_data = list(csv.reader(f))
+            #print(file_data)
             headers = ['id'] + file_data[0]
             rows = []
             for i, row in enumerate(file_data[1:], start=1):
                 rows.append({'id': i, **dict(zip(headers[1:], row))})
             response = HttpResponse(content_type='application/json')
             response['Content-Disposition'] = f'inline; filename={my_model.name}'
+            # dvrs(file_data)
             json.dump(rows, response, indent=4)
+            
             return response
         elif file_path.endswith('.json'):
             file_data = json.load(f)
@@ -333,7 +352,13 @@ def is_float(value):
     except ValueError:
         return False
 
-
+def is_digit(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+    
 @api_view(['POST'])
 def chart_summary_view(request,id):
     """
@@ -346,14 +371,17 @@ def chart_summary_view(request,id):
     x_values = data.get('x_values', [])
     y_values = data.get('y_values', [])
     chartid = data.get('chart_id', None)
-    print(x_values,y_values,chartid,id)
+    x_label = data.get('x_label', None)
+    y_label = data.get('y_label', None)
+    print(x_values,y_values,chartid,id,x_label,y_label)
 
     # x_values = request.GET.getlist('x_values', [])
     # y_values = request.GET.getlist('y_values', [])
 
     # Convert input data to proper types
-    x_values = [int(x) if x.isdigit() else float(x) if is_float(x) else x for x in x_values]
-    y_values = [int(y) if y.isdigit() else float(y) if is_float(y) else y for y in y_values]
+    x_values = [int(x) if is_digit(x) else float(x) if is_float(x) else x for x in x_values]
+    y_values = [int(y) if is_digit(y) else float(y) if is_float(y) else y for y in y_values]
+
     
     # Determine the data types for x and y
     x_type = "continuous" if isinstance(x_values[0], (int, float)) else "categorical"
@@ -368,22 +396,22 @@ def chart_summary_view(request,id):
     # Identify trends and patterns
     if y_type == "continuous":
         if y_values == sorted(y_values):
-            trend = "The y values increase consistently."
+            trend = "The "+y_label+" increase consistently."
         elif y_values == sorted(y_values, reverse=True):
-            trend = "The y values decrease consistently."
+            trend = "The "+y_label+" decrease consistently."
         else:
-            trend = "There is no consistent trend in the y values."
+            trend = "There is no consistent trend in the "+y_label+" values."
     else:
         trend = ""
 
     # Describe the distribution of y values
     if y_type == "continuous":
         if abs(skew(y_values)) > 1:
-            distribution = "The y values are highly skewed."
+            distribution = "The "+y_label+" are highly skewed."
         elif abs(skew(y_values)) > 0.5:
-            distribution = "The y values are moderately skewed."
+            distribution = "The "+y_label+" are moderately skewed."
         else:
-            distribution = "The y values are roughly symmetric."
+            distribution = "The "+y_label+" are roughly symmetric."
     else:
         distribution = ""
 
@@ -391,13 +419,13 @@ def chart_summary_view(request,id):
     if x_type == "continuous" and y_type == "continuous":
         corr, p_value = pearsonr(x_values, y_values)
         if abs(corr) >= 0.7:
-            correlation = "There is a strong positive correlation between x and y."
+            correlation = "There is a strong positive correlation between "+x_label+" and "+y_label+"."
         elif abs(corr) >= 0.3:
-            correlation = "There is a moderate positive correlation between x and y."
+            correlation = "There is a moderate positive correlation between "+x_label+" and "+y_label+"."
         elif abs(corr) > 0:
-            correlation = "There is a weak positive correlation between x and y."
+            correlation = "There is a weak positive correlation between "+x_label+" and "+y_label+"."
         else:
-            correlation = "There is no correlation between x and y."
+            correlation = "There is no correlation between "+x_label+" and "+y_label+"."
     else:
         correlation = ""
         
@@ -419,7 +447,7 @@ def chart_summary_view(request,id):
     # Generate summary text
     summary_text = ""
     if y_type == "continuous":
-        summary_text += f"The mean value of y is {mean_y:.2f}. The maximum value of y is {max_y}, the minimum value of y is {min_y}, and the range of y is {range_y}.\n{trend} \n{distribution} \n{correlation}"
+        summary_text += f"The mean value of {y_label} is {mean_y:.2f}. The maximum value of {y_label} is {max_y}, the minimum value of {y_label} is {min_y}, and the range of {y_label} is {range_y}.\n{trend} \n{distribution} \n{correlation}"
     # elif x_type == "categorical":
     #     summary_text += f"The chart shows {len(x_values)} categories: {', '.join(str(x) for x in x_values)}"
     #     if len(x_values) > 0:
@@ -442,4 +470,68 @@ def chart_summary_view(request,id):
         chart.save()
         return Response({'summary': summary_text_x})
     
-    
+    # @api_view(['DELETE']) 
+#delete chart via chartname
+# def delete_chart(request, chartName):
+#     try:
+#         chart = Chart.objects.get(title=chartName)
+#     except Chart.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     chart.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+#delete chart via chartid
+def delete_chart(request, chartID):
+    try:
+        chart = Chart.objects.get(chart_id=chartID)
+    except Chart.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    chart.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @api_view(['DELETE']) 
+#delete dashboard via dashboardname
+# def delete_dashboard(request, dashboardName):
+#     try:
+#         dashboard = Dashboard.objects.get(title=dashboardName)
+#     except Dashboard.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     dashboard.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+#delete dashboard via dashboardid
+def delete_dashboard(request, dashboardID):
+    try:
+        dashboard = Dashboard.objects.get(dashboard=dashboardID)
+    except Dashboard.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    dashboard.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @api_view(['DELETE']) 
+#delete workspace via workspacename
+# def delete_workspace(request, workspaceName):
+#     try:
+#         workspace = Workspace.objects.get(title=workspaceName)
+#     except Workspace.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     workspace.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+#delete workspace via workspaceid
+def delete_workspace(request, workspaceID):
+    try:
+        workspace = Workspace.objects.get(workspace=workspaceID)
+    except Dashboard.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    workspace.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)

@@ -70,7 +70,7 @@ class Dashboard(models.Model):
     text = models.CharField(max_length=10000, null=True, blank=True)
     created_on =  models.DateField(auto_now_add=True, blank=False, null=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
-    workspace_name = models.ForeignKey(Workspace, on_delete=models.CASCADE, blank=False, null=False)
+    workspace_name = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=False,blank=False)
 
     def __str__(self):
         return self.name
@@ -115,6 +115,10 @@ class Chart(models.Model):
     workspace_name = models.ForeignKey(Workspace, on_delete=models.CASCADE, null=False, blank=False)
     dashboard_name = models.ForeignKey(Dashboard, on_delete=models.CASCADE, null=False, blank=False)
 
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     self.workspace_name.charts.add(self.chart_id)
+    #     self.dashboard_name.charts.add(self.chart_id)
 
     def __str__(self):
         return self.title
