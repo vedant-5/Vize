@@ -120,6 +120,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     }
 
     const createDashboard = async (name) => {
+      console.log(clickedWorkspace)
         if(clickedWorkspace) {
           console.log(clickedWorkspace)
         const data = {
@@ -225,6 +226,29 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
       return chartID
   }
 
+
+  const getDashboardID = async (dashboardName) => {  //function that receives dashboardname and gives its id
+    const response = await fetch( 
+      `http://127.0.0.1:8000/dashboard`
+    );
+    const data = await response.json();
+    console.log(data.response)
+    const dashboardID = data.response.filter((db) => db.name.toLowerCase() === dashboardName.toLowerCase())[0].dashboard
+    console.log(dashboardID)
+    return dashboardID
+}
+
+const getWorkspaceID = async (workspaceName) => {  //function that receives workspace name and gives its id
+  const response = await fetch( 
+    `http://127.0.0.1:8000/workspace`
+  );
+  const data = await response.json();
+  console.log(data)
+  const workspaceID = data.filter((w) => w.name.toLowerCase() === workspaceName.toLowerCase())[0].workspace
+  console.log(workspaceID)
+  return workspaceID
+}
+
     const getDashboard = async (id) => {
         //console.log(id)
         const response = await fetch( 
@@ -311,8 +335,8 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     };
     
     const childRef = useRef();
-    // const databaseRef = useRef(null);
-    // const detailsRef = useRef(null); 
+    const databaseRef = useRef();
+    const detailsRef = useRef(); 
 
     const deleteChartByName = async (chartName) => {
       try {
@@ -332,6 +356,46 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
         console.error(error);
       }
     };
+
+    const deleteDashboardByName = async (dashboardName) => {
+      try {
+        // Fetch the dashboard list from the API
+        console.log("Inside deleteDashboardbyname function")
+        console.log(`${dashboardName}`)
+        //fetching the id of the dashboard
+        const dashboardID = await getDashboardID(dashboardName);
+        console.log(`the id is ${dashboardID} for the name ${dashboardName} `);
+        // Delete the dashboard by ID using the API
+        const deleteUrl = `http://127.0.0.1:8000/delete_dashboard/${dashboardID}/`;
+        const deleteResponse = await fetch(deleteUrl, { method: 'DELETE' });
+        if (!deleteResponse.ok) {
+          throw new Error(`HTTP error ${deleteResponse.status}`);
+        }
+        console.log(`Dashboard '${dashboardName}' deleted successfully function`);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const deleteWorkspaceByName = async (workspaceName) => {
+      try {
+        // Fetch the workspace list from the API
+        console.log("Inside deleteWorkspacebyname function")
+        console.log(`${workspaceName}`)
+        //fetching the id of the workspace
+        const workspaceID = await getWorkspaceID(workspaceName);
+        console.log(`the id is ${workspaceID} for the name ${workspaceName} `);
+        // Delete the workspace by ID using the API
+        const deleteUrl = `http://127.0.0.1:8000/delete_workspace/${workspaceID}/`;
+        const deleteResponse = await fetch(deleteUrl, { method: 'DELETE' });
+        if (!deleteResponse.ok) {
+          throw new Error(`HTTP error ${deleteResponse.status}`);
+        }
+        console.log(`Workspace '${workspaceName}' deleted successfully function`);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     
 
     const createWorkspace = ()=>{
@@ -339,11 +403,11 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
     }
 
     const uploadDatabase =  ()=>{
-      childRef.current.handleNext()
+      databaseRef.current.handleNext()
     }
 
     const viewDetails = ()=>{
-      childRef.current.handleNext()
+      detailsRef.current.handleNext()
     }
     
     const commands = [
@@ -355,13 +419,19 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
             console.log(`${isChartOpen}`)
             if(isChartOpen) {
             console.log("Chart is open");
-            //window.location.reload()
+            // Show confirmation dialog
+            const confirmed = window.confirm(`Are you sure you want to delete Chart named '${chartName}'?`);
+            if (!confirmed) {
+              console.log("User canceled delete operation");
+              return;
+            }
             // call api to delete chart
             try {
                 deleteChartByName(chartName);
                 setValue(`Chart '${chartName}' deleted successfully`);
                 console.log(`Now the chart is deleted, check through admin`)
                 // Redirect to dashboard page or do any other action here
+                window.location.reload() //palka instead of this reload, we may need redirect to uska dashboard screen
               } catch (error) {
                 console.error(error);
                 setValue(`Error deleting chart '${chartName}': ${error.message}`);
@@ -372,6 +442,55 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
             }
           }
         },
+        {
+          command: 'delete dashboard with name *',
+          callback: (dashboardName) => {
+            console.log("Delete dashboard command heard. You are here");
+            console.log(`${dashboardName}`)
+            //window.location.reload()
+            // Show confirmation dialog
+            const confirmed = window.confirm(`Are you sure you want to delete Dashboard named '${dashboardName}'?`);
+            if (!confirmed) {
+              console.log("User canceled delete operation");
+              return;
+            }
+            // call api to delete dashboard
+            try {
+                deleteDashboardByName(dashboardName);
+                setValue(`Dashboard '${dashboardName}' deleted successfully`);
+                console.log(`Now the dashboard is deleted, check through admin`)
+                // Redirect to dashboard page or do any other action here
+                window.location.reload()
+              } catch (error) {
+                console.error(error);
+                setValue(`Error deleting dashboard '${dashboardName}': ${error.message}`);
+              }
+          }
+        },
+        {
+          command: 'delete workspace with name *',
+          callback: (workspaceName) => {
+            console.log("Delete workspace command heard. You are here");
+            console.log(`${workspaceName}`)
+            // Show confirmation dialog
+            const confirmed = window.confirm(`Are you sure you want to delete Workspace named '${workspaceName}'?`);
+            if (!confirmed) {
+              console.log("User canceled delete operation");
+              return;
+            }
+            // call api to delete workspace
+            try {
+                deleteWorkspaceByName(workspaceName);
+                setValue(`Workspace '${workspaceName}' deleted successfully`);
+                console.log(`Now the workspace is deleted, check through admin`)
+                // Redirect to dashboard page or do any other action here
+                window.location.reload()
+              } catch (error) {
+                console.error(error);
+                setValue(`Error deleting workspace '${workspaceName}': ${error.message}`);
+              }
+          }
+          },
         {
           command: 'create * chart',
           callback: (chart) => {
@@ -841,7 +960,7 @@ function TopbarIcons({clickedWorkspace,setClickedWorkspace}) {
                 </IconButton>
             </Box>
         </Box>
-        <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} childRef={childRef}/>
+        {/* <NewWorkspaceModal workspaceModalOpen={workspaceModalOpen} setWorkspaceModalOpen={setWorkspaceModalOpen} clickedWorkspace={clickedWorkspace} setClickedWorkspace = {setClickedWorkspace} workspaceName={workspaceName} databaseRef={databaseRef} detailsRef={detailsRef} childRef={childRef}/> */}
     </Box>
     )
 }
