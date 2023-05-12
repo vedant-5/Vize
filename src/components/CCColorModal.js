@@ -17,7 +17,7 @@ function ChangeColor({colorModalOpen, setColorModalOpen,chartDetails}) {
 
     const editChartPost = async () => {
         const originalString = chartDetails.options
-        const newString = originalString.replace("Dark", "") + `${newColor}`;
+        const newString = originalString.replace(originalString[2], "") + `${newColor}`;
         
         const data = {...chartDetails,"options":newString}
         const requestOptions = {

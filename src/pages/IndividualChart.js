@@ -151,6 +151,7 @@ function IndividualChart ({chart_id}) {
             "x_label" : x,
             "y_label" : y
         })
+        console.log(color)
         console.log(data)
         //console.log(data.map((data) => data[y]),data.map((data) => data[x]))
         //store x array and y array values in a seperate variable and write it in labels and data.
