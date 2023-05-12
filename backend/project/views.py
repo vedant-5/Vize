@@ -340,7 +340,6 @@ def chart_summary_view(request,id):
     Compute summary statistics, identify patterns and trends, describe the distribution of y values,
     state the type of values (continuous or categorical) for x and y, and state whether they are correlated.
     """
-
     # print(request)
     # Get input data
     data = json.loads(request.body)
