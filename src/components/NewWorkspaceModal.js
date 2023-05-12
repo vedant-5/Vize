@@ -181,8 +181,8 @@ const NewWorkspaceModal = forwardRef(({workspaceModalOpen, setWorkspaceModalOpen
                               <Typography>Verfify Details</Typography>
                           </StepLabel>
                             <StepContent>
-                              <p>{name}</p>
-                              <p>{databaseName[1]}</p>
+                              <p><b>Workspace Name:</b> {name}</p>
+                              <p><b>Data File Uploaded:</b> {databaseName[1]}</p>
                             {/* <CreateWorkspace workspace_name= {name} database_name={databaseName}  /> */}
                             <Box sx={{ mb: 2 }}>
                                 <div>
