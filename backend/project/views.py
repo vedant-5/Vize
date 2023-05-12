@@ -466,3 +466,47 @@ def delete_chart(request, chartID):
 
     chart.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @api_view(['DELETE']) 
+#delete dashboard via dashboardname
+# def delete_dashboard(request, dashboardName):
+#     try:
+#         dashboard = Dashboard.objects.get(title=dashboardName)
+#     except Dashboard.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     dashboard.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+#delete dashboard via dashboardid
+def delete_dashboard(request, dashboardID):
+    try:
+        dashboard = Dashboard.objects.get(dashboard=dashboardID)
+    except Dashboard.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    dashboard.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @api_view(['DELETE']) 
+#delete workspace via workspacename
+# def delete_workspace(request, workspaceName):
+#     try:
+#         workspace = Workspace.objects.get(title=workspaceName)
+#     except Workspace.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     workspace.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+#delete workspace via workspaceid
+def delete_workspace(request, workspaceID):
+    try:
+        workspace = Workspace.objects.get(workspace=workspaceID)
+    except Dashboard.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    workspace.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
