@@ -150,8 +150,8 @@ function ChartDisplay ({chart_id}) {
                 {chartData ? <Chart
                     type={chartType}
                     data={chartData}
-                    width={350}
-                    height={180}
+                    width={400}
+                    height={200}
                     options={{
                         plugins: {
                             title: {

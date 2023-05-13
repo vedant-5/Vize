@@ -17,7 +17,8 @@ function ChangeColor({colorModalOpen, setColorModalOpen,chartDetails}) {
 
     const editChartPost = async () => {
         const originalString = chartDetails.options
-        const newString = originalString.replace(originalString[2], "") + `${newColor}`;
+        const newString = originalString.replace(originalString.split(",")[2], newColor);
+        console.log("in ccmodal, new string = ", newString)
         
         const data = {...chartDetails,"options":newString}
         const requestOptions = {

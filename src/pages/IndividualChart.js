@@ -41,33 +41,52 @@ function IndividualChart ({chart_id}) {
     //console.log(wid)
     const {text} = useParams();
 
+    // const colourPalette = [
+    //     {
+    //         "Light": ["#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
+    //     },
+    //     {
+    //         "Dark": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"]
+    //     },
+    //     {
+    //         "Yellow": ["#C09C22", "#FFCA1A", "#FFD94D", "#FFE880", "#FFF099", "#FFFFCC"]
+    //     },
+    //     {
+    //         "Blue": ["#1E3F66", "#2E5984", "#528AAE", "#73A5C6", "#AAD1EC", "#D2E9FF"]
+    //     },
+    //     { "BG" :  [
+    //         "rgba(75,192,192,1)",
+    //         "#ecf0f1",
+    //         "#50AF95",
+    //         "#f3ba2f",
+    //         "#2a71d0",
+    //         "#ecf0f1",
+    //         "#50AF95",
+    //         "#f3ba2f",
+    //         "#2a71d0",
+    //     ]}
+    // ];
+
     const colourPalette = [
         {
-            "Light": ["#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"]
+            "name": "Light",
+            "palette": ["#B983FF", "#94B3FD", "#B9F3FC", "#A0FFE6", "#D0F58B"],
         },
         {
-            "Dark": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"]
+            "name": "Dark",
+            "palette": ["#37306B", "#66347F", "#9E4784", "#E36075", "#DE834D", "#E2AE29"],
         },
         {
-            "Yellow": ["#C09C22", "#FFCA1A", "#FFD94D", "#FFE880", "#FFF099", "#FFFFCC"]
+            "name": "Yellow",
+            "palette": ["#C09C22", "#FFCA1A", "#FFD94D", "#FFE880", "#FFF099", "#FFFFCC"],
         },
         {
-            "Blue": ["#1E3F66", "#2E5984", "#528AAE", "#73A5C6", "#AAD1EC", "#D2E9FF"]
+            "name": "Blue",
+            "palette": ["#1E3F66", "#2E5984", "#528AAE", "#73A5C6", "#AAD1EC", "#D2E9FF"],
         },
-        { "BG" :  [
-            "rgba(75,192,192,1)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d0",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d0",
-        ]}
-    ];
+    ]
 
-    console.log(colourPalette[0].Light);
+    console.log(colourPalette[0].name);
 
 
     const [chart, setChart] =  useState([])
@@ -162,7 +181,7 @@ function IndividualChart ({chart_id}) {
                     {
                         label: y,
                         data: data.map((data) => data[y]), // y-axis
-                        backgroundColor: color!=='' ?  colourPalette[1].Dark : colourPalette[0].Light ,
+                        backgroundColor: color==='Dark' ?  colourPalette[1].palette : (color==='Yellow' ? colourPalette[2].palette : (color==='Blue' ? colourPalette[3].palette : colourPalette[0].palette)) ,
                         // borderColor: "black",
                         // borderWidth: 2
                     },
@@ -235,6 +254,7 @@ function IndividualChart ({chart_id}) {
                     <Chart
                         type={chartType}
                         data={chartData}
+                        height={400}
                         options={{
                             plugins: {
                                 title: {
@@ -301,6 +321,6 @@ const WhiteButtons =  styled.button`
     padding: 9px 20px;
     cursor: pointer;
     &:hover {
-        background-color: rgba(220, 226, 248, 0.6);
+        background-color: rgba(220, 226, 248, 0.6);
     }
 `
